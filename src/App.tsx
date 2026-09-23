@@ -19,7 +19,7 @@ import CardanoPage from "./pages/cardano/CardanoPage";
 import SolanaPage from "./pages/solana/SolanaPage";
 import SmartContractPage from "./pages/smart-contract/SmartContractPage";
 import QuizPage from "./pages/quiz/QuizPage";
-
+import TeamPage from "./pages/team/TeamPage";
 
 function App() {
   return (
@@ -91,6 +91,10 @@ function App() {
           <Route
             path="/quiz"
             element={<QuizPage />}
+          />
+          <Route 
+            path="/team" 
+            element={<TeamPage />} 
           />
 
         </Route>
