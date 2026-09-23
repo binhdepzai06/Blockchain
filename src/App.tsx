@@ -21,86 +21,91 @@ import SmartContractPage from "./pages/smart-contract/SmartContractPage";
 import QuizPage from "./pages/quiz/QuizPage";
 import TeamPage from "./pages/team/TeamPage";
 
+import { AuthProvider } from "./context/AuthContext";
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
 
-        <Route element={<Layout />}>
+          <Route element={<Layout />}>
 
-          <Route
-            path="/"
-            element={<Navigate to="/dashboard" replace />}
-          />
+            <Route
+              path="/"
+              element={<Navigate to="/dashboard" replace />}
+            />
 
-          <Route
-            path="/dashboard"
-            element={<DashboardPage />}
-          />
+            <Route
+              path="/dashboard"
+              element={<DashboardPage />}
+            />
 
-          <Route
-            path="/hash"
-            element={<HashPage />}
-          />
+            <Route
+              path="/hash"
+              element={<HashPage />}
+            />
 
-          <Route
-            path="/blockchain"
-            element={<BlockchainPage />}
-          />
+            <Route
+              path="/blockchain"
+              element={<BlockchainPage />}
+            />
 
-          <Route
-            path="/transaction"
-            element={<TransactionPage />}
-          />
+            <Route
+              path="/transaction"
+              element={<TransactionPage />}
+            />
 
-          <Route
-            path="/merkle"
-            element={<MerklePage />}
-          />
+            <Route
+              path="/merkle"
+              element={<MerklePage />}
+            />
 
-          <Route
-            path="/signature"
-            element={<SignaturePage />}
-          />
+            <Route
+              path="/signature"
+              element={<SignaturePage />}
+            />
 
-          <Route
-            path="/consensus"
-            element={<ConsensusPage />}
-          />
+            <Route
+              path="/consensus"
+              element={<ConsensusPage />}
+            />
 
-          <Route
-            path="/network"
-            element={<NetworkPage />}
-          />
+            <Route
+              path="/network"
+              element={<NetworkPage />}
+            />
 
-          <Route
-            path="/cardano"
-            element={<CardanoPage />}
-          />
+            <Route
+              path="/cardano"
+              element={<CardanoPage />}
+            />
 
-          <Route
-            path="/solana"
-            element={<SolanaPage />}
-          />
+            <Route
+              path="/solana"
+              element={<SolanaPage />}
+            />
 
-          <Route
-            path="/smart-contract"
-            element={<SmartContractPage />}
-          />
+            <Route
+              path="/smart-contract"
+              element={<SmartContractPage />}
+            />
 
-          <Route
-            path="/quiz"
-            element={<QuizPage />}
-          />
-          <Route 
-            path="/team" 
-            element={<TeamPage />} 
-          />
+            <Route
+              path="/quiz"
+              element={<QuizPage />}
+            />
 
-        </Route>
+            <Route
+              path="/team"
+              element={<TeamPage />}
+            />
 
-      </Routes>
-    </BrowserRouter>
+          </Route>
+
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

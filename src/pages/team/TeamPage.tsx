@@ -15,11 +15,12 @@ interface Member {
 }
 
 const members: Member[] = [
-  { name: "Thành viên 1", role: "Trưởng nhóm / Hash & Blockchain", contribution: "Xây dựng module Hash, Blockchain Engine" },
-  { name: "Thành viên 2", role: "Transaction & Merkle Tree", contribution: "Xây dựng Transaction Pool, Merkle Tree Visualizer" },
-  { name: "Thành viên 3", role: "Consensus", contribution: "Xây dựng mô phỏng Proof of Work & Proof of Stake" },
-  { name: "Thành viên 4", role: "Network & Blockchain thật (Cardano/Solana)", contribution: "Xây dựng Network Simulator, trang Cardano & Solana" },
-  { name: "Thành viên 5", role: "Personalization & Smart Contract", contribution: "Xây dựng Dashboard cá nhân hóa, Quiz, Smart Contract Simulator" },
+  { name: "Nguyễn Công Bình", role: "👑 Tech Lead + Integration", contribution: "Định hướng kỹ thuật, điều phối dự án và tích hợp các module lại với nhau." },
+  { name: "Lê Trần Vĩnh Hưng", role: "🎨 UI/UX + Visualization", contribution: "Thiết kế giao diện người dùng, tối ưu trải nghiệm và trực quan hóa các thành phần." },
+  { name: "Ngô Bùi Anh Khải", role: "🔐 Blockchain Core + Cryptography", contribution: "Xây dựng lõi Blockchain, thuật toán băm (Hash), cây Merkle và mã hóa số." },
+  { name: "Trần Đình Kiệt", role: "⚡ Consensus Lab", contribution: "Phát triển và mô phỏng các thuật toán đồng thuận (Proof of Work, Proof of Stake)." },
+  { name: "Nguyễn Đình Tiến Đạt", role: "🌐 Network + Real Networks", contribution: "Xây dựng mô phỏng mạng lưới phân tán và tích hợp dữ liệu mạng thực tế (Cardano/Solana)." },
+  { name: "Huỳnh Bảo Lâm", role: "🤖 Personalization + Web3", contribution: "Phát triển tính năng cá nhân hóa người dùng, Smart Contract và các tính năng Web3." },
 ];
 
 const siteFeatures = [
@@ -46,7 +47,7 @@ export default function TeamPage() {
           </h1>
           <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-400">
             CryptoLab là nền tảng học blockchain tương tác, được xây dựng bởi
-            một nhóm sinh viên với mục tiêu giúp người học hiểu blockchain
+            nhóm sinh viên với mục tiêu giúp người học hiểu blockchain
             bằng cách thực sự thử nghiệm, thay vì chỉ đọc lý thuyết.
           </p>
         </div>
@@ -54,23 +55,23 @@ export default function TeamPage() {
         {/* MEMBERS */}
         <section className="mb-14">
           <h2 className="mb-6 text-center text-2xl font-semibold text-white">
-            Thành viên
+            Thành viên nhóm
           </h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {members.map((m) => (
               <div
                 key={m.name}
-                className="rounded-3xl border border-white/10 bg-white/[0.03] p-6"
+                className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-blue-400/30"
               >
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-lg font-bold text-white">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 text-lg font-bold text-white shadow-lg shadow-blue-500/20">
                   {m.name
                     .split(" ")
                     .map((w) => w[0])
                     .slice(-2)
                     .join("")}
                 </div>
-                <h3 className="font-semibold text-white">{m.name}</h3>
-                <p className="mb-3 text-sm text-blue-300">{m.role}</p>
+                <h3 className="font-semibold text-white text-lg">{m.name}</h3>
+                <p className="mb-3 text-sm font-medium text-blue-300">{m.role}</p>
                 <p className="text-sm leading-6 text-slate-400">
                   {m.contribution}
                 </p>
