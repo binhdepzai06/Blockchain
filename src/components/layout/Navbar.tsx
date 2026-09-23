@@ -18,16 +18,20 @@ const navItems = [
     path: "/hash",
   },
   {
-  name: "Merkle",
-  path: "/merkle",
-  },
-  {
     name: "Mô phỏng",
     path: "/blockchain",
   },
   {
     name: "Transaction",
     path: "/transaction",
+  },
+  {
+  name: "Merkle",
+  path: "/merkle",
+  },
+  {
+  name: "Chữ ký số",
+  path: "/signature",
   },
   {
     name: "Consensus",
