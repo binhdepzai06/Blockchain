@@ -1,8 +1,9 @@
 import { useState } from "react";
 import NetworkLab from "./pages/NetworkLab";
 import CardanoLab from "./pages/CardanoLab";
+import SolanaLab from "./pages/SolanaLab";
 
-type Lab = "network" | "cardano";
+type Lab = "network" | "cardano" | "solana";
 
 function App() {
   const [activeLab, setActiveLab] = useState<Lab>("network");
@@ -25,11 +26,6 @@ function App() {
         <button
           type="button"
           onClick={() => setActiveLab("network")}
-          style={{
-            padding: "10px 18px",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
         >
           Network
         </button>
@@ -37,21 +33,23 @@ function App() {
         <button
           type="button"
           onClick={() => setActiveLab("cardano")}
-          style={{
-            padding: "10px 18px",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
         >
           Cardano
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveLab("solana")}
+        >
+          Solana
+        </button>
       </nav>
 
-      {activeLab === "network" ? (
-        <NetworkLab />
-      ) : (
-        <CardanoLab />
-      )}
+      {activeLab === "network" && <NetworkLab />}
+
+      {activeLab === "cardano" && <CardanoLab />}
+
+      {activeLab === "solana" && <SolanaLab />}
     </>
   );
 }
