@@ -1,20 +1,31 @@
+﻿export type NodeType = "node" | "validator";
+
+export type BroadcastType = "transaction" | "block";
+
 export interface NetworkNode {
   id: string;
   name: string;
   online: boolean;
-  isValidator: boolean;
-  x: number;
-  y: number;
+  type?: NodeType;
+  isValidator?: boolean;
+  x?: number;
+  y?: number;
 }
 
 export interface NetworkConnection {
-  id: string;
+  id?: string;
   source: string;
   target: string;
   latency: number;
 }
 
-export type BroadcastType = "transaction" | "block";
+export interface NetworkMessage {
+  id: string;
+  type: BroadcastType;
+  source: string;
+  target: string;
+  timestamp: number;
+}
 
 export interface PropagationEvent {
   nodeId: string;

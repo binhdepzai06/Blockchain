@@ -76,7 +76,7 @@ export default function NetworkGraph({
             height: "100%",
           }}
         >
-          {connections.map((connection) => {
+          {connections.map((connection, index) => {
             const source = getNode(connection.source);
             const target = getNode(connection.target);
 
@@ -84,20 +84,30 @@ export default function NetworkGraph({
               return null;
             }
 
-            const middleX = (source.x + target.x) / 2;
-            const middleY = (source.y + target.y) / 2;
+            const sourceX = source.x ?? 50;
+            const sourceY = source.y ?? 50;
+            const targetX = target.x ?? 50;
+            const targetY = target.y ?? 50;
+
+            const middleX = (sourceX + targetX) / 2;
+            const middleY = (sourceY + targetY) / 2;
 
             const connectionActive =
               receivedNodeIds.has(source.id) &&
               receivedNodeIds.has(target.id);
 
             return (
-              <g key={connection.id}>
+              <g
+                key={
+                  connection.id ??
+                  `${connection.source}-${connection.target}-${index}`
+                }
+              >
                 <line
-                  x1={source.x}
-                  y1={source.y}
-                  x2={target.x}
-                  y2={target.y}
+                  x1={sourceX}
+                  y1={sourceY}
+                  x2={targetX}
+                  y2={targetY}
                   stroke={connectionActive ? "#22c55e" : "#52525b"}
                   strokeWidth={connectionActive ? "1" : "0.7"}
                   style={{
@@ -122,13 +132,19 @@ export default function NetworkGraph({
         {nodes.map((node) => {
           const received = receivedNodeIds.has(node.id);
 
+          const x = node.x ?? 50;
+          const y = node.y ?? 50;
+
+          const isValidator =
+            node.isValidator ?? node.type === "validator";
+
           return (
             <div
               key={node.id}
               style={{
                 position: "absolute",
-                left: `${node.x}%`,
-                top: `${node.y}%`,
+                left: `${x}%`,
+                top: `${y}%`,
                 transform: "translate(-50%, -50%)",
                 width: "90px",
                 minHeight: "70px",
@@ -157,7 +173,7 @@ export default function NetworkGraph({
                   color: "#d4d4d8",
                 }}
               >
-                {node.isValidator ? "Validator" : "Node"}
+                {isValidator ? "Validator" : "Node"}
               </span>
 
               {received && (
