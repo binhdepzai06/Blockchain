@@ -50,6 +50,10 @@ const navItems = [
     path: "/network",
   },
   {
+  name: "Smart Contract",
+  path: "/smart-contract",
+  },
+  {
     name: "Quiz",
     path: "/quiz",
   },
