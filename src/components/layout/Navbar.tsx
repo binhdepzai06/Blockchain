@@ -34,6 +34,14 @@ const navItems = [
   path: "/signature",
   },
   {
+  name: "Cardano",
+  path: "/cardano",
+  },
+  {
+  name: "Solana",
+  path: "/solana",
+  },
+  {
     name: "Consensus",
     path: "/consensus",
   },
