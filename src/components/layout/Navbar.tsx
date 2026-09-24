@@ -53,6 +53,8 @@ const navItems: NavItem[] = [
     name: "Smart Contract",
     path: "/smart-contract",
   },
+  { name: "Full Node Network",
+    path: "/node-network" },
   {
     name: "Quiz",
     path: "/quiz",

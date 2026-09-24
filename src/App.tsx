@@ -20,7 +20,7 @@ import SolanaPage from "./pages/solana/SolanaPage";
 import SmartContractPage from "./pages/smart-contract/SmartContractPage";
 import QuizPage from "./pages/quiz/QuizPage";
 import TeamPage from "./pages/team/TeamPage";
-
+import NodeNetworkPage from "./pages/node-network/NodeNetworkPage";
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -99,6 +99,10 @@ function App() {
             <Route
               path="/team"
               element={<TeamPage />}
+            />
+            <Route 
+              path="/node-network" 
+              element={<NodeNetworkPage />} 
             />
 
           </Route>
