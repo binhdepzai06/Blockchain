@@ -104,7 +104,7 @@ function App() {
           </Route>
 
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter>n
     </AuthProvider>
   );
 }
