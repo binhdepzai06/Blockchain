@@ -9,6 +9,7 @@ export interface Block {
   nonce: number;
   data?: string;
   merkleRoot: string;
+  difficulty?: number;
 }
 
 export interface BlockchainState {

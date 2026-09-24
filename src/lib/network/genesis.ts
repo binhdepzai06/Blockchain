@@ -1,27 +1,18 @@
-import { computeBlockHash } from "./mining";
 import type { Block } from "../../types/blockchain";
 
-// Timestamp CỐ ĐỊNH để mọi Node tính ra hash Genesis giống hệt nhau
-const GENESIS_TIMESTAMP = 1700000000000;
-
-export async function createGenesisBlock(): Promise<Block> {
-  const genesis: Block = {
+// Toàn bộ giá trị đều CỐ ĐỊNH CỨNG — để mọi Node có Genesis Block
+// giống hệt nhau tuyệt đối, không phụ thuộc vào việc tính hash "sống"
+// mỗi lần khởi động (tránh sai lệch dù chỉ 1 bit).
+export function createGenesisBlock(): Block {
+  return {
     index: 0,
-    timestamp: GENESIS_TIMESTAMP,
+    timestamp: 1700000000000,
     transactions: [],
     previousHash: "0",
-    hash: "",
+    hash: "genesis000000000000000000000000000000000000000000000000000000",
     nonce: 0,
     data: "Genesis Block",
-    merkleRoot: await sha256Empty(),
+    merkleRoot: "genesis-empty-merkle-root",
+    difficulty: 0,
   };
-
-  genesis.hash = await computeBlockHash(genesis);
-  return genesis;
-}
-
-async function sha256Empty(): Promise<string> {
-  const { buildMerkleTree } = await import("../blockchain/merkle");
-  const { root } = await buildMerkleTree([]);
-  return root;
 }
