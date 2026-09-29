@@ -3,10 +3,10 @@ import type { Transaction } from "../../types/transaction";
 
 import { createGenesisBlock } from "./genesis";
 import {
-  mineFullBlock,
   validateChain,
   computeTotalWork,
 } from "./mining";
+import { BlockchainEngine } from "../blockchain/blockchain";
 
 type NetworkMessage =
   | {
@@ -48,11 +48,21 @@ export type LogEntry = {
 export class FullNode {
   id: string;
 
-  chain: Block[] = [];
+    private core = new BlockchainEngine(4);
+
+  get chain(): Block[] {
+    return this.core.chain;
+  }
+
+  get difficulty(): number {
+    return this.core.difficulty;
+  }
+
+  set difficulty(value: number) {
+    this.core.setDifficulty(value);
+  }
 
   mempool: Transaction[] = [];
-
-  difficulty = 4;
 
   peers: Map<string, PeerInfo> = new Map();
 
@@ -123,30 +133,20 @@ export class FullNode {
   // =========================================================
 
   async initialize() {
-    // Chỉ tạo Genesis một lần
-    if (this.chain.length === 0) {
-      const genesis = createGenesisBlock();
-
-      this.chain = [genesis];
-
-      console.log(
-        `[${this.id}] Genesis hash:`,
-        genesis.hash
-      );
-    }
+        await this.core.initialize();
 
     // Kiểm tra Genesis
     const expectedGenesis = createGenesisBlock();
 
-    if (this.chain[0].hash !== expectedGenesis.hash) {
+    if (this.core.chain[0].hash !== expectedGenesis.hash) {
       console.error("GENESIS MISMATCH", {
         nodeId: this.id,
-        localGenesis: this.chain[0].hash,
+        localGenesis: this.core.chain[0].hash,
         expectedGenesis: expectedGenesis.hash,
       });
 
       // Reset về Genesis chuẩn
-      this.chain = [expectedGenesis];
+      this.core.replaceChain([expectedGenesis]);
     }
 
     // Yêu cầu các Node khác gửi chain
@@ -305,10 +305,9 @@ export class FullNode {
     // Mine
     // -------------------------------------------------------
 
-    const block = await mineFullBlock(
-      previousBlock,
+        const block = await this.core.mineCandidate(
       txsToMine,
-      this.difficulty,
+      undefined,
       onProgress
     );
 
@@ -350,7 +349,7 @@ export class FullNode {
     // Thêm block vào local chain
     // -------------------------------------------------------
 
-    this.chain.push(block);
+        this.core.pushBlock(block);
 
     // -------------------------------------------------------
     // Xóa transaction đã mine khỏi mempool
@@ -671,8 +670,9 @@ export class FullNode {
       const oldWork = myWork;
 
       // Copy chain
-      this.chain =
-        this.cloneChain(incomingChain);
+            this.core.replaceChain(
+        this.cloneChain(incomingChain)
+      );
 
       // =====================================================
       // Remove confirmed transactions

@@ -23,6 +23,9 @@ export default function TransactionPage() {
   const [to, setTo] = useState("Bob");
   const [amount, setAmount] = useState(10);
 
+  const [isMining, setIsMining] = useState(false);
+  const [miningAttempts, setMiningAttempts] = useState(0);
+
   const refresh = () => {
     setPending(transactionPool.getPending());
 
@@ -34,13 +37,19 @@ export default function TransactionPage() {
   };
 
   useEffect(() => {
-  const init = async () => {
-    await blockchain.initialize();
-    refresh();
-  };
+    const init = async () => {
+      await blockchain.initialize();
+      refresh();
+    };
 
-  init();
-}, []);
+    init();
+
+    // Nếu Block khác được mine ở trang Blockchain (hoặc tab khác đang
+    // mở cùng blockchain này), danh sách Confirmed ở đây tự cập nhật.
+    const unsubscribe = blockchain.subscribe(refresh);
+
+    return unsubscribe;
+  }, []);
 
   const handleCreateTransaction = () => {
     if (!from.trim() || !to.trim() || amount <= 0) {
@@ -55,17 +64,32 @@ export default function TransactionPage() {
   };
 
   const handleMineBlock = async () => {
+    if (isMining) {
+      return;
+    }
+
     const txs = transactionPool.getPending();
 
     if (txs.length === 0) {
       return;
     }
 
-    await blockchain.addBlock(txs);
+    setIsMining(true);
+    setMiningAttempts(0);
 
-    transactionPool.clear();
+    try {
+      // Mine thật (PoW) chứ không thêm Block tức thì, để "mine" trong
+      // UI đúng nghĩa với những gì đang xảy ra bên dưới.
+      await blockchain.mineBlock(txs, undefined, (attempts) => {
+        setMiningAttempts(attempts);
+      });
 
-    refresh();
+      transactionPool.clear();
+
+      refresh();
+    } finally {
+      setIsMining(false);
+    }
   };
 
   return (
@@ -157,10 +181,13 @@ export default function TransactionPage() {
               {pending.length > 0 && (
                 <button
                   onClick={handleMineBlock}
-                  className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-400 transition hover:bg-emerald-400/20"
+                  disabled={isMining}
+                  className="flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs font-semibold text-emerald-400 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <PackagePlus size={14} />
-                  Mine vào Block
+                  {isMining
+                    ? `Đang mine... (${miningAttempts.toLocaleString()})`
+                    : "Mine vào Block"}
                 </button>
               )}
             </div>

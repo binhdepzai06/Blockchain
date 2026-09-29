@@ -22,93 +22,101 @@ import QuizPage from "./pages/quiz/QuizPage";
 import TeamPage from "./pages/team/TeamPage";
 import NodeNetworkPage from "./pages/node-network/NodeNetworkPage";
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import AttackSimulator from "./pages/AttackSimulator/AttackSimulator";
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
+      <LanguageProvider>
+        <BrowserRouter>
+          <Routes>
 
-          <Route element={<Layout />}>
+            <Route element={<Layout />}>
 
-            <Route
-              path="/"
-              element={<Navigate to="/dashboard" replace />}
-            />
+              <Route
+                path="/"
+                element={<Navigate to="/dashboard" replace />}
+              />
 
-            <Route
-              path="/dashboard"
-              element={<DashboardPage />}
-            />
+              <Route
+                path="/dashboard"
+                element={<DashboardPage />}
+              />
 
-            <Route
-              path="/hash"
-              element={<HashPage />}
-            />
+              <Route
+                path="/hash"
+                element={<HashPage />}
+              />
 
-            <Route
-              path="/blockchain"
-              element={<BlockchainPage />}
-            />
+              <Route
+                path="/blockchain"
+                element={<BlockchainPage />}
+              />
 
-            <Route
-              path="/transaction"
-              element={<TransactionPage />}
-            />
+              <Route
+                path="/transaction"
+                element={<TransactionPage />}
+              />
 
-            <Route
-              path="/merkle"
-              element={<MerklePage />}
-            />
+              <Route
+                path="/merkle"
+                element={<MerklePage />}
+              />
 
-            <Route
-              path="/signature"
-              element={<SignaturePage />}
-            />
+              <Route
+                path="/signature"
+                element={<SignaturePage />}
+              />
 
-            <Route
-              path="/consensus"
-              element={<ConsensusPage />}
-            />
+              <Route
+                path="/consensus"
+                element={<ConsensusPage />}
+              />
 
-            <Route
-              path="/network"
-              element={<NetworkPage />}
-            />
+              <Route
+                path="/network"
+                element={<NetworkPage />}
+              />
 
-            <Route
-              path="/cardano"
-              element={<CardanoPage />}
-            />
+              <Route
+                path="/cardano"
+                element={<CardanoPage />}
+              />
 
-            <Route
-              path="/solana"
-              element={<SolanaPage />}
-            />
+              <Route
+                path="/solana"
+                element={<SolanaPage />}
+              />
 
-            <Route
-              path="/smart-contract"
-              element={<SmartContractPage />}
-            />
+              <Route
+                path="/smart-contract"
+                element={<SmartContractPage />}
+              />
+              <Route
+                path="/attack-simulator"
+                element={<AttackSimulator />}
+              />
 
-            <Route
-              path="/quiz"
-              element={<QuizPage />}
-            />
+              <Route
+                path="/quiz"
+                element={<QuizPage />}
+              />
 
-            <Route
-              path="/team"
-              element={<TeamPage />}
-            />
-            <Route 
-              path="/node-network" 
-              element={<NodeNetworkPage />} 
-            />
+              <Route
+                path="/team"
+                element={<TeamPage />}
+              />
+              <Route
+                path="/node-network"
+                element={<NodeNetworkPage />}
+              />
 
-          </Route>
+            </Route>
 
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </LanguageProvider>
     </AuthProvider>
   );
 }

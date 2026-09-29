@@ -33,7 +33,8 @@ export async function mineFullBlock(
   previousBlock: Block,
   transactions: Transaction[],
   difficulty: number,
-  onProgress?: (attempts: number) => void
+  onProgress?: (attempts: number) => void,
+  data?: string
 ): Promise<Block> {
   const target = "0".repeat(difficulty);
 
@@ -58,7 +59,7 @@ export async function mineFullBlock(
       nonce,
 
       data:
-        `Block chứa ${transactions.length} giao dịch`,
+        data ?? `Block chứa ${transactions.length} giao dịch`,
 
       merkleRoot,
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckCircle2,
   GitBranch,
@@ -8,6 +8,7 @@ import {
 
 import { blockchain } from "../../lib/blockchain/instance";
 import { buildMerkleTree } from "../../lib/blockchain/merkle";
+import type { Block } from "../../types/blockchain";
 import type { Transaction } from "../../types/transaction";
 
 export default function MerklePage() {
@@ -17,11 +18,40 @@ export default function MerklePage() {
   const [root, setRoot] = useState("");
   const [originalRoot, setOriginalRoot] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [blocksWithTx, setBlocksWithTx] = useState<Block[]>([]);
 
-  const blocksWithTx = useMemo(
-    () => blockchain.chain.filter((b) => b.transactions.length > 0),
-    [blockchain.chain.length]
-  );
+  const refreshBlocksWithTx = () => {
+    const withTx = blockchain.chain.filter(
+      (block) => block.transactions.length > 0
+    );
+
+    setBlocksWithTx(withTx);
+
+    return withTx;
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      await blockchain.initialize();
+
+      const withTx = refreshBlocksWithTx();
+
+      if (withTx.length > 0) {
+        await selectBlock(withTx[0].index);
+      }
+
+      setIsLoading(false);
+    };
+
+    init();
+
+    // Trang Transaction có thể mine thêm Block chứa giao dịch bất cứ
+    // lúc nào — danh sách chọn Block ở đây phải tự cập nhật theo, thay
+    // vì chỉ tính 1 lần lúc mount.
+    const unsubscribe = blockchain.subscribe(refreshBlocksWithTx);
+
+    return unsubscribe;
+  }, []);
 
   const selectBlock = async (index: number) => {
     const block = blockchain.chain[index];
@@ -36,24 +66,6 @@ export default function MerklePage() {
     setLevels(result.levels);
     setRoot(result.root);
   };
-
-  useEffect(() => {
-    const init = async () => {
-      await blockchain.initialize();
-
-      const withTx = blockchain.chain.filter(
-        (b) => b.transactions.length > 0
-      );
-
-      if (withTx.length > 0) {
-        await selectBlock(withTx[0].index);
-      }
-
-      setIsLoading(false);
-    };
-
-    init();
-  }, []);
 
   const editTransaction = async (txIndex: number, newAmount: number) => {
     const updated = sandboxTxs.map((tx, i) =>

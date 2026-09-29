@@ -3,8 +3,8 @@ import {
   Blocks,
   CheckCircle2,
   Database,
+  Hammer,
   Link2,
-  Plus,
   RefreshCw,
   ShieldCheck,
   XCircle,
@@ -13,11 +13,17 @@ import {
 import { blockchain } from "../../lib/blockchain/instance";
 import type { Block } from "../../types/blockchain";
 
+const DIFFICULTY_OPTIONS = [1, 2, 3, 4, 5];
+
 export default function BlockchainPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const [difficulty, setDifficulty] = useState(blockchain.difficulty);
+  const [isMining, setIsMining] = useState(false);
+  const [miningAttempts, setMiningAttempts] = useState(0);
 
   const refreshBlockchain = () => {
     setBlocks([...blockchain.chain]);
@@ -40,35 +46,60 @@ export default function BlockchainPage() {
     };
 
     initialize();
+
+    // Lắng nghe blockchain dùng chung: nếu Block mới được mine từ trang
+    // Transaction (hoặc tab khác đang mở), trang này tự cập nhật theo,
+    // không cần F5.
+    const unsubscribe = blockchain.subscribe(() => {
+      refreshBlockchain();
+    });
+
+    return unsubscribe;
   }, []);
 
-  const addBlock = async () => {
-  const blockData =
-    data.trim() || `Block data ${blocks.length}`;
+  const changeDifficulty = (value: number) => {
+    setDifficulty(value);
+    blockchain.setDifficulty(value);
+  };
 
-  await blockchain.addBlock([], blockData);
+  const mineBlock = async () => {
+    if (isMining) {
+      return;
+    }
 
-  setData("");
+    const blockData = data.trim() || `Block data ${blocks.length}`;
 
-  await validateBlockchain();
-};
+    setIsMining(true);
+    setMiningAttempts(0);
 
-  const editBlockData = (
-  index: number,
-  newData: string
-) => {
-  const block = blockchain.chain[index];
+    try {
+      // Block rỗng (không giao dịch) — trang này chỉ để minh họa
+      // hash-chain + PoW, giao dịch thật được tạo ở trang Transaction.
+      await blockchain.mineBlock([], blockData, (attempts) => {
+        setMiningAttempts(attempts);
+      });
 
-  if (!block) {
-    return;
-  }
+      setData("");
 
-  blockchain.chain[index] = { ...block, data: newData };
+      await validateBlockchain();
+    } finally {
+      setIsMining(false);
+    }
+  };
 
-  refreshBlockchain();
+  const editBlockData = (index: number, newData: string) => {
+    const block = blockchain.chain[index];
 
-  setIsValid(false);
-};
+    if (!block) {
+      return;
+    }
+
+    blockchain.chain[index] = { ...block, data: newData };
+
+    refreshBlockchain();
+
+    setIsValid(false);
+  };
 
   const recalculateHash = async (index: number) => {
     await blockchain.recalculateBlock(index);
@@ -173,14 +204,37 @@ export default function BlockchainPage() {
 
             <div>
               <h2 className="font-semibold text-white">
-                Create New Block
+                Mine New Block
               </h2>
 
               <p className="text-sm text-slate-500">
-                Thêm một Block vào Blockchain
+                Tìm một Nonce sao cho Hash bắt đầu bằng {difficulty} số 0
+                (Proof-of-Work thật, không phải giả lập)
               </p>
             </div>
 
+          </div>
+
+          {/* DIFFICULTY */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-xs uppercase tracking-wider text-slate-500">
+              Difficulty
+            </span>
+
+            {DIFFICULTY_OPTIONS.map((level) => (
+              <button
+                key={level}
+                onClick={() => changeDifficulty(level)}
+                disabled={isMining}
+                className={`h-9 w-9 rounded-xl text-sm font-semibold transition ${
+                  difficulty === level
+                    ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                    : "border border-white/10 bg-white/[0.03] text-slate-400 hover:text-white"
+                } disabled:cursor-not-allowed disabled:opacity-50`}
+              >
+                {level}
+              </button>
+            ))}
           </div>
 
           <div className="flex flex-col gap-3 md:flex-row">
@@ -190,16 +244,27 @@ export default function BlockchainPage() {
               onChange={(event) =>
                 setData(event.target.value)
               }
+              disabled={isMining}
               placeholder="Nhập dữ liệu cho Block..."
-              className="flex-1 rounded-2xl border border-white/10 bg-[#050816] px-5 py-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50"
+              className="flex-1 rounded-2xl border border-white/10 bg-[#050816] px-5 py-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50 disabled:opacity-60"
             />
 
             <button
-              onClick={addBlock}
-              className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-4 font-semibold text-white transition hover:scale-[1.01]"
+              onClick={mineBlock}
+              disabled={isMining}
+              className="flex min-w-[190px] items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-4 font-semibold text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              <Plus size={18} />
-              Add Block
+              {isMining ? (
+                <>
+                  <RefreshCw size={18} className="animate-spin" />
+                  Mining... ({miningAttempts.toLocaleString()})
+                </>
+              ) : (
+                <>
+                  <Hammer size={18} />
+                  Mine Block
+                </>
+              )}
             </button>
 
           </div>
@@ -278,9 +343,12 @@ function BlockCard({
 
   useEffect(() => {
     const check = async () => {
-      const blockHash = await calculateLocalHash(block);
+      // Dùng đúng logic kiểm tra của engine (bao gồm cả merkleRoot,
+      // difficulty và liên kết previousHash) thay vì tự tính hash lại ở
+      // UI — tránh 2 công thức hash lệch nhau dẫn tới badge sai.
+      const isValidBlock = await blockchain.getBlockValidity(block.index);
 
-      setValid(blockHash === block.hash);
+      setValid(isValidBlock);
     };
 
     check();
@@ -436,23 +504,4 @@ function BlockCard({
 
     </div>
   );
-}
-
-async function calculateLocalHash(
-  block: Block
-): Promise<string> {
-  const { sha256 } = await import(
-    "../../lib/crypto/hash"
-  );
-
-  const blockData = JSON.stringify({
-    index: block.index,
-    timestamp: block.timestamp,
-    transactions: block.transactions,
-    previousHash: block.previousHash,
-    nonce: block.nonce,
-    data: block.data,
-  });
-
-  return sha256(blockData);
 }
