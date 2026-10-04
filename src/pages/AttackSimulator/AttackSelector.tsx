@@ -31,16 +31,16 @@ export default function AttackSelector({
       <div className="rounded-3xl border border-white/10 bg-white/[0.025] p-4">
         <div className="mb-4">
           <div className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-400">
-            Security Lab
+            Phòng Lab An Ninh
           </div>
 
           <h2 className="mt-1 text-lg font-bold text-white">
-            Attack Scenarios
+            Chọn kịch bản tấn công
           </h2>
 
           <p className="mt-1 text-xs leading-5 text-slate-500">
-            Chọn một cơ chế tấn công để quan sát
-            trực tiếp trên blockchain network.
+            Mỗi kịch bản mô phỏng 1 cách kẻ xấu có thể
+            tìm cách phá vỡ blockchain.
           </p>
         </div>
 

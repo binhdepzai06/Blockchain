@@ -1,27 +1,32 @@
 export const consensusComparison = [
   {
-    metric: "Tốc độ giao dịch",
-    pow: "Chậm (Bitcoin ~10 phút/block)",
-    pos: "Nhanh (vài giây)",
+    metric: "Ý tưởng chính",
+    pow: "Chứng minh công việc bằng sức mạnh tính toán",
+    pos: "Lựa chọn Validator dựa trên Stake",
   },
   {
-    metric: "Năng lượng tiêu thụ",
-    pow: "Rất cao (đào bằng phần cứng)",
-    pos: "Thấp",
+    metric: "Ai tạo Block?",
+    pow: "Miner tìm được Proof of Work hợp lệ",
+    pos: "Validator được cơ chế của mạng lựa chọn",
   },
   {
-    metric: "Yêu cầu phần cứng",
-    pow: "Máy đào chuyên dụng (ASIC/GPU)",
-    pos: "Không cần phần cứng đặc biệt",
+    metric: "Tài nguyên chính",
+    pow: "Sức mạnh tính toán + năng lượng",
+    pos: "Tài sản được Stake",
   },
   {
-    metric: "Cách chọn người tạo Block",
-    pow: "Ai giải được bài toán trước",
-    pos: "Chọn ngẫu nhiên theo tỉ lệ stake",
+    metric: "Cách cạnh tranh",
+    pow: "Thử nhiều nonce để tìm hash hợp lệ",
+    pos: "Tham gia với lượng Stake phù hợp",
   },
   {
-    metric: "Độ phi tập trung",
-    pow: "Phụ thuộc sức mạnh tính toán",
-    pos: "Phụ thuộc số coin nắm giữ",
+    metric: "Phần cứng",
+    pow: "Cần thiết bị tính toán để mining",
+    pos: "Không cần thực hiện mining bằng hash",
+  },
+  {
+    metric: "Ví dụ tiêu biểu",
+    pow: "Bitcoin",
+    pos: "Ethereum",
   },
 ];

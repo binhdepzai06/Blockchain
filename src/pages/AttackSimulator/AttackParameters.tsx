@@ -10,6 +10,14 @@ import type {
   AttackStatus,
 } from "../../types/attack";
 
+const STATUS_LABELS: Record<AttackStatus, string> = {
+  IDLE: "Chưa chạy",
+  RUNNING: "Đang chạy",
+  SUCCESS: "Thành công",
+  FAILED: "Thất bại",
+  STOPPED: "Đã dừng",
+};
+
 interface Props {
   parameters: AttackParameters;
   status: AttackStatus;
@@ -40,11 +48,11 @@ export default function AttackParametersPanel({
       <div className="mb-5 flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
-            Simulation Controls
+            Điều khiển mô phỏng
           </div>
 
           <h3 className="mt-1 text-lg font-bold text-white">
-            Attack Parameters
+            Thông số tấn công
           </h3>
         </div>
 
@@ -57,7 +65,7 @@ export default function AttackParametersPanel({
                 : "border-white/10 bg-white/5 text-slate-500"
           }`}
         >
-          {status}
+          {STATUS_LABELS[status]}
         </div>
       </div>
 
@@ -66,7 +74,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Hash Power
+              Sức mạnh đào (Hash Power)
             </label>
 
             <span className="text-xs font-bold text-blue-300">
@@ -94,7 +102,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Attacker Nodes
+              Số Node của kẻ tấn công
             </label>
 
             <span className="text-xs font-bold text-purple-300">
@@ -121,7 +129,7 @@ export default function AttackParametersPanel({
         {/* TARGET NODE */}
         <div>
           <label className="mb-2 block text-xs font-medium text-slate-400">
-            Target Node
+            Node mục tiêu
           </label>
 
           <select
@@ -148,7 +156,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Simulation Speed
+              Tốc độ mô phỏng
             </label>
 
             <span className="text-xs font-bold text-cyan-300">
@@ -182,7 +190,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Play size={16} />
-          Start Attack
+          Bắt đầu tấn công
         </button>
 
         <button
@@ -192,7 +200,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-40"
         >
           <StepForward size={16} />
-          Step
+          Từng bước
         </button>
 
         <button
@@ -202,7 +210,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/5 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-500/10 disabled:opacity-40"
         >
           <Square size={15} />
-          Stop
+          Dừng
         </button>
 
         <button
@@ -211,7 +219,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
         >
           <RotateCcw size={15} />
-          Reset
+          Làm lại
         </button>
       </div>
     </section>

@@ -6,64 +6,64 @@ export interface AttackDefinition {
   shortName: string;
   description: string;
   category: string;
-  difficulty: "Basic" | "Intermediate" | "Advanced";
-  danger: "Medium" | "High" | "Critical";
+  difficulty: "Cơ bản" | "Trung bình" | "Nâng cao";
+  danger: "Trung bình" | "Cao" | "Nghiêm trọng";
 }
 
 export const ATTACK_DEFINITIONS: AttackDefinition[] = [
   {
     id: "51_PERCENT",
-    name: "51% Attack",
+    name: "Tấn công 51%",
     shortName: "51%",
     description:
-      "Mô phỏng tình huống một thực thể kiểm soát phần lớn hash power của mạng Proof-of-Work.",
-    category: "Consensus Attack",
-    difficulty: "Advanced",
-    danger: "Critical",
+      "1 kẻ tấn công nắm hơn 50% sức mạnh đào của mạng, đủ để tự viết lại lịch sử giao dịch.",
+    category: "Tấn công đồng thuận",
+    difficulty: "Nâng cao",
+    danger: "Nghiêm trọng",
   },
 
   {
     id: "DOUBLE_SPEND",
-    name: "Double Spending",
+    name: "Chi tiêu gấp đôi",
     shortName: "Double Spend",
     description:
-      "Mô phỏng việc tạo hai giao dịch sử dụng cùng một nguồn tiền và quan sát quá trình xung đột giao dịch.",
-    category: "Transaction Attack",
-    difficulty: "Intermediate",
-    danger: "High",
+      "Dùng cùng 1 số tiền để tạo 2 giao dịch khác nhau, cố gắng 'tiêu' được cả hai.",
+    category: "Tấn công giao dịch",
+    difficulty: "Trung bình",
+    danger: "Cao",
   },
 
   {
     id: "SYBIL",
-    name: "Sybil Attack",
+    name: "Tấn công Sybil",
     shortName: "Sybil",
     description:
-      "Mô phỏng attacker tạo nhiều identity/node giả để chiếm tỷ lệ lớn trong mạng ngang hàng.",
-    category: "Network Attack",
-    difficulty: "Advanced",
-    danger: "Critical",
+      "Tạo hàng loạt Node giả để chiếm phần lớn mạng ngang hàng, giống tạo nhiều tài khoản ảo.",
+    category: "Tấn công mạng lưới",
+    difficulty: "Nâng cao",
+    danger: "Nghiêm trọng",
   },
 
   {
     id: "ECLIPSE",
-    name: "Eclipse Attack",
+    name: "Tấn công Eclipse",
     shortName: "Eclipse",
     description:
-      "Mô phỏng việc attacker kiểm soát phần lớn kết nối peer của một node mục tiêu.",
-    category: "Network Attack",
-    difficulty: "Advanced",
-    danger: "High",
+      "Cô lập 1 Node bằng cách chiếm hết các kết nối xung quanh nó, khiến nó chỉ 'nghe' được kẻ tấn công.",
+    category: "Tấn công mạng lưới",
+    difficulty: "Nâng cao",
+    danger: "Cao",
   },
 
   {
     id: "SELFISH_MINING",
-    name: "Selfish Mining",
+    name: "Đào ích kỷ",
     shortName: "Selfish Mining",
     description:
-      "Mô phỏng attacker giữ private chain và trì hoãn công bố block nhằm tạo lợi thế trong mining.",
-    category: "Mining Attack",
-    difficulty: "Advanced",
-    danger: "High",
+      "Giấu Block vừa đào được thay vì công bố ngay, để chiếm lợi thế không công bằng trước các thợ đào khác.",
+    category: "Tấn công đào Block",
+    difficulty: "Nâng cao",
+    danger: "Cao",
   },
 ];
 

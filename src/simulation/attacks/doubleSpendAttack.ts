@@ -7,7 +7,7 @@ export function initializeDoubleSpendAttack(
   return {
     ...state,
 
-    resultTitle: "Double Spending Simulation",
+    resultTitle: "Mô phỏng chi tiêu gấp đôi",
     resultDescription:
       "Mô phỏng hai giao dịch sử dụng cùng một nguồn tiền: Alice → Bob và Alice → Charlie.",
 
@@ -142,8 +142,8 @@ export function stepDoubleSpendAttack(
 
     resultTitle:
       finished
-        ? "Double-Spend Conflict Detected"
-        : "Transaction Conflict in Progress",
+        ? "Phát hiện 2 giao dịch tranh chấp cùng 1 số tiền!"
+        : "Đang xử lý giao dịch xung đột...",
 
     resultDescription:
       finished

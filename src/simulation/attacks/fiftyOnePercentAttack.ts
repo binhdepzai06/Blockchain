@@ -10,7 +10,7 @@ export function initializeFiftyOneAttack(
   return {
     ...state,
 
-    resultTitle: "51% Attack Simulation",
+    resultTitle: "Mô phỏng tấn công 51%",
     resultDescription:
       "Attacker sẽ cạnh tranh với honest miners bằng hash power. Khi attacker có hơn 50% hash power, khả năng tạo private chain dài hơn tăng lên.",
     resultImpact: "CRITICAL",
@@ -172,8 +172,8 @@ export function stepFiftyOneAttack(
 
     resultTitle:
       attackConditionReached
-        ? "Majority Hash Power Detected"
-        : "Private Chain Mining",
+        ? "Kẻ tấn công đã chiếm hơn 50% sức mạnh đào!"
+        : "Đang âm thầm đào chuỗi riêng...",
 
     resultDescription:
       attackConditionReached

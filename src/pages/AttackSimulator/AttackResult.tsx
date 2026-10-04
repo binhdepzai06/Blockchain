@@ -25,11 +25,11 @@ export default function AttackResult({
       <div className="mb-5 flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">
-            Security Analysis
+            Phân tích kết quả
           </div>
 
           <h3 className="mt-1 text-lg font-bold text-white">
-            Simulation Result
+            Kết quả mô phỏng
           </h3>
         </div>
 
@@ -55,7 +55,7 @@ export default function AttackResult({
         {/* RESULT */}
         <div className="rounded-2xl border border-white/5 bg-black/10 p-4">
           <div className="text-[10px] uppercase tracking-widest text-slate-600">
-            Status
+            Trạng thái
           </div>
 
           <div className="mt-2 flex items-center gap-2">
@@ -76,7 +76,11 @@ export default function AttackResult({
               />
             )}
 
-            <span className="text-lg font-bold text-white">
+            <span
+              className={`text-lg font-bold ${
+                success ? "text-emerald-400" : "text-white"
+              }`}
+            >
               {state.resultTitle}
             </span>
           </div>
@@ -89,24 +93,24 @@ export default function AttackResult({
         {/* METRICS */}
         <div className="grid grid-cols-2 gap-2">
           <Metric
-            label="Attack Progress"
+            label="Tiến độ tấn công"
             value={`${state.metrics.attackProgress}%`}
           />
 
           <Metric
-            label="Network Control"
+            label="% Mạng bị kiểm soát"
             value={`${state.metrics.networkControl}%`}
           />
 
           <Metric
-            label="Affected Nodes"
+            label="Node bị ảnh hưởng"
             value={String(
               state.metrics.affectedNodes,
             )}
           />
 
           <Metric
-            label="Attacker Blocks"
+            label="Block của kẻ tấn công"
             value={String(
               state.metrics.attackerBlocks,
             )}
@@ -117,14 +121,14 @@ export default function AttackResult({
       {/* EDUCATIONAL NOTE */}
       <div className="mt-4 rounded-2xl border border-blue-400/10 bg-blue-500/[0.04] p-4">
         <div className="text-xs font-semibold text-blue-300">
-          Educational Context
+          Giải thích thêm
         </div>
 
         <p className="mt-2 text-xs leading-5 text-slate-500">
           Đây là mô phỏng giáo dục. Các hành vi trên
           được thực hiện trong môi trường giả lập
           của CryptoLab nhằm minh họa cơ chế
-          blockchain security, không thực hiện
+          bảo mật blockchain, không thực hiện
           tấn công vào mạng blockchain thật.
         </p>
       </div>

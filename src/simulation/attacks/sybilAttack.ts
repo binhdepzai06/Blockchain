@@ -7,7 +7,7 @@ export function initializeSybilAttack(
   return {
     ...state,
 
-    resultTitle: "Sybil Attack Simulation",
+    resultTitle: "Mô phỏng tấn công Sybil",
 
     resultDescription:
       "Attacker sẽ tạo thêm nhiều node giả để tăng tỷ lệ identity do attacker kiểm soát.",
@@ -179,8 +179,8 @@ export function stepSybilAttack(
 
     resultTitle:
       conditionReached
-        ? "Sybil Dominance Detected"
-        : "Sybil Nodes Joining Network",
+        ? "Node giả đã chiếm phần lớn mạng lưới!"
+        : "Các Node giả đang gia nhập mạng...",
 
     resultDescription:
       `Attacker hiện kiểm soát ${controlledNodes}/${totalNodes} node hiển thị trong simulation.`,

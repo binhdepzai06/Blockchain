@@ -10,7 +10,7 @@ export function initializeSelfishMiningAttack(
   return {
     ...state,
 
-    resultTitle: "Selfish Mining Simulation",
+    resultTitle: "Mô phỏng đào ích kỷ",
 
     resultDescription:
       "Attacker giữ block trong private chain thay vì công bố ngay, sau đó lựa chọn thời điểm publish để cạnh tranh với public chain.",
@@ -178,8 +178,8 @@ export function stepSelfishMiningAttack(
 
     resultTitle:
       conditionReached
-        ? "Selfish Mining Pattern Demonstrated"
-        : "Private Chain Growing",
+        ? "Đã chứng minh được hành vi đào ích kỷ!"
+        : "Đang giấu Block, không công bố...",
 
     resultDescription:
       "Private chain và public chain đang được mô phỏng riêng biệt. Attacker không công bố block ngay lập tức.",

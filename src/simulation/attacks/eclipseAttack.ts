@@ -7,7 +7,7 @@ export function initializeEclipseAttack(
   return {
     ...state,
 
-    resultTitle: "Eclipse Attack Simulation",
+    resultTitle: "Mô phỏng tấn công Eclipse",
 
     resultDescription:
       "Attacker cố gắng kiểm soát các peer connections của target node.",
@@ -54,7 +54,7 @@ export function stepEclipseAttack(
     return {
       ...state,
       status: "FAILED",
-      resultTitle: "Target Node Not Found",
+      resultTitle: "Không tìm thấy Node mục tiêu",
       resultDescription:
         "Không tìm thấy target node.",
       resultImpact: "LOW",
@@ -169,8 +169,8 @@ export function stepEclipseAttack(
 
     resultTitle:
       conditionReached
-        ? "Target Node Eclipsed"
-        : "Replacing Peer Connections",
+        ? "Node mục tiêu đã bị cô lập hoàn toàn!"
+        : "Đang thay dần các kết nối xung quanh...",
 
     resultDescription:
       `${target.id} đang dần mất các kết nối honest peer. ${isolationRatio}% kết nối mô phỏng hiện do attacker kiểm soát.`,
