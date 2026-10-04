@@ -71,9 +71,9 @@ export default function MerkleTree({
                       const tampered = tamperedHashes.has(hash);
                       const duplicated =
                         levelIndex > 0 &&
-                        levels[levelIndex - 1]?.length % 2 === 1 &&
+                        (levels[levelIndex - 1]?.length ?? 0) % 2 === 1 &&
                         nodeIndex === level.length - 1 &&
-                        levels[levelIndex - 1]?.length > 1;
+                        (levels[levelIndex - 1]?.length ?? 0) > 1;
 
                       return (
                         <button
@@ -132,8 +132,7 @@ export default function MerkleTree({
   );
 }
 
-
-function getNodeLabel(levelIndex: number, nodeIndex: number, levels: string[][]) {
+function getNodeLabel(levelIndex: number, nodeIndex: number, levels: string[][]): string {
   if (levelIndex === 0) return `H${nodeIndex + 1}`;
 
   const childStart = nodeIndex * 2;
