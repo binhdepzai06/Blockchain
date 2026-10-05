@@ -15,6 +15,7 @@ import type { Block } from "../../types/blockchain";
 import type { Transaction } from "../../types/transaction";
 import MerkleExplanation from "./MerkleExplanation";
 import MerkleTree from "./MerkleTree";
+import MerkleProofPanel from "./MerkleProofPanel";
 import TransactionList from "./TransactionList";
 
 export default function MerklePage() {
@@ -33,6 +34,7 @@ export default function MerklePage() {
     null
   );
   const [tamperedIndex, setTamperedIndex] = useState<number | null>(null);
+  const [proofIndex, setProofIndex] = useState(0);
 
   const refreshBlocksWithTx = () => {
     const withTx = blockchain.chain.filter(
@@ -76,6 +78,7 @@ export default function MerklePage() {
     setSandboxTxs(block.transactions);
     setOriginalRoot(block.merkleRoot);
     setTamperedIndex(null);
+    setProofIndex(0);
     setSelectedHash(null);
     setSelectedLevel(null);
     setSelectedNodeIndex(null);
@@ -170,6 +173,27 @@ export default function MerklePage() {
 
     return set;
   }, [levels, tamperedIndex]);
+
+  // Các node nằm trên đường Merkle Proof của giao dịch đang chọn:
+  // chính nó, hash anh em ở mỗi tầng và các node cha lên tới Root.
+  const proofNodes = useMemo(() => {
+    const set = new Set<string>();
+    if (!levels.length || proofIndex >= (levels[0]?.length ?? 0)) return set;
+
+    let index = proofIndex;
+    for (let level = 0; level < levels.length; level++) {
+      set.add(`${level}-${index}`);
+      if (level < levels.length - 1) {
+        const sibling = index % 2 === 1 ? index - 1 : index + 1;
+        set.add(`${level}-${Math.min(sibling, levels[level].length - 1)}`);
+      }
+      index = Math.floor(index / 2);
+    }
+    return set;
+  }, [levels, proofIndex]);
+
+  const originalTransactions =
+    blockIndex !== null ? (blockchain.chain[blockIndex]?.transactions ?? []) : [];
 
   const isValid = root === originalRoot;
   const changed = !isValid;
@@ -287,6 +311,7 @@ export default function MerklePage() {
                   selectedHash={selectedHash}
                   tamperedHashes={tamperedHashes}
                   visibleLevels={visibleLevels}
+                  proofNodes={proofNodes}
                   onSelect={selectNode}
                 />
 
@@ -334,6 +359,14 @@ export default function MerklePage() {
                 levels={levels}
               />
             </div>
+
+            <MerkleProofPanel
+              originalTransactions={originalTransactions}
+              claimedTransactions={sandboxTxs}
+              headerRoot={originalRoot}
+              selectedIndex={proofIndex}
+              onSelectIndex={setProofIndex}
+            />
 
             <section className="mt-5 rounded-[28px] border border-white/10 bg-[#070b16] p-5 md:p-6">
               <div className="mb-5 flex items-center gap-2">

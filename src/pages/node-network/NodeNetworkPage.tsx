@@ -5,15 +5,35 @@ import {
   RefreshCw,
   Send,
   Server,
+  ShieldAlert,
+  Wallet,
 } from "lucide-react";
 
 import { fullNode } from "../../lib/network/fullNode";
+import {
+  buildSignedTransaction,
+  createWallet,
+  loadWallets,
+  signWithWallet,
+  txSigningPayload,
+  BLOCK_REWARD,
+  type WalletRecord,
+} from "../../lib/blockchain/wallet";
+import type { Transaction } from "../../types/transaction";
+
+const short = (value: string) =>
+  value.length > 14 ? `${value.slice(0, 8)}…${value.slice(-4)}` : value;
 
 export default function NodeNetworkPage() {
   const [, forceUpdate] = useState(0);
-  const [from, setFrom] = useState("Alice");
-  const [to, setTo] = useState("Bob");
+  const [wallets, setWallets] = useState<WalletRecord[]>(() => loadWallets());
+  const [activeAddress, setActiveAddress] = useState(
+    () => loadWallets()[0]?.address ?? ""
+  );
+  const [newName, setNewName] = useState("Alice");
+  const [to, setTo] = useState("");
   const [amount, setAmount] = useState(10);
+  const [lastTx, setLastTx] = useState<Transaction | null>(null);
   const [isMining, setIsMining] = useState(false);
   const [miningAttempts, setMiningAttempts] = useState(0);
 
@@ -23,15 +43,65 @@ export default function NodeNetworkPage() {
     return unsubscribe;
   }, []);
 
-  const handleCreateTx = () => {
-    if (!from.trim() || !to.trim() || amount <= 0) return;
-    fullNode.createTransaction(from.trim(), to.trim(), amount);
+  const active = wallets.find((w) => w.address === activeAddress);
+  const receiver = to || wallets.find((w) => w.address !== activeAddress)?.address || "";
+
+  const handleCreateWallet = async () => {
+    const wallet = await createWallet(newName);
+    setWallets(loadWallets());
+    if (!activeAddress) setActiveAddress(wallet.address);
+    setNewName(newName === "Alice" ? "Bob" : "Wallet " + (wallets.length + 2));
+  };
+
+  // Tx hợp lệ: ký bằng Private Key rồi broadcast
+  const handleSend = async () => {
+    if (!active || !receiver) return;
+    const tx = await buildSignedTransaction(active, receiver, amount);
+    setLastTx(tx);
+    await fullNode.submitTransaction(tx);
+  };
+
+  // Tấn công 1: sửa số tiền SAU KHI đã ký → chữ ký không còn khớp
+  const attackTamper = async () => {
+    if (!active || !receiver) return;
+    const tx = await buildSignedTransaction(active, receiver, amount);
+    await fullNode.submitTransaction(
+      { ...tx, amount: tx.amount * 10 },
+      { forceBroadcast: true }
+    );
+  };
+
+  // Tấn công 2: giả danh ví khác nhưng không có Private Key của họ
+  const attackForge = async () => {
+    const victim = wallets.find((w) => w.address !== activeAddress);
+    if (!active || !victim) return;
+    const unsigned = {
+      id: crypto.randomUUID(),
+      from: victim.address,
+      to: active.address,
+      amount,
+      timestamp: Date.now(),
+    };
+    const signature = await signWithWallet(active, txSigningPayload(unsigned));
+    await fullNode.submitTransaction(
+      { ...unsigned, publicKey: victim.publicKey, signature },
+      { forceBroadcast: true }
+    );
+  };
+
+  // Tấn công 3: gửi lại nguyên Tx đã ký trước đó (replay)
+  const attackReplay = async () => {
+    if (!lastTx) return;
+    await fullNode.submitTransaction(lastTx, { forceBroadcast: true });
   };
 
   const handleMine = async () => {
+    if (!active) return;
     setIsMining(true);
     setMiningAttempts(0);
-    await fullNode.mineAndBroadcast((attempts) => setMiningAttempts(attempts));
+    await fullNode.mineAndBroadcast(active.address, (attempts) =>
+      setMiningAttempts(attempts)
+    );
     setIsMining(false);
   };
 
@@ -68,47 +138,79 @@ export default function NodeNetworkPage() {
 
         <div className="grid gap-6 lg:grid-cols-3">
 
-          {/* CREATE TX + MINE */}
+          {/* WALLETS */}
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
-            <h2 className="mb-4 font-semibold text-white">Tạo & Mine</h2>
-
-            <div className="mb-4 space-y-2">
-              <input
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-                placeholder="From"
-                className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none"
-              />
-              <input
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                placeholder="To"
-                className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none"
-              />
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none"
-              />
+            <div className="mb-4 flex items-center gap-2">
+              <Wallet size={16} className="text-blue-300" />
+              <h2 className="font-semibold text-white">Ví (Private/Public Key)</h2>
             </div>
 
-            <button
-              onClick={handleCreateTx}
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
-            >
-              <Send size={15} />
-              Tạo giao dịch
+            <div className="mb-3 flex gap-2">
+              <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Tên ví" className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none" />
+              <button onClick={handleCreateWallet} className="shrink-0 rounded-xl bg-blue-500 px-4 text-sm font-semibold text-white">Tạo</button>
+            </div>
+
+            <div className="space-y-2">
+              {wallets.length === 0 && (
+                <p className="text-sm text-slate-500">Chưa có ví. Tạo ví Alice và Bob để bắt đầu.</p>
+              )}
+              {wallets.map((w) => (
+                <button
+                  key={w.address}
+                  onClick={() => setActiveAddress(w.address)}
+                  className={`w-full rounded-xl border px-4 py-2.5 text-left text-sm ${
+                    w.address === activeAddress
+                      ? "border-blue-400/40 bg-blue-400/10"
+                      : "border-white/5 bg-[#050816]"
+                  }`}
+                >
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-white">{w.name}</span>
+                    <span className="text-emerald-300">{fullNode.getConfirmedBalance(w.address)} coin</span>
+                  </div>
+                  <div className="font-mono text-xs text-slate-500">{short(w.address)} · khả dụng {fullNode.getAvailableBalance(w.address)}</div>
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-slate-500">
+              Ví lưu trong localStorage nên dùng chung giữa các tab (mỗi tab = 1 Node).
+            </p>
+          </section>
+
+          {/* SIGN + SEND + MINE */}
+          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+            <h2 className="mb-4 font-semibold text-white">Ký, gửi & Mine</h2>
+
+            <div className="mb-4 space-y-2">
+              <div className="text-xs text-slate-400">Người gửi: <span className="text-white">{active?.name ?? "—"}</span></div>
+              <select value={receiver} onChange={(e) => setTo(e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none">
+                {wallets.filter((w) => w.address !== activeAddress).map((w) => (
+                  <option key={w.address} value={w.address}>{w.name} ({short(w.address)})</option>
+                ))}
+              </select>
+              <input type="number" min={1} value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="w-full rounded-xl border border-white/10 bg-[#050816] px-3 py-2.5 text-sm text-white outline-none" />
+            </div>
+
+            <button onClick={handleSend} disabled={!active || !receiver} className="mb-2 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-40">
+              <Send size={15} /> Ký & Broadcast giao dịch
             </button>
 
             <button
               onClick={handleMine}
-              disabled={isMining || fullNode.mempool.length === 0}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.01] disabled:opacity-40"
+              disabled={isMining || !active}
+              className="mb-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.01] disabled:opacity-40"
             >
               {isMining ? <RefreshCw size={15} className="animate-spin" /> : <Hammer size={15} />}
-              {isMining ? `Đang mine... (${miningAttempts})` : `Mine Block (${fullNode.mempool.length} tx)`}
+              {isMining ? `Đang mine... (${miningAttempts})` : `Mine Block (${fullNode.mempool.length} tx + ${BLOCK_REWARD} thưởng)`}
             </button>
+
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-red-300">
+              <ShieldAlert size={14} /> Mô phỏng tấn công
+            </div>
+            <button onClick={attackTamper} disabled={!active || !receiver} className="mb-2 flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-400/5 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-400/10 disabled:opacity-40">Sửa số tiền ×10 sau khi ký</button>
+            <button onClick={attackForge} disabled={wallets.length < 2 || !active} className="mb-2 flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-400/5 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-400/10 disabled:opacity-40">Giả danh ví khác (không có Private Key)</button>
+            <button onClick={attackReplay} disabled={!lastTx} className="mb-2 flex w-full items-center justify-center gap-2 rounded-xl border border-red-400/20 bg-red-400/5 py-2 text-xs font-semibold text-red-300 transition hover:bg-red-400/10 disabled:opacity-40">Gửi lại Tx cũ (replay)</button>
+            <p className="text-xs text-slate-500">Gửi 2 Tx mỗi cái &gt; nửa số dư để thử double-spend.</p>
           </section>
 
           {/* PEERS */}
@@ -134,6 +236,47 @@ export default function NodeNetworkPage() {
                 >
                   <span className="text-slate-300">{peer.nodeId}</span>
                   <span className="text-slate-500">Height {peer.height}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* MEMPOOL + AUDIT */}
+          <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 lg:col-span-2">
+            <h2 className="mb-3 font-semibold text-white">Mempool ({fullNode.mempool.length})</h2>
+            <div className="mb-6 max-h-40 space-y-2 overflow-y-auto">
+              {fullNode.mempool.length === 0 && (
+                <p className="text-sm text-slate-500">Mempool trống.</p>
+              )}
+              {fullNode.mempool.map((tx) => (
+                <div key={tx.id} className="rounded-xl border border-white/5 bg-[#050816] px-3 py-2 font-mono text-xs text-slate-300">
+                  {short(tx.from)} → {short(tx.to)} · <span className="text-emerald-300">{tx.amount}</span> · sig {short(tx.signature ?? "")}
+                </div>
+              ))}
+            </div>
+
+            <h2 className="mb-3 font-semibold text-white">Kiểm tra giao dịch (từng bước)</h2>
+            <div className="max-h-72 space-y-3 overflow-y-auto">
+              {fullNode.txAudit.length === 0 && (
+                <p className="text-sm text-slate-500">Chưa có giao dịch nào được kiểm tra.</p>
+              )}
+              {fullNode.txAudit.map((entry) => (
+                <div
+                  key={entry.time + String(entry.tx?.id)}
+                  className={`rounded-xl border p-3 text-xs ${
+                    entry.result.valid
+                      ? "border-emerald-400/20 bg-emerald-400/5"
+                      : "border-red-400/20 bg-red-400/5"
+                  }`}
+                >
+                  <div className="mb-2 font-semibold text-white">
+                    {entry.result.valid ? "VALID → Mempool" : "REJECT"} · {entry.origin === "local" ? "tạo tại node này" : "nhận từ mạng"} · {entry.tx?.amount}
+                  </div>
+                  {entry.result.checks.map((c) => (
+                    <div key={c.name} className={c.ok ? "text-emerald-300" : "text-red-300"}>
+                      {c.ok ? "✔" : "✘"} {c.name}: <span className="text-slate-400">{c.detail}</span>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

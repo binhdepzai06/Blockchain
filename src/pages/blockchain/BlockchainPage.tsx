@@ -271,6 +271,25 @@ export default function BlockchainPage() {
 
         </section>
 
+        {/* HEADER vs BODY */}
+        <section className="mb-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-sm leading-6 text-slate-400">
+          <div className="mb-2 font-semibold text-white">
+            Block Header vs Block Body
+          </div>
+          <p>
+            <span className="text-blue-300">Hash của Block = SHA-256(Header)</span>{" "}
+            với Header gồm version, previousHash, merkleRoot, timestamp,
+            difficulty, nonce (và dataHash cho ghi chú tự do). Body (danh sách
+            giao dịch, blockHeight, transactionCount) <em>không</em> được băm
+            trực tiếp: giao dịch được bảo vệ gián tiếp qua{" "}
+            <span className="text-blue-300">merkleRoot</span>, nên sửa giao dịch
+            thì Root khác và Block INVALID. Hai trường{" "}
+            <span className="text-slate-300">blockHeight / transactionCount</span>{" "}
+            chỉ là metadata để tra cứu, đồng bộ và hiển thị nhanh — node luôn tự
+            kiểm tra lại chứ không tin chúng.
+          </p>
+        </section>
+
         {/* BLOCKCHAIN */}
         <div className="space-y-5">
 
@@ -278,6 +297,7 @@ export default function BlockchainPage() {
             <BlockCard
               key={block.index}
               block={block}
+              chain={blocks}
               index={index}
               onEdit={editBlockData}
               onRecalculate={recalculateHash}
@@ -328,6 +348,7 @@ export default function BlockchainPage() {
 
 interface BlockCardProps {
   block: Block;
+  chain: Block[];
   index: number;
   onEdit: (index: number, data: string) => void;
   onRecalculate: (index: number) => void;
@@ -335,11 +356,17 @@ interface BlockCardProps {
 
 function BlockCard({
   block,
+  chain,
   index,
   onEdit,
   onRecalculate,
 }: BlockCardProps) {
-  const [valid, setValid] = useState(true);
+  const [ownValid, setOwnValid] = useState(true);
+  const [brokenFrom, setBrokenFrom] = useState(-1);
+
+  // Block chỉ thực sự hợp lệ khi chính nó VÀ mọi Block trước nó đều hợp lệ.
+  const afterBreak = brokenFrom !== -1 && block.index > brokenFrom;
+  const valid = ownValid && !afterBreak;
 
   useEffect(() => {
     const check = async () => {
@@ -348,11 +375,12 @@ function BlockCard({
       // UI — tránh 2 công thức hash lệch nhau dẫn tới badge sai.
       const isValidBlock = await blockchain.getBlockValidity(block.index);
 
-      setValid(isValidBlock);
+      setOwnValid(isValidBlock);
+      setBrokenFrom(await blockchain.findFirstInvalidBlock());
     };
 
     check();
-  }, [block]);
+  }, [block, chain]);
 
   return (
     <div
@@ -406,7 +434,9 @@ function BlockCard({
           ) : (
             <>
               <XCircle size={15} />
-              INVALID BLOCK
+              {afterBreak
+                ? `INVALID — chuỗi đứt từ Block #${brokenFrom}`
+                : "INVALID BLOCK"}
             </>
           )}
         </div>
@@ -471,25 +501,35 @@ function BlockCard({
 
       </div>
 
+      {/* HEADER / BODY FIELDS */}
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-blue-400/15 bg-blue-400/[0.03] p-4">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-300">
+            Header (được băm)
+          </div>
+          <Field label="Version" value={block.version} />
+          <Field label="Merkle Root" value={shortHash(block.merkleRoot)} />
+          <Field label="Data Hash" value={shortHash(block.dataHash)} />
+          <Field label="Timestamp" value={block.timestamp} />
+          <Field label="Difficulty" value={block.difficulty ?? 0} />
+          <Field label="Nonce" value={block.nonce} />
+        </div>
+
+        <div className="rounded-2xl border border-white/10 bg-[#050816] p-4">
+          <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Body (cam kết qua Header)
+          </div>
+          <Field label="Block Height" value={block.index} />
+          <Field label="Transaction Count" value={block.transactionCount} />
+          <Field label="Transactions thực tế" value={block.transactions.length} />
+        </div>
+      </div>
+
       {/* FOOTER */}
       <div className="mt-5 flex flex-col justify-between gap-4 border-t border-white/5 pt-5 md:flex-row md:items-center">
 
-        <div className="flex gap-5 text-xs text-slate-500">
-
-          <span>
-            Nonce:
-            <strong className="ml-2 text-slate-300">
-              {block.nonce}
-            </strong>
-          </span>
-
-          <span>
-            Transactions:
-            <strong className="ml-2 text-slate-300">
-              {block.transactions.length}
-            </strong>
-          </span>
-
+        <div className="text-xs text-slate-500">
+          Hash = SHA-256(Header)
         </div>
 
         <button
@@ -502,6 +542,18 @@ function BlockCard({
 
       </div>
 
+    </div>
+  );
+}
+
+const shortHash = (hash: string) =>
+  hash.length > 20 ? `${hash.slice(0, 10)}…${hash.slice(-6)}` : hash;
+
+function Field({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="flex justify-between gap-3 py-0.5 font-mono text-xs">
+      <span className="text-slate-500">{label}</span>
+      <span className="break-all text-right text-slate-300">{value}</span>
     </div>
   );
 }

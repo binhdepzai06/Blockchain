@@ -1,4 +1,9 @@
 import { buildMerkleTree } from "./merkle";
+import {
+  BLOCK_VERSION,
+  hashBlockData,
+  validateBlockBody,
+} from "./blockHeader";
 import type { Transaction } from "../../types/transaction";
 import type { Block } from "../../types/blockchain";
 import { createGenesisBlock } from "../network/genesis";
@@ -91,14 +96,19 @@ export class BlockchainEngine {
 
     const { root: merkleRoot } = await buildMerkleTree(transactions);
 
+    const blockData = data ?? `Block chứa ${transactions.length} giao dịch`;
+
     const newBlock: Block = {
+      version: BLOCK_VERSION,
       index: previousBlock.index + 1,
       timestamp: Date.now(),
       transactions,
+      transactionCount: transactions.length,
+      dataHash: await hashBlockData(blockData),
       previousHash: previousBlock.hash,
       hash: "",
       nonce: 0,
-      data: data ?? `Block chứa ${transactions.length} giao dịch`,
+      data: blockData,
       merkleRoot,
       difficulty: 0,
     };
@@ -194,9 +204,26 @@ export class BlockchainEngine {
       return;
     }
 
+    // Kẻ gian "làm lại" mọi thứ có thể dẫn xuất từ Body để Block trông
+    // hợp lệ: txCount, Merkle Root, dataHash, rồi hash của Header.
+    block.transactionCount = block.transactions.length;
+    block.merkleRoot = (await buildMerkleTree(block.transactions)).root;
+    block.dataHash = await hashBlockData(block.data);
     block.hash = await this.calculateHash(block);
 
     this.notify();
+  }
+
+  // Vị trí Block đầu tiên bị hỏng, hoặc -1 nếu cả chain nguyên vẹn.
+  // Mọi Block phía sau điểm này đều không còn thuộc một chuỗi hợp lệ.
+  async findFirstInvalidBlock(): Promise<number> {
+    for (let i = 0; i < this.chain.length; i++) {
+      if (!(await this.getBlockValidity(i))) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   async isChainValid(): Promise<boolean> {
@@ -217,6 +244,10 @@ export class BlockchainEngine {
     for (let i = 1; i < this.chain.length; i++) {
       const currentBlock = this.chain[i];
       const previousBlock = this.chain[i - 1];
+
+      if (!(await validateBlockBody(currentBlock)).valid) {
+        return false;
+      }
 
       const recalculatedHash = await this.calculateHash(currentBlock);
 
@@ -262,6 +293,10 @@ export class BlockchainEngine {
     }
 
     const previousBlock = this.chain[index - 1];
+
+    if (!(await validateBlockBody(block)).valid) {
+      return false;
+    }
 
     const calculatedHash = await this.calculateHash(block);
 

@@ -6,6 +6,7 @@ interface MerkleTreeProps {
   selectedHash: string | null;
   tamperedHashes: Set<string>;
   visibleLevels: number;
+  proofNodes?: Set<string>;
   onSelect: (hash: string, levelIndex: number, nodeIndex: number) => void;
 }
 
@@ -14,6 +15,7 @@ export default function MerkleTree({
   selectedHash,
   tamperedHashes,
   visibleLevels,
+  proofNodes,
   onSelect,
 }: MerkleTreeProps) {
   const displayLevels = useMemo(
@@ -84,7 +86,9 @@ export default function MerkleTree({
                               ? "border-cyan-400/60 bg-cyan-400/[0.08] shadow-[0_0_0_1px_rgba(34,211,238,0.15)]"
                               : tampered
                                 ? "border-red-400/50 bg-red-400/[0.07]"
-                                : isRoot
+                                : proofNodes?.has(`${levelIndex}-${nodeIndex}`)
+                                  ? "border-amber-400/50 bg-amber-400/[0.07]"
+                                  : isRoot
                                   ? "border-emerald-400/30 bg-emerald-400/[0.06] hover:border-emerald-300/60"
                                   : "border-white/10 bg-white/[0.025] hover:border-white/20 hover:bg-white/[0.05]"
                           }`}

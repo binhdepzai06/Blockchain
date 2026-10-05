@@ -1,5 +1,11 @@
-import { sha256 } from "../crypto/hash";
 import { buildMerkleTree } from "../blockchain/merkle";
+import {
+  BLOCK_VERSION,
+  computeHeaderHash,
+  getBlockHeader,
+  hashBlockData,
+  validateBlockBody,
+} from "../blockchain/blockHeader";
 
 import type { Block } from "../../types/blockchain";
 import type { Transaction } from "../../types/transaction";
@@ -11,18 +17,8 @@ import type { Transaction } from "../../types/transaction";
 export async function computeBlockHash(
   block: Block
 ): Promise<string> {
-  const blockData = JSON.stringify({
-    index: block.index,
-    timestamp: block.timestamp,
-    transactions: block.transactions,
-    previousHash: block.previousHash,
-    nonce: block.nonce,
-    data: block.data,
-    merkleRoot: block.merkleRoot,
-    difficulty: block.difficulty,
-  });
-
-  return sha256(blockData);
+  // Hash của Block = SHA-256(Header). Body không được băm trực tiếp.
+  return computeHeaderHash(getBlockHeader(block));
 }
 
 // =========================================================
@@ -41,15 +37,26 @@ export async function mineFullBlock(
   const { root: merkleRoot } =
     await buildMerkleTree(transactions);
 
+  const blockData =
+    data ?? `Block chứa ${transactions.length} giao dịch`;
+
+  const dataHash = await hashBlockData(blockData);
+
   let nonce = 0;
 
   while (true) {
     const candidate: Block = {
+      version: BLOCK_VERSION,
+
       index: previousBlock.index + 1,
 
       timestamp: Date.now(),
 
       transactions,
+
+      transactionCount: transactions.length,
+
+      dataHash,
 
       previousHash:
         previousBlock.hash,
@@ -58,8 +65,7 @@ export async function mineFullBlock(
 
       nonce,
 
-      data:
-        data ?? `Block chứa ${transactions.length} giao dịch`,
+      data: blockData,
 
       merkleRoot,
 
@@ -138,28 +144,20 @@ export async function validateBlock(
   }
 
   // -------------------------------------------------------
-  // 3. Merkle Root
+  // 3. Body phải khớp Header (version, txCount, Merkle Root, dataHash)
   // -------------------------------------------------------
 
-  const {
-    root: recalculatedRoot,
-  } = await buildMerkleTree(
-    block.transactions
-  );
+  const body = await validateBlockBody(block);
 
-  if (
-    recalculatedRoot !==
-    block.merkleRoot
-  ) {
+  if (!body.valid) {
     return {
       valid: false,
-      reason:
-        "Merkle Root không khớp",
+      reason: body.reason,
     };
   }
 
   // -------------------------------------------------------
-  // 4. Recalculate Hash
+  // 4. Hash phải bằng SHA-256(Header)
   // -------------------------------------------------------
 
   const recalculatedHash =
@@ -172,7 +170,7 @@ export async function validateBlock(
     return {
       valid: false,
       reason:
-        "Hash không khớp với dữ liệu Block (bị giả mạo)",
+        "Hash không khớp với Header (bị giả mạo)",
     };
   }
 

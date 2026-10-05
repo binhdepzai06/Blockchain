@@ -7,6 +7,15 @@ import {
   computeTotalWork,
 } from "./mining";
 import { BlockchainEngine } from "../blockchain/blockchain";
+import {
+  applyTx,
+  createLedgerState,
+  getBalance,
+  validateLedger,
+  verifyTransaction,
+  type TxVerifyResult,
+} from "../blockchain/txVerify";
+import { createCoinbaseTransaction } from "../blockchain/wallet";
 
 type NetworkMessage =
   | {
@@ -45,6 +54,13 @@ export type LogEntry = {
   kind: "info" | "success" | "error" | "fork";
 };
 
+export interface TxAuditEntry {
+  time: number;
+  tx: Transaction;
+  origin: "local" | "network";
+  result: TxVerifyResult;
+}
+
 export class FullNode {
   id: string;
 
@@ -63,6 +79,13 @@ export class FullNode {
   }
 
   mempool: Transaction[] = [];
+
+  // Nhật ký kiểm tra Tx gần nhất (kèm từng bước ✔/✘) để hiển thị lên UI.
+  txAudit: TxAuditEntry[] = [];
+
+  // Xếp hàng xử lý Tx tuần tự: verify là async, nếu 2 Tx double-spend đến
+  // cùng lúc mà xử lý song song thì cả hai có thể cùng "đủ số dư".
+  private txQueue: Promise<unknown> = Promise.resolve();
 
   peers: Map<string, PeerInfo> = new Map();
 
@@ -223,45 +246,90 @@ export class FullNode {
   }
 
   // =========================================================
-  // CREATE TRANSACTION
+  // SỔ CÁI / SỐ DƯ
   // =========================================================
 
-  createTransaction(
-    from: string,
-    to: string,
-    amount: number
-  ) {
-    const tx: Transaction = {
-      id: crypto.randomUUID(),
-      from,
-      to,
-      amount,
-      timestamp: Date.now(),
-    };
+  // Số dư đã xác nhận trên chain
+  getConfirmedBalance(address: string): number {
+    return getBalance(createLedgerState(this.chain), address);
+  }
 
-    // Tránh duplicate
-    if (
-      this.mempool.some(
-        (existingTx) => existingTx.id === tx.id
-      )
-    ) {
-      return;
+  // Số dư có thể tiêu = đã xác nhận − các Tx đang chờ trong Mempool
+  getAvailableBalance(address: string): number {
+    return getBalance(createLedgerState(this.chain, this.mempool), address);
+  }
+
+  // =========================================================
+  // NHẬN / VERIFY TRANSACTION (P4)
+  // Dùng chung cho Tx do chính node tạo và Tx nhận từ mạng, để mọi node
+  // áp dụng ĐÚNG MỘT bộ luật. VALID → Mempool, INVALID → REJECT.
+  // =========================================================
+
+  private receiveTx(
+    tx: Transaction,
+    origin: "local" | "network"
+  ): Promise<TxVerifyResult> {
+    const task = this.txQueue.then(async () => {
+      const state = createLedgerState(this.chain, this.mempool);
+      const result = await verifyTransaction(tx, state);
+
+      this.txAudit = [
+        { time: Date.now(), tx, origin, result },
+        ...this.txAudit,
+      ].slice(0, 12);
+
+      const label = `${String(tx?.from).slice(0, 8)}… → ${String(tx?.to).slice(0, 8)}… (${tx?.amount})`;
+
+      if (result.valid) {
+        this.mempool.push(tx);
+        this.addLog(`✔ Tx hợp lệ → Mempool: ${label}`, "success");
+      } else {
+        this.addLog(`✘ REJECT Tx ${label} — ${result.reason}`, "error");
+      }
+
+      this.notify();
+      return result;
+    });
+
+    this.txQueue = task.catch(() => undefined);
+    return task;
+  }
+
+  // Bước 3–5 của luồng end-to-end: broadcast Tx đã ký, node verify rồi mới
+  // cho vào Mempool. `forceBroadcast` dùng cho demo tấn công: Tx sai vẫn
+  // được phát ra để chứng minh CÁC NODE KHÁC cũng từ chối nó.
+  async submitTransaction(
+    tx: Transaction,
+    options: { forceBroadcast?: boolean } = {}
+  ): Promise<TxVerifyResult> {
+    const result = await this.receiveTx(tx, "local");
+
+    if (result.valid || options.forceBroadcast) {
+      this.channel.postMessage({
+        type: "NEW_TX",
+        tx,
+      } satisfies NetworkMessage);
     }
 
-    this.mempool.push(tx);
+    return result;
+  }
 
-    // Broadcast transaction
-    this.channel.postMessage({
-      type: "NEW_TX",
-      tx,
-    } satisfies NetworkMessage);
+  // Sau khi chain đổi (mine/reorg), loại các Tx trong Mempool không còn hợp lệ
+  private async pruneMempool() {
+    const state = createLedgerState(this.chain);
+    const kept: Transaction[] = [];
 
-    this.addLog(
-      `Bạn tạo giao dịch: ${from} → ${to} (${amount})`,
-      "info"
-    );
+    for (const tx of this.mempool) {
+      const result = await verifyTransaction(tx, state);
+      if (result.valid) {
+        kept.push(tx);
+        applyTx(state, tx, "pending");
+      } else {
+        this.addLog(`Loại Tx khỏi Mempool: ${result.reason}`, "info");
+      }
+    }
 
-    this.notify();
+    this.mempool = kept;
   }
 
   // =========================================================
@@ -269,22 +337,21 @@ export class FullNode {
   // =========================================================
 
   async mineAndBroadcast(
+    minerAddress: string,
     onProgress?: (attempts: number) => void
   ) {
-    if (this.mempool.length === 0) {
-      this.addLog(
-        "Mempool trống, không có gì để mine",
-        "error"
-      );
-
-      return;
-    }
+    // Chờ các Tx đang được verify xong, rồi dọn Mempool trước khi lấy Tx
+    await this.txQueue;
+    await this.pruneMempool();
 
     // -------------------------------------------------------
-    // Snapshot transactions
+    // Snapshot transactions: coinbase (thưởng Miner) + Tx từ Mempool
     // -------------------------------------------------------
 
-    const txsToMine = [...this.mempool];
+    const txsToMine = [
+      createCoinbaseTransaction(minerAddress),
+      ...this.mempool,
+    ];
 
     // -------------------------------------------------------
     // Snapshot blockchain tip
@@ -426,6 +493,13 @@ export class FullNode {
       };
     }
 
+    // Chữ ký, số dư, replay, coinbase của mọi Tx trong chain + block mới
+    const ledger = await validateLedger([...this.chain, block]);
+
+    if (!ledger.valid) {
+      return ledger;
+    }
+
     return {
       valid: true,
     };
@@ -464,22 +538,7 @@ export class FullNode {
       // -----------------------------------------------------
 
       case "NEW_TX": {
-        if (
-          this.mempool.some(
-            (tx) => tx.id === message.tx.id
-          )
-        ) {
-          return;
-        }
-
-        this.mempool.push(message.tx);
-
-        this.addLog(
-          `Nhận giao dịch mới từ mạng: ${message.tx.from} → ${message.tx.to}`,
-          "info"
-        );
-
-        this.notify();
+        await this.receiveTx(message.tx, "network");
 
         break;
       }
@@ -628,6 +687,21 @@ export class FullNode {
     }
 
     // =======================================================
+    // 3b. VALIDATE LEDGER (chữ ký, số dư, replay, coinbase)
+    // =======================================================
+
+    const ledger = await validateLedger(incomingChain);
+
+    if (!ledger.valid) {
+      this.addLog(
+        `Từ chối chain từ ${fromNodeId}: ${ledger.reason}`,
+        "error"
+      );
+
+      return;
+    }
+
+    // =======================================================
     // 4. CALCULATE CUMULATIVE POW
     // =======================================================
 
@@ -693,6 +767,8 @@ export class FullNode {
           (tx) =>
             !confirmedTxIds.has(tx.id)
         );
+
+      await this.pruneMempool();
 
       // =====================================================
       // Log
