@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, Mail, Lock, User, Check } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ const mockGoogleAccounts = [
 ];
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModalProps) {
+  const { tr } = useLanguage();
+
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,7 +31,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const displayName = isRegister ? (name || email.split("@")[0] || "Thành viên") : (email.split("@")[0] || "Người dùng");
+    const displayName = isRegister ? (name || email.split("@")[0] || tr("Thành viên")) : (email.split("@")[0] || tr("Người dùng"));
     
     localStorage.setItem("cryptolab_user", JSON.stringify({ name: displayName, email }));
     onLoginSuccess(displayName, email);
@@ -59,15 +62,14 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
 
         {/* Tiêu đề */}
         <h2 className="mb-6 text-center text-2xl font-bold tracking-tight text-white">
-          {isRegister ? "Đăng ký tài khoản" : "Đăng nhập"}
+          {isRegister ? tr("Đăng ký tài khoản") : tr("Đăng nhập")}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {isRegister && (
             <div>
               <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-400">
-                Họ và tên
-              </label>
+                {tr("Họ và tên")}</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
                   <User size={18} />
@@ -75,7 +77,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 <input
                   type="text"
                   required
-                  placeholder="Nhập họ tên của bạn"
+                  placeholder={tr("Nhập họ tên của bạn")}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full rounded-2xl border border-white/10 bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/[0.05]"
@@ -105,8 +107,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
 
           <div>
             <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-400">
-              Mật khẩu
-            </label>
+              {tr("Mật khẩu")}</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500">
                 <Lock size={18} />
@@ -115,7 +116,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 type="password"
                 required
                 minLength={6}
-                placeholder="Tối thiểu 6 ký tự"
+                placeholder={tr("Tối thiểu 6 ký tự")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-2xl border border-white/10 bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder-slate-500 outline-none transition focus:border-blue-500/50 focus:bg-white/[0.05]"
@@ -127,7 +128,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
             type="submit"
             className="w-full rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition hover:opacity-90 active:scale-[0.99]"
           >
-            {isRegister ? "Đăng ký" : "Đăng nhập"}
+            {isRegister ? tr("Đăng ký") : tr("Đăng nhập")}
           </button>
         </form>
 
@@ -137,8 +138,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
             <div className="w-full border-t border-white/10" />
           </div>
           <span className="relative bg-[#0a0f24] px-4 text-xs uppercase tracking-wider text-slate-500">
-            hoặc
-          </span>
+            {tr("hoặc")}</span>
         </div>
 
         {/* Khu vực Đăng nhập Google có thể chọn tài khoản */}
@@ -153,7 +153,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
                 {selectedGoogleAccount.avatar}
               </div>
               <div>
-                <div className="text-xs text-slate-400">Đăng nhập với tên {selectedGoogleAccount.name}</div>
+                <div className="text-xs text-slate-400">{tr("Đăng nhập với tên")}{" "}{selectedGoogleAccount.name}</div>
                 <div className="text-sm font-medium text-white">{selectedGoogleAccount.email}</div>
               </div>
             </div>
@@ -170,8 +170,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
           {showGoogleDropdown && (
             <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-white/15 bg-[#0e1633] p-2 shadow-2xl z-20 space-y-1">
               <div className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 border-b border-white/5 mb-1">
-                Chọn tài khoản Google của bạn
-              </div>
+                {tr("Chọn tài khoản Google của bạn")}</div>
               {mockGoogleAccounts.map((acc) => (
                 <button
                   key={acc.email}
@@ -198,13 +197,13 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }: AuthModal
 
         {/* Chuyển đổi qua lại giữa Đăng nhập / Đăng ký */}
         <div className="mt-6 text-center text-sm text-slate-400">
-          {isRegister ? "Đã có tài khoản?" : "Chưa có tài khoản?"}{" "}
+          {isRegister ? tr("Đã có tài khoản?") : tr("Chưa có tài khoản?")}{" "}
           <button
             type="button"
             onClick={() => setIsRegister(!isRegister)}
             className="font-semibold text-blue-400 hover:underline"
           >
-            {isRegister ? "Đăng nhập" : "Đăng ký"}
+            {isRegister ? tr("Đăng nhập") : tr("Đăng ký")}
           </button>
         </div>
 

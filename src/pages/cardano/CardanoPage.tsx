@@ -18,6 +18,7 @@ import type {
   CardanoEpochResult,
   StakePool,
 } from "../../types/cardano";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface CardanoPool extends StakePool {
   ticker: string;
@@ -56,6 +57,8 @@ const initialPools: CardanoPool[] = [
 ];
 
 export default function CardanoPage() {
+  const { tr } = useLanguage();
+
   const [pools, setPools] = useState<CardanoPool[]>(initialPools);
 
   const [selectedPoolId, setSelectedPoolId] = useState("alpha");
@@ -166,7 +169,7 @@ export default function CardanoPage() {
     event.preventDefault();
 
     if (newPoolStake <= 0) {
-      setError("Stake phải lớn hơn 0.");
+      setError(tr("Stake phải lớn hơn 0."));
       return;
     }
 
@@ -221,30 +224,24 @@ export default function CardanoPage() {
         <div className="mb-8">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-4 py-2 text-sm text-blue-300">
             <Landmark size={16} />
-            Educational Simulation — không phải dữ liệu mạng thật
-          </div>
+            {tr("Educational Simulation — không phải dữ liệu mạng thật")}</div>
 
           <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
             Cardano — Stake Pool & Epoch
           </h1>
 
           <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-            Mô phỏng luồng Epoch → Slots → Stake Pools → Stake → Slot
-            Leader → Block.
-          </p>
+            {tr("Mô phỏng luồng Epoch → Slots → Stake Pools → Stake → Slot Leader → Block.")}</p>
         </div>
 
         <div className="mb-6 flex items-center gap-2 rounded-2xl border border-yellow-400/20 bg-yellow-400/5 px-5 py-3 text-sm text-yellow-300">
           <Info size={16} />
-          Đây là mô phỏng giáo dục đơn giản, không phải triển khai đầy đủ
-          Ouroboros và không kết nối mạng Cardano thật.
-        </div>
+          {tr("Đây là mô phỏng giáo dục đơn giản, không phải triển khai đầy đủ Ouroboros và không kết nối mạng Cardano thật.")}</div>
 
         <div className="mb-6 grid gap-6 lg:grid-cols-3">
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 lg:col-span-2">
             <h2 className="mb-5 font-semibold text-white">
-              Danh sách Stake Pool
-            </h2>
+              {tr("Danh sách Stake Pool")}</h2>
 
             <div className="space-y-3">
               {pools.map((pool) => {
@@ -303,13 +300,12 @@ export default function CardanoPage() {
 
           <section className="rounded-3xl border border-purple-400/20 bg-purple-400/[0.04] p-6">
             <h2 className="mb-4 font-semibold text-white">
-              Mô phỏng Delegate
-            </h2>
+              {tr("Mô phỏng Delegate")}</h2>
 
             {selectedPool ? (
               <>
                 <label className="mb-2 block text-xs text-slate-500">
-                  Số ADA delegate vào {selectedPool.name}
+                  {tr("Số ADA delegate vào")}{" "}{selectedPool.name}
                 </label>
 
                 <input
@@ -324,8 +320,7 @@ export default function CardanoPage() {
                 <div className="space-y-3 rounded-2xl border border-white/5 bg-[#050816] p-4 text-sm">
                   <div className="flex justify-between">
                     <span className="text-slate-500">
-                      Tỉ lệ đóng góp của bạn
-                    </span>
+                      {tr("Tỉ lệ đóng góp của bạn")}</span>
 
                     <span className="text-white">
                       {estimatedShare.toFixed(4)}%
@@ -334,8 +329,7 @@ export default function CardanoPage() {
 
                   <div className="flex justify-between">
                     <span className="text-slate-500">
-                      Margin của pool
-                    </span>
+                      {tr("Margin của pool")}</span>
 
                     <span className="text-white">
                       {selectedPool.margin}%
@@ -344,8 +338,7 @@ export default function CardanoPage() {
 
                   <div className="flex justify-between">
                     <span className="text-slate-500">
-                      Tổng stake sau delegate
-                    </span>
+                      {tr("Tổng stake sau delegate")}</span>
 
                     <span className="text-white">
                       {(
@@ -358,8 +351,7 @@ export default function CardanoPage() {
               </>
             ) : (
               <p className="text-sm text-slate-500">
-                Chưa có Stake Pool.
-              </p>
+                {tr("Chưa có Stake Pool.")}</p>
             )}
           </section>
         </div>
@@ -384,8 +376,7 @@ export default function CardanoPage() {
             </label>
 
             <label className="text-sm text-slate-400">
-              Số Slot
-              <input
+              {tr("Số Slot")}<input
                 type="number"
                 min="1"
                 max="500"
@@ -476,7 +467,7 @@ export default function CardanoPage() {
               type="text"
               value={newPoolName}
               onChange={(event) => setNewPoolName(event.target.value)}
-              placeholder="Tên Pool"
+              placeholder={tr("Tên Pool")}
               className="rounded-xl border border-white/10 bg-[#050816] px-4 py-3 text-sm text-white"
             />
 
@@ -508,7 +499,7 @@ export default function CardanoPage() {
               />
 
               <StatBox
-                label="Slots mô phỏng"
+                label={tr("Slots mô phỏng")}
                 value={result.slots.toString()}
               />
 

@@ -9,6 +9,7 @@ import {
   type MerkleProofVerification,
 } from "../../lib/blockchain/merkle";
 import type { Transaction } from "../../types/transaction";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface Props {
   originalTransactions: Transaction[]; // dữ liệu gốc của Block (full node giữ)
@@ -27,6 +28,8 @@ export default function MerkleProofPanel({
   selectedIndex,
   onSelectIndex,
 }: Props) {
+  const { tr } = useLanguage();
+
   const [proof, setProof] = useState<MerkleProof | null>(null);
   const [result, setResult] = useState<MerkleProofVerification | null>(null);
   const [corrupt, setCorrupt] = useState(false);
@@ -91,8 +94,7 @@ export default function MerkleProofPanel({
         <div className="flex items-center gap-2">
           <Route size={16} className="text-cyan-400" />
           <h2 className="text-sm font-semibold text-white">
-            Merkle Proof — chứng minh 1 giao dịch thuộc Block
-          </h2>
+            {tr("Merkle Proof — chứng minh 1 giao dịch thuộc Block")}</h2>
         </div>
 
         <button
@@ -103,16 +105,12 @@ export default function MerkleProofPanel({
               : "border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.07]"
           }`}
         >
-          {corrupt ? "Đang làm hỏng proof (bấm để hoàn tác)" : "Làm hỏng 1 hash trong proof"}
+          {corrupt ? tr("Đang làm hỏng proof (bấm để hoàn tác)") : tr("Làm hỏng 1 hash trong proof")}
         </button>
       </div>
 
       <p className="mb-4 text-xs leading-5 text-slate-500">
-        Chọn giao dịch cần chứng minh. Bên xác minh chỉ cần giao dịch, các hash
-        “anh em” trên đường lên Root và Merkle Root trong Block Header — không
-        cần toàn bộ {n} giao dịch. Sửa số tiền ở danh sách bên trên để thấy
-        proof chuyển sang INVALID.
-      </p>
+        {tr("Chọn giao dịch cần chứng minh. Bên xác minh chỉ cần giao dịch, các hash “anh em” trên đường lên Root và Merkle Root trong Block Header — không cần toàn bộ")}{" "}{n} {" "}{tr("giao dịch. Sửa số tiền ở danh sách bên trên để thấy proof chuyển sang INVALID.")}</p>
 
       <div className="mb-5 flex flex-wrap gap-2">
         {claimedTransactions.map((_, index) => (
@@ -133,25 +131,24 @@ export default function MerkleProofPanel({
       {proof && result && claimedTx && (
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="min-w-0 space-y-2">
-            <Row label={`Hash lá H(T${selectedIndex + 1})`} value={short(result.path[0])} />
+            <Row label={tr("Hash lá H(T{0})", selectedIndex + 1)} value={short(result.path[0])} />
 
             {proof.steps.map((step, i) => (
               <div
                 key={i}
                 className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 font-mono text-[11px] text-slate-400"
               >
-                <span className="text-slate-600">Bước {i + 1}:</span>{" "}
-                hash anh em{" "}
+                <span className="text-slate-600">{tr("Bước")}{" "}{i + 1}:</span>{" "}
+                {tr("hash anh em")}{" "}
                 <span className="text-amber-300">{short(step.siblingHash)}</span>{" "}
-                ({step.position === "left" ? "ghép bên trái" : "ghép bên phải"}) →{" "}
+                ({step.position === "left" ? tr("ghép bên trái") : tr("ghép bên phải")}) →{" "}
                 <span className="text-cyan-300">{short(result.path[i + 1])}</span>
               </div>
             ))}
 
             {proof.steps.length === 0 && (
               <p className="text-xs text-slate-500">
-                Block chỉ có 1 giao dịch nên hash lá chính là Merkle Root (proof rỗng).
-              </p>
+                {tr("Block chỉ có 1 giao dịch nên hash lá chính là Merkle Root (proof rỗng).")}</p>
             )}
           </div>
 
@@ -172,33 +169,26 @@ export default function MerkleProofPanel({
                 {result.valid ? "Proof VALID" : "Proof INVALID"}
               </div>
               <div className="break-all font-mono text-[10px] leading-5 text-slate-500">
-                Root tính được: {short(result.computedRoot)}
+                {tr("Root tính được:")}{" "}{short(result.computedRoot)}
                 <br />
-                Root trong Header: {short(headerRoot)}
+                {tr("Root trong Header:")}{" "}{short(headerRoot)}
               </div>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
               <div className="mb-1 font-semibold text-slate-300">
-                Chi phí: {proof.steps.length} hash thay vì {n}
+                {tr("Chi phí:")}{" "}{proof.steps.length} {" "}{tr("hash thay vì")}{" "}{n}
               </div>
-              Số bước = ⌈log₂ n⌉ nên độ phức tạp là{" "}
-              <span className="text-cyan-300">O(log n)</span>. Ví dụ 1.000
-              giao dịch chỉ cần 10 hash, 1.000.000 giao dịch chỉ cần 20 hash.
-            </div>
+              {tr("Số bước = ⌈log₂ n⌉ nên độ phức tạp là")}{" "}
+              <span className="text-cyan-300">O(log n)</span>{tr(". Ví dụ 1.000 giao dịch chỉ cần 10 hash, 1.000.000 giao dịch chỉ cần 20 hash.")}</div>
           </div>
         </div>
       )}
 
       <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-xs leading-5 text-slate-500">
         <span className="font-medium text-slate-300">
-          Vì sao Header chỉ lưu Root?
-        </span>{" "}
-        Root là “dấu vân tay” của cả danh sách giao dịch: đổi bất kỳ giao dịch
-        nào thì Root đổi. Header nhỏ và cố định, nên node nhẹ (light client) chỉ
-        tải Header rồi dùng Merkle Proof để kiểm tra từng giao dịch mà không
-        cần tải cả Block.
-      </div>
+          {tr("Vì sao Header chỉ lưu Root?")}</span>{" "}
+        {tr("Root là “dấu vân tay” của cả danh sách giao dịch: đổi bất kỳ giao dịch nào thì Root đổi. Header nhỏ và cố định, nên node nhẹ (light client) chỉ tải Header rồi dùng Merkle Proof để kiểm tra từng giao dịch mà không cần tải cả Block.")}</div>
     </section>
   );
 }

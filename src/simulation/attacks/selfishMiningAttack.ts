@@ -3,6 +3,7 @@ import {
   createBlock,
   createEvent,
 } from "./attackEngine";
+import { tr } from "../../i18n";
 
 export function initializeSelfishMiningAttack(
   state: AttackState,
@@ -10,10 +11,10 @@ export function initializeSelfishMiningAttack(
   return {
     ...state,
 
-    resultTitle: "Mô phỏng đào ích kỷ",
+    resultTitle: tr("Mô phỏng đào ích kỷ"),
 
     resultDescription:
-      "Attacker giữ block trong private chain thay vì công bố ngay, sau đó lựa chọn thời điểm publish để cạnh tranh với public chain.",
+      tr("Attacker giữ block trong private chain thay vì công bố ngay, sau đó lựa chọn thời điểm publish để cạnh tranh với public chain."),
 
     events: [
       ...state.events,
@@ -178,11 +179,11 @@ export function stepSelfishMiningAttack(
 
     resultTitle:
       conditionReached
-        ? "Đã chứng minh được hành vi đào ích kỷ!"
-        : "Đang giấu Block, không công bố...",
+        ? tr("Đã chứng minh được hành vi đào ích kỷ!")
+        : tr("Đang giấu Block, không công bố..."),
 
     resultDescription:
-      "Private chain và public chain đang được mô phỏng riêng biệt. Attacker không công bố block ngay lập tức.",
+      tr("Private chain và public chain đang được mô phỏng riêng biệt. Attacker không công bố block ngay lập tức."),
 
     resultImpact:
       conditionReached

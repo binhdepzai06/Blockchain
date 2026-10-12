@@ -1,5 +1,6 @@
 import type { AttackNode, AttackState } from "../../types/attack";
 import { createEvent } from "./attackEngine";
+import { tr } from "../../i18n";
 
 export function initializeSybilAttack(
   state: AttackState,
@@ -7,10 +8,10 @@ export function initializeSybilAttack(
   return {
     ...state,
 
-    resultTitle: "Mô phỏng tấn công Sybil",
+    resultTitle: tr("Mô phỏng tấn công Sybil"),
 
     resultDescription:
-      "Attacker sẽ tạo thêm nhiều node giả để tăng tỷ lệ identity do attacker kiểm soát.",
+      tr("Attacker sẽ tạo thêm nhiều node giả để tăng tỷ lệ identity do attacker kiểm soát."),
 
     events: [
       ...state.events,
@@ -179,11 +180,11 @@ export function stepSybilAttack(
 
     resultTitle:
       conditionReached
-        ? "Node giả đã chiếm phần lớn mạng lưới!"
-        : "Các Node giả đang gia nhập mạng...",
+        ? tr("Node giả đã chiếm phần lớn mạng lưới!")
+        : tr("Các Node giả đang gia nhập mạng..."),
 
     resultDescription:
-      `Attacker hiện kiểm soát ${controlledNodes}/${totalNodes} node hiển thị trong simulation.`,
+      tr("Attacker hiện kiểm soát {0}/{1} node hiển thị trong simulation.", controlledNodes, totalNodes),
 
     resultImpact:
       conditionReached

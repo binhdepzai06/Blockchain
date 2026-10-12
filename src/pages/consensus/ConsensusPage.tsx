@@ -19,6 +19,7 @@ import {
   type Validator,
 } from "../../lib/consensus/pos";
 import { consensusComparison } from "../../lib/consensus/comparison";
+import { useLanguage } from "../../context/LanguageContext";
 
 type Tab = "overview" | "pow" | "pos" | "compare";
 
@@ -29,6 +30,8 @@ const initialValidators: Validator[] = [
 ];
 
 export default function ConsensusPage() {
+  const { tr } = useLanguage();
+
   const [tab, setTab] = useState<Tab>("overview");
 
   return (
@@ -43,13 +46,10 @@ export default function ConsensusPage() {
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-            Cơ chế đồng thuận
-          </h1>
+            {tr("Cơ chế đồng thuận")}</h1>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            Blockchain có nhiều node cùng hoạt động. Consensus giúp mạng
-            quyết định ai được tạo Block tiếp theo và Block nào được chấp nhận.
-          </p>
+            {tr("Blockchain có nhiều node cùng hoạt động. Consensus giúp mạng quyết định ai được tạo Block tiếp theo và Block nào được chấp nhận.")}</p>
         </header>
 
         {/* MAIN NAV */}
@@ -59,8 +59,7 @@ export default function ConsensusPage() {
             onClick={() => setTab("overview")}
             icon={HelpCircle}
           >
-            Tổng quan
-          </TabButton>
+            {tr("Tổng quan")}</TabButton>
 
           <TabButton
             active={tab === "pow"}
@@ -83,8 +82,7 @@ export default function ConsensusPage() {
             onClick={() => setTab("compare")}
             icon={Scale}
           >
-            So sánh
-          </TabButton>
+            {tr("So sánh")}</TabButton>
         </div>
 
         {tab === "overview" && <Overview />}
@@ -134,6 +132,8 @@ function TabButton({
 ========================================================= */
 
 function Overview() {
+  const { tr } = useLanguage();
+
   return (
     <div className="space-y-5">
 
@@ -141,26 +141,21 @@ function Overview() {
       <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 md:p-7">
         <div className="mb-5">
           <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-            Câu hỏi quan trọng
-          </div>
+            {tr("Câu hỏi quan trọng")}</div>
 
           <h2 className="mt-2 text-xl font-semibold text-white md:text-2xl">
-            Ai được quyền tạo Block tiếp theo?
-          </h2>
+            {tr("Ai được quyền tạo Block tiếp theo?")}</h2>
 
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Trong blockchain phi tập trung, không có một máy chủ trung tâm
-            quyết định. Consensus là cách các node cùng thống nhất về trạng
-            thái của blockchain.
-          </p>
+            {tr("Trong blockchain phi tập trung, không có một máy chủ trung tâm quyết định. Consensus là cách các node cùng thống nhất về trạng thái của blockchain.")}</p>
         </div>
 
         {/* SIMPLE FLOW */}
         <div className="grid gap-3 md:grid-cols-4">
           <FlowCard
             number="01"
-            title="Giao dịch"
-            description="Các giao dịch mới được tạo."
+            title={tr("Giao dịch")}
+            description={tr("Các giao dịch mới được tạo.")}
           />
 
           <FlowArrow />
@@ -168,7 +163,7 @@ function Overview() {
           <FlowCard
             number="02"
             title="Consensus"
-            description="Mạng xác định cách chọn người tạo Block."
+            description={tr("Mạng xác định cách chọn người tạo Block.")}
           />
 
           <FlowArrow />
@@ -176,7 +171,7 @@ function Overview() {
           <FlowCard
             number="03"
             title="Block"
-            description="Block hợp lệ được mạng chấp nhận."
+            description={tr("Block hợp lệ được mạng chấp nhận.")}
           />
         </div>
       </section>
@@ -187,26 +182,26 @@ function Overview() {
         <MechanismCard
           icon={Hammer}
           title="Proof of Work"
-          subtitle="Dùng sức mạnh tính toán"
-          description="Các miner cạnh tranh bằng cách thử nhiều nonce để tìm hash đáp ứng độ khó."
+          subtitle={tr("Dùng sức mạnh tính toán")}
+          description={tr("Các miner cạnh tranh bằng cách thử nhiều nonce để tìm hash đáp ứng độ khó.")}
           color="orange"
           points={[
-            "Miner tìm nonce hợp lệ",
-            "Ai tìm được trước có thể đề xuất Block",
-            "Cần năng lực tính toán và năng lượng",
+            tr("Miner tìm nonce hợp lệ"),
+            tr("Ai tìm được trước có thể đề xuất Block"),
+            tr("Cần năng lực tính toán và năng lượng"),
           ]}
         />
 
         <MechanismCard
           icon={Coins}
           title="Proof of Stake"
-          subtitle="Dùng lượng tài sản Stake"
-          description="Validator được lựa chọn dựa trên lượng stake của họ."
+          subtitle={tr("Dùng lượng tài sản Stake")}
+          description={tr("Validator được lựa chọn dựa trên lượng stake của họ.")}
           color="blue"
           points={[
-            "Validator khóa tài sản làm stake",
-            "Stake càng lớn → xác suất được chọn càng cao",
-            "Không cần cạnh tranh bằng việc đào hash",
+            tr("Validator khóa tài sản làm stake"),
+            tr("Stake càng lớn → xác suất được chọn càng cao"),
+            tr("Không cần cạnh tranh bằng việc đào hash"),
           ]}
         />
       </div>
@@ -220,13 +215,10 @@ function Overview() {
 
           <div>
             <h3 className="font-semibold text-white">
-              Consensus giải quyết vấn đề gì?
-            </h3>
+              {tr("Consensus giải quyết vấn đề gì?")}</h3>
 
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              Consensus giúp mạng blockchain thống nhất Block nào hợp lệ mà
-              không cần một bên trung tâm quyết định.
-            </p>
+              {tr("Consensus giúp mạng blockchain thống nhất Block nào hợp lệ mà không cần một bên trung tâm quyết định.")}</p>
           </div>
         </div>
       </section>
@@ -238,14 +230,10 @@ function Overview() {
 
           <div>
             <div className="text-xs font-semibold text-blue-200">
-              Cách giải thích khi thuyết trình
-            </div>
+              {tr("Cách giải thích khi thuyết trình")}</div>
 
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              “Consensus là cơ chế giúp các node trong blockchain thống nhất
-              với nhau. Với PoW, miner cạnh tranh bằng sức mạnh tính toán.
-              Với PoS, validator được lựa chọn dựa trên stake.”
-            </p>
+              {tr("“Consensus là cơ chế giúp các node trong blockchain thống nhất với nhau. Với PoW, miner cạnh tranh bằng sức mạnh tính toán. Với PoS, validator được lựa chọn dựa trên stake.”")}</p>
           </div>
         </div>
       </section>
@@ -361,6 +349,8 @@ function MechanismCard({
 ========================================================= */
 
 function PowDemo() {
+  const { tr } = useLanguage();
+
   const [difficulty, setDifficulty] = useState(3);
   const [isMining, setIsMining] = useState(false);
   const [attempts, setAttempts] = useState(0);
@@ -409,13 +399,10 @@ function PowDemo() {
             </div>
 
             <h2 className="mt-1 text-xl font-semibold text-white">
-              Miner phải chứng minh mình đã làm việc
-            </h2>
+              {tr("Miner phải chứng minh mình đã làm việc")}</h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-              Miner thử nhiều giá trị nonce cho đến khi tạo được hash phù hợp
-              với độ khó của mạng.
-            </p>
+              {tr("Miner thử nhiều giá trị nonce cho đến khi tạo được hash phù hợp với độ khó của mạng.")}</p>
           </div>
         </div>
       </section>
@@ -423,38 +410,37 @@ function PowDemo() {
       {/* SIMPLE FLOW */}
       <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
         <div className="mb-5 text-xs font-semibold uppercase tracking-wider text-slate-500">
-          PoW hoạt động như thế nào?
-        </div>
+          {tr("PoW hoạt động như thế nào?")}</div>
 
         <div className="grid gap-3 md:grid-cols-4">
           <FlowCard
             number="01"
             title="Block"
-            description="Miner nhận dữ liệu Block."
+            description={tr("Miner nhận dữ liệu Block.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="02"
-            title="Thử nonce"
-            description="Miner liên tục thử các nonce khác nhau."
+            title={tr("Thử nonce")}
+            description={tr("Miner liên tục thử các nonce khác nhau.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="03"
-            title="Hash hợp lệ"
-            description="Hash phải đáp ứng độ khó."
+            title={tr("Hash hợp lệ")}
+            description={tr("Hash phải đáp ứng độ khó.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="04"
-            title="Đề xuất Block"
-            description="Miner có thể gửi Block cho mạng."
+            title={tr("Đề xuất Block")}
+            description={tr("Miner có thể gửi Block cho mạng.")}
           />
         </div>
       </section>
@@ -469,14 +455,12 @@ function PowDemo() {
             </div>
 
             <h2 className="mt-1 text-lg font-semibold text-white">
-              Mô phỏng Mining
-            </h2>
+              {tr("Mô phỏng Mining")}</h2>
 
             <p className="mt-1 text-xs text-slate-500">
-              Thử tìm một nonce tạo ra hash bắt đầu bằng{" "}
+              {tr("Thử tìm một nonce tạo ra hash bắt đầu bằng")}{" "}
               <strong className="text-orange-300">
-                {difficulty} số 0
-              </strong>
+                {difficulty} {" "}{tr("số 0")}</strong>
               .
             </p>
           </div>
@@ -511,7 +495,7 @@ function PowDemo() {
                 <Hammer size={14} />
               )}
 
-              {isMining ? "Đang thử..." : "Bắt đầu"}
+              {isMining ? tr("Đang thử...") : tr("Bắt đầu")}
             </button>
           </div>
         </div>
@@ -519,7 +503,7 @@ function PowDemo() {
         <div className="mt-6 grid gap-3 md:grid-cols-3">
 
           <Metric
-            label="Nonce hiện tại"
+            label={tr("Nonce hiện tại")}
             value={attempts.toLocaleString()}
           />
 
@@ -529,8 +513,8 @@ function PowDemo() {
           />
 
           <Metric
-            label="Trạng thái"
-            value={isMining ? "Đang tìm..." : result ? "Đã tìm thấy" : "Chờ bắt đầu"}
+            label={tr("Trạng thái")}
+            value={isMining ? tr("Đang tìm...") : result ? tr("Đã tìm thấy") : tr("Chờ bắt đầu")}
           />
         </div>
 
@@ -540,7 +524,7 @@ function PowDemo() {
           </div>
 
           <div className="break-all font-mono text-[11px] leading-5 text-slate-500">
-            {currentHash || "Chưa có hash..."}
+            {currentHash || tr("Chưa có hash...")}
           </div>
         </div>
 
@@ -548,8 +532,7 @@ function PowDemo() {
           <div className="mt-4 rounded-xl border border-emerald-400/15 bg-emerald-400/[0.04] p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-emerald-300">
               <Trophy size={16} />
-              Đã tìm thấy Block hợp lệ
-            </div>
+              {tr("Đã tìm thấy Block hợp lệ")}</div>
 
             <div className="mt-4 grid gap-3 text-xs md:grid-cols-3">
               <ResultItem
@@ -577,9 +560,7 @@ function PowDemo() {
 
       {/* KEY IDEA */}
       <KeyIdea>
-        PoW không chọn miner dựa trên số coin. Miner cạnh tranh bằng sức mạnh
-        tính toán để tìm ra bằng chứng công việc hợp lệ.
-      </KeyIdea>
+        {tr("PoW không chọn miner dựa trên số coin. Miner cạnh tranh bằng sức mạnh tính toán để tìm ra bằng chứng công việc hợp lệ.")}</KeyIdea>
     </div>
   );
 }
@@ -589,6 +570,8 @@ function PowDemo() {
 ========================================================= */
 
 function PosDemo() {
+  const { tr } = useLanguage();
+
   const [validators, setValidators] =
     useState<Validator[]>(initialValidators);
 
@@ -640,13 +623,10 @@ function PosDemo() {
             </div>
 
             <h2 className="mt-1 text-xl font-semibold text-white">
-              Validator được chọn dựa trên Stake
-            </h2>
+              {tr("Validator được chọn dựa trên Stake")}</h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-              Người tham gia khóa một lượng tài sản làm stake. Trong mô phỏng
-              này, stake càng lớn thì xác suất được chọn càng cao.
-            </p>
+              {tr("Người tham gia khóa một lượng tài sản làm stake. Trong mô phỏng này, stake càng lớn thì xác suất được chọn càng cao.")}</p>
           </div>
         </div>
       </section>
@@ -654,38 +634,37 @@ function PosDemo() {
       {/* SIMPLE FLOW */}
       <section className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
         <div className="mb-5 text-xs font-semibold uppercase tracking-wider text-slate-500">
-          PoS hoạt động như thế nào?
-        </div>
+          {tr("PoS hoạt động như thế nào?")}</div>
 
         <div className="grid gap-3 md:grid-cols-4">
           <FlowCard
             number="01"
             title="Stake"
-            description="Validator khóa tài sản."
+            description={tr("Validator khóa tài sản.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="02"
-            title="Lựa chọn"
-            description="Mạng chọn một Validator."
+            title={tr("Lựa chọn")}
+            description={tr("Mạng chọn một Validator.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="03"
-            title="Tạo Block"
-            description="Validator được chọn đề xuất Block."
+            title={tr("Tạo Block")}
+            description={tr("Validator được chọn đề xuất Block.")}
           />
 
           <FlowArrow />
 
           <FlowCard
             number="04"
-            title="Xác nhận"
-            description="Mạng xác nhận Block hợp lệ."
+            title={tr("Xác nhận")}
+            description={tr("Mạng xác nhận Block hợp lệ.")}
           />
         </div>
       </section>
@@ -701,8 +680,7 @@ function PosDemo() {
               </div>
 
               <h2 className="mt-1 text-lg font-semibold text-white">
-                Ai sẽ tạo Block?
-              </h2>
+                {tr("Ai sẽ tạo Block?")}</h2>
             </div>
 
             <div className="text-right">
@@ -766,8 +744,7 @@ function PosDemo() {
                       </div>
 
                       <div className="text-[10px] text-slate-600">
-                        cơ hội
-                      </div>
+                        {tr("cơ hội")}</div>
                     </div>
                   </div>
 
@@ -804,8 +781,7 @@ function PosDemo() {
             className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-400/10 py-3 text-sm font-semibold text-blue-200 transition hover:bg-blue-400/15"
           >
             <Coins size={16} />
-            Chọn Validator
-          </button>
+            {tr("Chọn Validator")}</button>
         </div>
 
         {/* RESULT */}
@@ -821,16 +797,14 @@ function PosDemo() {
               </div>
 
               <div className="mt-5 text-xs text-slate-600">
-                Validator được chọn
-              </div>
+                {tr("Validator được chọn")}</div>
 
               <h3 className="mt-1 text-2xl font-bold text-emerald-300">
                 {selected.name}
               </h3>
 
               <p className="mt-3 text-sm leading-6 text-slate-400">
-                Validator này được chọn để đề xuất Block trong
-                Round {round}.
+                {tr("Validator này được chọn để đề xuất Block trong Round")}{" "}{round}.
               </p>
 
               <div className="mt-6 rounded-xl border border-white/6 bg-black/10 p-4">
@@ -850,33 +824,25 @@ function PosDemo() {
               </div>
 
               <h3 className="mt-5 text-lg font-semibold text-white">
-                Chưa chọn Validator
-              </h3>
+                {tr("Chưa chọn Validator")}</h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                Điều chỉnh stake nếu muốn, sau đó bấm
-                “Chọn Validator”.
-              </p>
+                {tr("Điều chỉnh stake nếu muốn, sau đó bấm “Chọn Validator”.")}</p>
             </div>
           )}
 
           <div className="mt-8 border-t border-white/6 pt-5">
             <div className="text-xs font-semibold text-slate-400">
-              Điều cần nhớ
-            </div>
+              {tr("Điều cần nhớ")}</div>
 
             <p className="mt-2 text-xs leading-5 text-slate-500">
-              Trong mô hình PoS đơn giản này, stake càng lớn thì
-              xác suất được chọn càng cao.
-            </p>
+              {tr("Trong mô hình PoS đơn giản này, stake càng lớn thì xác suất được chọn càng cao.")}</p>
           </div>
         </div>
       </section>
 
       <KeyIdea>
-        PoS thay việc cạnh tranh bằng sức mạnh tính toán bằng cơ chế lựa chọn
-        Validator dựa trên stake.
-      </KeyIdea>
+        {tr("PoS thay việc cạnh tranh bằng sức mạnh tính toán bằng cơ chế lựa chọn Validator dựa trên stake.")}</KeyIdea>
     </div>
   );
 }
@@ -886,6 +852,8 @@ function PosDemo() {
 ========================================================= */
 
 function CompareTable() {
+  const { tr } = useLanguage();
+
   return (
     <div className="space-y-5">
 
@@ -895,13 +863,10 @@ function CompareTable() {
         </div>
 
         <h2 className="text-xl font-semibold text-white">
-          PoW và PoS khác nhau ở đâu?
-        </h2>
+          {tr("PoW và PoS khác nhau ở đâu?")}</h2>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-          Điểm khác biệt dễ nhớ nhất là cách mạng chọn người có quyền
-          đề xuất Block.
-        </p>
+          {tr("Điểm khác biệt dễ nhớ nhất là cách mạng chọn người có quyền đề xuất Block.")}</p>
       </section>
 
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
@@ -910,8 +875,7 @@ function CompareTable() {
             <thead>
               <tr className="border-b border-white/10">
                 <th className="p-5 text-xs font-semibold uppercase tracking-wider text-slate-600">
-                  Tiêu chí
-                </th>
+                  {tr("Tiêu chí")}</th>
 
                 <th className="p-5 text-xs font-semibold uppercase tracking-wider text-orange-300">
                   Proof of Work
@@ -930,15 +894,15 @@ function CompareTable() {
                   className="border-b border-white/5 last:border-0"
                 >
                   <td className="p-5 font-medium text-slate-300">
-                    {row.metric}
+                    {tr(row.metric)}
                   </td>
 
                   <td className="p-5 text-slate-500">
-                    {row.pow}
+                    {tr(row.pow)}
                   </td>
 
                   <td className="p-5 text-slate-500">
-                    {row.pos}
+                    {tr(row.pos)}
                   </td>
                 </tr>
               ))}
@@ -950,13 +914,11 @@ function CompareTable() {
       <div className="grid gap-4 md:grid-cols-2">
         <KeyIdea>
           <strong className="text-orange-200">PoW:</strong>{" "}
-          Ai tìm được Proof of Work hợp lệ trước có thể đề xuất Block.
-        </KeyIdea>
+          {tr("Ai tìm được Proof of Work hợp lệ trước có thể đề xuất Block.")}</KeyIdea>
 
         <KeyIdea>
           <strong className="text-blue-200">PoS:</strong>{" "}
-          Validator được lựa chọn dựa trên stake theo cơ chế của mạng.
-        </KeyIdea>
+          {tr("Validator được lựa chọn dựa trên stake theo cơ chế của mạng.")}</KeyIdea>
       </div>
     </div>
   );

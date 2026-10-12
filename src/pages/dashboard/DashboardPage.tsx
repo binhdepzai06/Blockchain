@@ -20,8 +20,11 @@ import { useProgressStore } from "../../store/useProgressStore";
 import { QUIZ_TOPICS } from "../../data/quizTopics";
 import Card from "../../components/ui/Card";
 import ProgressBar from "../../components/ui/ProgressBar";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function DashboardPage() {
+  const { tr } = useLanguage();
+
   const { xp, streak, getLevel, quizTopicProgress } = useProgressStore();
 
   const level = getLevel();
@@ -58,10 +61,9 @@ export default function DashboardPage() {
               <Rocket size={14} />
               Interactive Blockchain Learning Platform
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">Chào mừng trở lại</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">{tr("Chào mừng trở lại")}</h1>
             <p className="mt-3 max-w-xl leading-7 text-slate-400">
-              Học blockchain bằng cách thực sự thử nghiệm — không chỉ đọc lý thuyết.
-            </p>
+              {tr("Học blockchain bằng cách thực sự thử nghiệm — không chỉ đọc lý thuyết.")}</p>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -69,31 +71,28 @@ export default function DashboardPage() {
               to="/quiz"
               className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-semibold text-white transition hover:scale-[1.02]"
             >
-              Tiếp tục ôn tập
-            </Link>
+              {tr("Tiếp tục ôn tập")}</Link>
             <Link
               to="/blockchain"
               className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-3 font-semibold text-slate-200 transition hover:bg-white/10"
             >
-              Vào Mô phỏng
-            </Link>
+              {tr("Vào Mô phỏng")}</Link>
           </div>
         </div>
 
         <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           <StatCard icon={Trophy} label="Level" value={level} color="text-yellow-400" bg="bg-yellow-400/10" />
           <StatCard icon={Zap} label="XP" value={`${xp} / ${xpToNextLevel}`} color="text-blue-400" bg="bg-blue-400/10" />
-          <StatCard icon={Flame} label="Learning Streak" value={`${streak} ngày`} color="text-orange-400" bg="bg-orange-400/10" />
-          <StatCard icon={Award} label="Tiến độ Quiz" value={`${overallProgress}%`} color="text-emerald-400" bg="bg-emerald-400/10" />
+          <StatCard icon={Flame} label="Learning Streak" value={tr("{0} ngày", streak)} color="text-orange-400" bg="bg-orange-400/10" />
+          <StatCard icon={Award} label={tr("Tiến độ Quiz")} value={`${overallProgress}%`} color="text-emerald-400" bg="bg-emerald-400/10" />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
           <Card className="lg:col-span-2">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="font-semibold text-white">Tiến độ ôn tập (9 chủ đề)</h2>
+              <h2 className="font-semibold text-white">{tr("Tiến độ ôn tập (9 chủ đề)")}</h2>
               <Link to="/quiz" className="text-xs text-blue-400 hover:underline">
-                Xem tất cả →
-              </Link>
+                {tr("Xem tất cả →")}</Link>
             </div>
 
             <div className="space-y-4">
@@ -108,10 +107,9 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1">
                     <div className="mb-1.5 flex items-center justify-between">
-                      <span className="text-sm font-medium text-white">{topic.title}</span>
+                      <span className="text-sm font-medium text-white">{tr(topic.title)}</span>
                       <span className="text-xs text-slate-500">
-                        {topic.answered}/{topic.totalQuestions} câu
-                      </span>
+                        {topic.answered}/{topic.totalQuestions} {" "}{tr("câu")}</span>
                     </div>
                     <ProgressBar value={topic.percent} />
                   </div>
@@ -121,15 +119,14 @@ export default function DashboardPage() {
           </Card>
 
           <Card highlight="purple">
-            <h2 className="mb-4 font-semibold text-white">Gợi ý cho bạn</h2>
+            <h2 className="mb-4 font-semibold text-white">{tr("Gợi ý cho bạn")}</h2>
             <p className="mb-4 text-sm leading-6 text-slate-400">
               {nextTopic ? (
                 <>
-                  Bạn nên tiếp tục với <strong className="text-white">{nextTopic.title}</strong> — mới làm{" "}
-                  {nextTopic.answered}/{nextTopic.totalQuestions} câu.
-                </>
+                  {tr("Bạn nên tiếp tục với")}{" "}<strong className="text-white">{tr(nextTopic.title)}</strong> {" "}{tr("— mới làm")}{" "}
+                  {nextTopic.answered}/{nextTopic.totalQuestions} {" "}{tr("câu.")}</>
               ) : (
-                "Hãy bắt đầu làm Quiz để mình gợi ý chủ đề phù hợp."
+                tr("Hãy bắt đầu làm Quiz để mình gợi ý chủ đề phù hợp.")
               )}
             </p>
             <div className="space-y-3">
@@ -137,24 +134,23 @@ export default function DashboardPage() {
                 to="/quiz"
                 className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02]"
               >
-                Làm Quiz ngay
-              </Link>
+                {tr("Làm Quiz ngay")}</Link>
             </div>
           </Card>
         </div>
 
         <Card className="mt-6">
-          <h2 className="mb-5 font-semibold text-white">Khám phá thêm</h2>
+          <h2 className="mb-5 font-semibold text-white">{tr("Khám phá thêm")}</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <ExploreLink icon={Hash} label="Hash" path="/hash" />
             <ExploreLink icon={Blocks} label="Blockchain" path="/blockchain" />
-            <ExploreLink icon={Shield} label="Chữ ký số" path="/signature" />
+            <ExploreLink icon={Shield} label={tr("Chữ ký số")} path="/signature" />
             <ExploreLink icon={Scale} label="Consensus" path="/consensus" />
-            <ExploreLink icon={Network} label="Mạng P2P" path="/network" />
+            <ExploreLink icon={Network} label={tr("Mạng P2P")} path="/network" />
             <ExploreLink icon={Landmark} label="Cardano" path="/cardano" />
             <ExploreLink icon={Activity} label="Solana" path="/solana" />
             <ExploreLink icon={ShieldAlert} label="Attack Simulator" path="/attack-simulator" />
-            <ExploreLink icon={Users} label="Nhóm thực hiện" path="/team" />
+            <ExploreLink icon={Users} label={tr("Nhóm thực hiện")} path="/team" />
           </div>
         </Card>
       </div>

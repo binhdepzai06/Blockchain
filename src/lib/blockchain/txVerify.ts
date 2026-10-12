@@ -9,6 +9,7 @@ import {
   importPublicKey,
   txSigningPayload,
 } from "./wallet";
+import { tr } from "../../i18n";
 
 export interface TxCheck {
   name: string;
@@ -88,40 +89,40 @@ export async function verifyTransaction(
     typeof t.timestamp !== "number" ||
     !Number.isFinite(t.timestamp)
   ) {
-    return fail("Định dạng", "thiếu hoặc sai kiểu dữ liệu các trường bắt buộc");
+    return fail(tr("Định dạng"), tr("thiếu hoặc sai kiểu dữ liệu các trường bắt buộc"));
   }
   if (t.from === COINBASE) {
-    return fail("Định dạng", "COINBASE chỉ do Miner tạo trong Block, không gửi qua mạng");
+    return fail(tr("Định dạng"), tr("COINBASE chỉ do Miner tạo trong Block, không gửi qua mạng"));
   }
   if (!Number.isFinite(t.amount) || t.amount <= 0 || t.amount > 1_000_000) {
-    return fail("Định dạng", "số tiền phải > 0 và hợp lệ");
+    return fail(tr("Định dạng"), tr("số tiền phải > 0 và hợp lệ"));
   }
   if (!ADDRESS_REGEX.test(t.to)) {
-    return fail("Định dạng", "địa chỉ nhận không đúng chuẩn 0x + 40 hex");
+    return fail(tr("Định dạng"), tr("địa chỉ nhận không đúng chuẩn 0x + 40 hex"));
   }
   if (t.from === t.to) {
-    return fail("Định dạng", "người gửi và người nhận trùng nhau");
+    return fail(tr("Định dạng"), tr("người gửi và người nhận trùng nhau"));
   }
   if (!t.publicKey || !t.signature) {
-    return fail("Định dạng", "thiếu Public Key hoặc Signature");
+    return fail(tr("Định dạng"), tr("thiếu Public Key hoặc Signature"));
   }
-  pass("Định dạng", "đủ trường, số tiền & địa chỉ hợp lệ");
+  pass(tr("Định dạng"), tr("đủ trường, số tiền & địa chỉ hợp lệ"));
 
   // 2. Public Key -----------------------------------------------------
   let key: CryptoKey;
   try {
     key = await importPublicKey(t.publicKey);
-    pass("Public Key", "đọc được khóa ECDSA P-256");
+    pass("Public Key", tr("đọc được khóa ECDSA P-256"));
   } catch {
-    return fail("Public Key", "không phải khóa ECDSA P-256 hợp lệ");
+    return fail("Public Key", tr("không phải khóa ECDSA P-256 hợp lệ"));
   }
 
   // 3. Địa chỉ gửi phải sinh ra từ chính Public Key đính kèm ----------
   const derived = await addressFromPublicKey(t.publicKey);
   if (derived !== t.from) {
-    return fail("Khớp địa chỉ", "Public Key không thuộc về địa chỉ người gửi");
+    return fail(tr("Khớp địa chỉ"), tr("Public Key không thuộc về địa chỉ người gửi"));
   }
-  pass("Khớp địa chỉ", "hash(Public Key) trùng địa chỉ người gửi");
+  pass(tr("Khớp địa chỉ"), tr("hash(Public Key) trùng địa chỉ người gửi"));
 
   // 4. Chữ ký ---------------------------------------------------------
   let sigOk = false;
@@ -135,25 +136,25 @@ export async function verifyTransaction(
     sigOk = false;
   }
   if (!sigOk) {
-    return fail("Chữ ký số", "INVALID — dữ liệu bị sửa hoặc không ký bằng Private Key đúng");
+    return fail(tr("Chữ ký số"), tr("INVALID — dữ liệu bị sửa hoặc không ký bằng Private Key đúng"));
   }
-  pass("Chữ ký số", "ECDSA verify = VALID");
+  pass(tr("Chữ ký số"), "ECDSA verify = VALID");
 
   // 5. Trùng lặp / replay ---------------------------------------------
   if (state.seenIds.has(t.id)) {
-    return fail("Replay / trùng lặp", "giao dịch này đã có trong Mempool hoặc Blockchain");
+    return fail(tr("Replay / trùng lặp"), tr("giao dịch này đã có trong Mempool hoặc Blockchain"));
   }
-  pass("Replay / trùng lặp", "id chưa từng xuất hiện");
+  pass(tr("Replay / trùng lặp"), tr("id chưa từng xuất hiện"));
 
   // 6. Số dư ----------------------------------------------------------
   const available = getBalance(state, t.from);
   if (available < t.amount) {
     return fail(
-      "Số dư",
-      `không đủ: khả dụng ${available}, cần ${t.amount} (đã trừ các Tx đang chờ)`
+      tr("Số dư"),
+      tr("không đủ: khả dụng {0}, cần {1} (đã trừ các Tx đang chờ)", available, t.amount)
     );
   }
-  pass("Số dư", `khả dụng ${available} ≥ ${t.amount}`);
+  pass(tr("Số dư"), tr("khả dụng {0} ≥ {1}", available, t.amount));
 
   return { valid: true, checks };
 }
@@ -170,7 +171,7 @@ export async function validateLedger(
     const txs = block.transactions;
 
     if (txs.length === 0 || txs[0].from !== COINBASE) {
-      return { valid: false, reason: `Block #${block.index}: thiếu coinbase ở đầu Block` };
+      return { valid: false, reason: tr("Block #{0}: thiếu coinbase ở đầu Block", block.index) };
     }
 
     for (let j = 0; j < txs.length; j++) {
@@ -178,10 +179,10 @@ export async function validateLedger(
 
       if (tx.from === COINBASE) {
         const bad =
-          j !== 0 ? "coinbase phải duy nhất và đứng đầu"
-          : tx.amount !== BLOCK_REWARD ? `phần thưởng phải đúng ${BLOCK_REWARD}`
-          : !ADDRESS_REGEX.test(tx.to) ? "địa chỉ nhận thưởng không hợp lệ"
-          : state.seenIds.has(tx.id) ? "coinbase trùng id"
+          j !== 0 ? tr("coinbase phải duy nhất và đứng đầu")
+          : tx.amount !== BLOCK_REWARD ? tr("phần thưởng phải đúng {0}", BLOCK_REWARD)
+          : !ADDRESS_REGEX.test(tx.to) ? tr("địa chỉ nhận thưởng không hợp lệ")
+          : state.seenIds.has(tx.id) ? tr("coinbase trùng id")
           : null;
         if (bad) return { valid: false, reason: `Block #${block.index}: ${bad}` };
       } else {

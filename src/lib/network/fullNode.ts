@@ -16,6 +16,7 @@ import {
   type TxVerifyResult,
 } from "../blockchain/txVerify";
 import { createCoinbaseTransaction } from "../blockchain/wallet";
+import { tr } from "../../i18n";
 
 type NetworkMessage =
   | {
@@ -282,7 +283,7 @@ export class FullNode {
 
       if (result.valid) {
         this.mempool.push(tx);
-        this.addLog(`✔ Tx hợp lệ → Mempool: ${label}`, "success");
+        this.addLog(tr("✔ Tx hợp lệ → Mempool: {0}", label), "success");
       } else {
         this.addLog(`✘ REJECT Tx ${label} — ${result.reason}`, "error");
       }
@@ -325,7 +326,7 @@ export class FullNode {
         kept.push(tx);
         applyTx(state, tx, "pending");
       } else {
-        this.addLog(`Loại Tx khỏi Mempool: ${result.reason}`, "info");
+        this.addLog(tr("Loại Tx khỏi Mempool: {0}", result.reason), "info");
       }
     }
 
@@ -364,7 +365,7 @@ export class FullNode {
     const miningTipIndex = previousBlock.index;
 
     this.addLog(
-      `Bắt đầu mine Block #${previousBlock.index + 1} với ${txsToMine.length} giao dịch...`,
+      tr("Bắt đầu mine Block #{0} với {1} giao dịch...", previousBlock.index + 1, txsToMine.length),
       "info"
     );
 
@@ -390,7 +391,7 @@ export class FullNode {
       currentTip.index !== miningTipIndex
     ) {
       this.addLog(
-        `⚠ Hủy Block #${block.index}: chain đã thay đổi trong lúc mining`,
+        tr("⚠ Hủy Block #{0}: chain đã thay đổi trong lúc mining", block.index),
         "fork"
       );
 
@@ -405,7 +406,7 @@ export class FullNode {
 
     if (!validation.valid) {
       this.addLog(
-        `Block #${block.index} không hợp lệ sau khi mine: ${validation.reason}`,
+        tr("Block #{0} không hợp lệ sau khi mine: {1}", block.index, validation.reason),
         "error"
       );
 
@@ -435,7 +436,7 @@ export class FullNode {
     // -------------------------------------------------------
 
     this.addLog(
-      `Đã mine thành công Block #${block.index}, đang broadcast toàn bộ chain...`,
+      tr("Đã mine thành công Block #{0}, đang broadcast toàn bộ chain...", block.index),
       "success"
     );
 
@@ -466,7 +467,7 @@ export class FullNode {
     if (!previousBlock) {
       return {
         valid: false,
-        reason: "Không có Previous Block",
+        reason: tr("Không có Previous Block"),
       };
     }
 
@@ -477,9 +478,7 @@ export class FullNode {
       return {
         valid: false,
         reason:
-          `Previous Hash không khớp | ` +
-          `block.previousHash=${block.previousHash} | ` +
-          `previousBlock.hash=${previousBlock.hash}`,
+          tr("Previous Hash không khớp | block.previousHash={0} | previousBlock.hash={1}", block.previousHash, previousBlock.hash),
       };
     }
 
@@ -593,7 +592,7 @@ export class FullNode {
 
         await this.considerChain(
           message.chain,
-          "mạng (đồng bộ ban đầu)"
+          tr("mạng (đồng bộ ban đầu)")
         );
 
         break;
@@ -623,7 +622,7 @@ export class FullNode {
 
     if (!localGenesis || !incomingGenesis) {
       this.addLog(
-        `Từ chối chain từ ${fromNodeId}: thiếu Genesis Block`,
+        tr("Từ chối chain từ {0}: thiếu Genesis Block", fromNodeId),
         "error"
       );
 
@@ -635,7 +634,7 @@ export class FullNode {
       localGenesis.hash
     ) {
       this.addLog(
-        `Từ chối chain từ ${fromNodeId}: Genesis không giống nhau`,
+        tr("Từ chối chain từ {0}: Genesis không giống nhau", fromNodeId),
         "error"
       );
 
@@ -669,7 +668,7 @@ export class FullNode {
 
     if (!validation.valid) {
       this.addLog(
-        `Từ chối chain từ ${fromNodeId}: ${validation.reason}`,
+        tr("Từ chối chain từ {0}: {1}", fromNodeId, validation.reason),
         "error"
       );
 
@@ -694,7 +693,7 @@ export class FullNode {
 
     if (!ledger.valid) {
       this.addLog(
-        `Từ chối chain từ ${fromNodeId}: ${ledger.reason}`,
+        tr("Từ chối chain từ {0}: {1}", fromNodeId, ledger.reason),
         "error"
       );
 
@@ -776,16 +775,12 @@ export class FullNode {
 
       if (isReorg) {
         this.addLog(
-          `⚠ FORK: chuyển sang chain của ${fromNodeId} | ` +
-            `PoW ${incomingWork} > ${oldWork}`,
+          tr("⚠ FORK: chuyển sang chain của {0} | PoW {1} > {2}", fromNodeId, incomingWork, oldWork),
           "fork"
         );
       } else {
         this.addLog(
-          `Đồng bộ chain từ ${fromNodeId} | ` +
-            `Height ${incomingChain.length - 1} | ` +
-            `PoW ${incomingWork} | ` +
-            `Height cũ ${oldHeight}`,
+          tr("Đồng bộ chain từ {0} | Height {1} | PoW {2} | Height cũ {3}", fromNodeId, incomingChain.length - 1, incomingWork, oldHeight),
           "success"
         );
       }
@@ -803,8 +798,7 @@ export class FullNode {
 
     if (incomingWork < myWork) {
       this.addLog(
-        `Giữ nguyên chain của mình | ` +
-          `PoW ${myWork} > ${incomingWork}`,
+        tr("Giữ nguyên chain của mình | PoW {0} > {1}", myWork, incomingWork),
         "info"
       );
 
@@ -816,8 +810,7 @@ export class FullNode {
     // =======================================================
 
     this.addLog(
-      `⚠ FORK: chain từ ${fromNodeId} có ` +
-        `cumulative PoW bằng nhau (${incomingWork})`,
+      tr("⚠ FORK: chain từ {0} có cumulative PoW bằng nhau ({1})", fromNodeId, incomingWork),
       "fork"
     );
 

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { GitBranch, Layers3 } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface MerkleTreeProps {
   levels: string[][];
@@ -18,6 +19,8 @@ export default function MerkleTree({
   proofNodes,
   onSelect,
 }: MerkleTreeProps) {
+  const { tr } = useLanguage();
+
   const displayLevels = useMemo(
     () => levels.slice(0, Math.max(1, visibleLevels)),
     [levels, visibleLevels]
@@ -31,15 +34,13 @@ export default function MerkleTree({
         <div>
           <div className="flex items-center gap-2 text-sm font-semibold text-white">
             <GitBranch size={16} className="text-cyan-400" />
-            Cây Merkle
-          </div>
+            {tr("Cây Merkle")}</div>
           <p className="mt-1 text-xs text-slate-500">
-            {totalLeaves} giao dịch · Cây băm SHA-256
-          </p>
+            {totalLeaves} {" "}{tr("giao dịch · Cây băm SHA-256")}</p>
         </div>
         <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] text-slate-400">
           <Layers3 size={13} />
-          Tầng {displayLevels.length}/{levels.length}
+          {tr("Tầng")}{" "}{displayLevels.length}/{levels.length}
         </div>
       </div>
 
@@ -54,8 +55,8 @@ export default function MerkleTree({
                 isRoot
                   ? "ROOT"
                   : levelIndex === 0
-                    ? "LÁ — HASH GIAO DỊCH"
-                    : `TẦNG ${levelIndex}`;
+                    ? tr("LÁ — HASH GIAO DỊCH")
+                    : tr("TẦNG {0}", levelIndex);
 
               return (
                 <div key={levelIndex} className="relative">
@@ -116,13 +117,11 @@ export default function MerkleTree({
 
                           {duplicated && (
                             <div className="mt-2 text-[9px] text-amber-400/80">
-                              Gấp đôi hash cuối
-                            </div>
+                              {tr("Gấp đôi hash cuối")}</div>
                           )}
 
                           <div className="mt-2 text-[9px] text-slate-600 transition group-hover:text-slate-400">
-                            Nhấn để xem chi tiết
-                          </div>
+                            {tr("Nhấn để xem chi tiết")}</div>
                         </button>
                       );
                     })}

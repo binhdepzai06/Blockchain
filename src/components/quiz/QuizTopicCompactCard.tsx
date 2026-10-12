@@ -1,6 +1,7 @@
 import React from "react";
 import type { QuizTopicMeta } from "../../data/quizTopics";
 import type { TopicQuizProgress } from "../../store/useProgressStore";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface QuizTopicCompactCardProps {
   topic: QuizTopicMeta;
@@ -13,6 +14,8 @@ export const QuizTopicCompactCard: React.FC<QuizTopicCompactCardProps> = ({
   progress,
   onStartQuiz,
 }) => {
+  const { tr } = useLanguage();
+
   // Use persistent progress if user has answered, or fallback to overallStats for demo
   const userHasProgress = (progress?.answered ?? 0) > 0;
   const answered = userHasProgress
@@ -40,31 +43,27 @@ export const QuizTopicCompactCard: React.FC<QuizTopicCompactCardProps> = ({
             {topic.icon}
           </div>
           <h3 className="text-base font-bold text-white group-hover:text-blue-400 transition-colors">
-            {topic.title}
+            {tr(topic.title)}
           </h3>
         </div>
 
         {/* Badges: Dễ, Vừa, Khó */}
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center rounded-md border border-cyan-500/30 bg-cyan-950/50 px-2 py-0.5 text-xs font-semibold text-cyan-300">
-            {topic.overallStats.easyTotal} Dễ
-          </span>
+            {topic.overallStats.easyTotal} {" "}{tr("Dễ")}</span>
           <span className="inline-flex items-center rounded-md border border-amber-500/30 bg-amber-950/50 px-2 py-0.5 text-xs font-semibold text-amber-300">
-            {topic.overallStats.mediumTotal} Vừa
-          </span>
+            {topic.overallStats.mediumTotal} {" "}{tr("Vừa")}</span>
           <span className="inline-flex items-center rounded-md border border-rose-500/30 bg-rose-950/50 px-2 py-0.5 text-xs font-semibold text-rose-300">
-            {topic.overallStats.hardTotal} Khó
-          </span>
+            {topic.overallStats.hardTotal} {" "}{tr("Khó")}</span>
         </div>
 
         {/* Answered text */}
         <div className="mt-3 text-xs text-slate-400">
           {answered === 0 ? (
-            <span>0/{total} đã trả lời</span>
+            <span>0/{total} {" "}{tr("đã trả lời")}</span>
           ) : (
             <span>
-              {answered}/{total} đã trả lời • {correct}/{answered} đúng
-            </span>
+              {answered}/{total} {" "}{tr("đã trả lời •")}{" "}{correct}/{answered} {" "}{tr("đúng")}</span>
           )}
         </div>
       </div>

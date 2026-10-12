@@ -9,6 +9,7 @@ import type {
   AttackParameters,
   AttackStatus,
 } from "../../types/attack";
+import { useLanguage } from "../../context/LanguageContext";
 
 const STATUS_LABELS: Record<AttackStatus, string> = {
   IDLE: "Chưa chạy",
@@ -43,17 +44,17 @@ export default function AttackParametersPanel({
   onStop,
   onReset,
 }: Props) {
+  const { tr } = useLanguage();
+
   return (
     <section className="rounded-3xl border border-white/10 bg-white/[0.025] p-5">
       <div className="mb-5 flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">
-            Điều khiển mô phỏng
-          </div>
+            {tr("Điều khiển mô phỏng")}</div>
 
           <h3 className="mt-1 text-lg font-bold text-white">
-            Thông số tấn công
-          </h3>
+            {tr("Thông số tấn công")}</h3>
         </div>
 
         <div
@@ -65,7 +66,7 @@ export default function AttackParametersPanel({
                 : "border-white/10 bg-white/5 text-slate-500"
           }`}
         >
-          {STATUS_LABELS[status]}
+          {tr(STATUS_LABELS[status])}
         </div>
       </div>
 
@@ -74,8 +75,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Sức mạnh đào (Hash Power)
-            </label>
+              {tr("Sức mạnh đào (Hash Power)")}</label>
 
             <span className="text-xs font-bold text-blue-300">
               {parameters.hashPower}%
@@ -102,8 +102,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Số Node của kẻ tấn công
-            </label>
+              {tr("Số Node của kẻ tấn công")}</label>
 
             <span className="text-xs font-bold text-purple-300">
               {parameters.attackerNodes}
@@ -129,8 +128,7 @@ export default function AttackParametersPanel({
         {/* TARGET NODE */}
         <div>
           <label className="mb-2 block text-xs font-medium text-slate-400">
-            Node mục tiêu
-          </label>
+            {tr("Node mục tiêu")}</label>
 
           <select
             value={parameters.targetNode}
@@ -156,8 +154,7 @@ export default function AttackParametersPanel({
         <div>
           <div className="mb-2 flex justify-between">
             <label className="text-xs font-medium text-slate-400">
-              Tốc độ mô phỏng
-            </label>
+              {tr("Tốc độ mô phỏng")}</label>
 
             <span className="text-xs font-bold text-cyan-300">
               {parameters.attackSpeed}x
@@ -190,8 +187,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Play size={16} />
-          Bắt đầu tấn công
-        </button>
+          {tr("Bắt đầu tấn công")}</button>
 
         <button
           type="button"
@@ -200,8 +196,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:opacity-40"
         >
           <StepForward size={16} />
-          Từng bước
-        </button>
+          {tr("Từng bước")}</button>
 
         <button
           type="button"
@@ -210,8 +205,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/5 px-4 py-2.5 text-sm font-semibold text-red-300 transition hover:bg-red-500/10 disabled:opacity-40"
         >
           <Square size={15} />
-          Dừng
-        </button>
+          {tr("Dừng")}</button>
 
         <button
           type="button"
@@ -219,8 +213,7 @@ export default function AttackParametersPanel({
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
         >
           <RotateCcw size={15} />
-          Làm lại
-        </button>
+          {tr("Làm lại")}</button>
       </div>
     </section>
   );

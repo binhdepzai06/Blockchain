@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import type { AttackState } from "../../types/attack";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface Props {
   state: AttackState;
@@ -14,6 +15,8 @@ interface Props {
 export default function AttackResult({
   state,
 }: Props) {
+  const { tr } = useLanguage();
+
   const success =
     state.status === "SUCCESS";
 
@@ -25,12 +28,10 @@ export default function AttackResult({
       <div className="mb-5 flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400">
-            Phân tích kết quả
-          </div>
+            {tr("Phân tích kết quả")}</div>
 
           <h3 className="mt-1 text-lg font-bold text-white">
-            Kết quả mô phỏng
-          </h3>
+            {tr("Kết quả mô phỏng")}</h3>
         </div>
 
         {success ? (
@@ -55,8 +56,7 @@ export default function AttackResult({
         {/* RESULT */}
         <div className="rounded-2xl border border-white/5 bg-black/10 p-4">
           <div className="text-[10px] uppercase tracking-widest text-slate-600">
-            Trạng thái
-          </div>
+            {tr("Trạng thái")}</div>
 
           <div className="mt-2 flex items-center gap-2">
             {success ? (
@@ -93,24 +93,24 @@ export default function AttackResult({
         {/* METRICS */}
         <div className="grid grid-cols-2 gap-2">
           <Metric
-            label="Tiến độ tấn công"
+            label={tr("Tiến độ tấn công")}
             value={`${state.metrics.attackProgress}%`}
           />
 
           <Metric
-            label="% Mạng bị kiểm soát"
+            label={tr("% Mạng bị kiểm soát")}
             value={`${state.metrics.networkControl}%`}
           />
 
           <Metric
-            label="Node bị ảnh hưởng"
+            label={tr("Node bị ảnh hưởng")}
             value={String(
               state.metrics.affectedNodes,
             )}
           />
 
           <Metric
-            label="Block của kẻ tấn công"
+            label={tr("Block của kẻ tấn công")}
             value={String(
               state.metrics.attackerBlocks,
             )}
@@ -121,16 +121,10 @@ export default function AttackResult({
       {/* EDUCATIONAL NOTE */}
       <div className="mt-4 rounded-2xl border border-blue-400/10 bg-blue-500/[0.04] p-4">
         <div className="text-xs font-semibold text-blue-300">
-          Giải thích thêm
-        </div>
+          {tr("Giải thích thêm")}</div>
 
         <p className="mt-2 text-xs leading-5 text-slate-500">
-          Đây là mô phỏng giáo dục. Các hành vi trên
-          được thực hiện trong môi trường giả lập
-          của CryptoLab nhằm minh họa cơ chế
-          bảo mật blockchain, không thực hiện
-          tấn công vào mạng blockchain thật.
-        </p>
+          {tr("Đây là mô phỏng giáo dục. Các hành vi trên được thực hiện trong môi trường giả lập của CryptoLab nhằm minh họa cơ chế bảo mật blockchain, không thực hiện tấn công vào mạng blockchain thật.")}</p>
       </div>
     </section>
   );

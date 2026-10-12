@@ -23,6 +23,7 @@ import type {
   NetworkNode,
   SimulationResult,
 } from "../../types/network";
+import { useLanguage } from "../../context/LanguageContext";
 
 const initialNodes: NetworkNode[] = [
   {
@@ -101,6 +102,8 @@ function getNextNodeId(nodes: NetworkNode[]) {
 }
 
 export default function NetworkPage() {
+  const { tr } = useLanguage();
+
   const [nodes, setNodes] = useState<NetworkNode[]>(initialNodes);
   const [connections, setConnections] =
     useState<NetworkConnection[]>(initialConnections);
@@ -334,12 +337,12 @@ export default function NetworkPage() {
     event.preventDefault();
 
     if (connectionSource === connectionTarget) {
-      setError("Một node không thể kết nối với chính nó.");
+      setError(tr("Một node không thể kết nối với chính nó."));
       return;
     }
 
     if (!Number.isFinite(connectionLatency) || connectionLatency < 0) {
-      setError("Latency phải lớn hơn hoặc bằng 0.");
+      setError(tr("Latency phải lớn hơn hoặc bằng 0."));
       return;
     }
 
@@ -352,7 +355,7 @@ export default function NetworkPage() {
     );
 
     if (alreadyExists) {
-      setError("Hai node này đã được kết nối.");
+      setError(tr("Hai node này đã được kết nối."));
       return;
     }
 
@@ -401,15 +404,13 @@ export default function NetworkPage() {
           </h1>
 
           <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-            Thay đổi topology, latency, trạng thái node và quan sát transaction
-            hoặc block lan truyền qua mạng blockchain.
-          </p>
+            {tr("Thay đổi topology, latency, trạng thái node và quan sát transaction hoặc block lan truyền qua mạng blockchain.")}</p>
         </div>
 
         <div className="mb-6 grid gap-6 lg:grid-cols-3">
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 lg:col-span-2">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-semibold text-white">Sơ đồ mạng</h2>
+              <h2 className="font-semibold text-white">{tr("Sơ đồ mạng")}</h2>
 
               <div className="flex flex-wrap gap-2">
                 <button
@@ -439,8 +440,7 @@ export default function NetworkPage() {
                 htmlFor="network-start-node"
                 className="text-sm text-slate-400"
               >
-                Node bắt đầu
-              </label>
+                {tr("Node bắt đầu")}</label>
 
               <select
                 id="network-start-node"
@@ -552,8 +552,7 @@ export default function NetworkPage() {
             <div className="mt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
               <span className="flex items-center gap-2">
                 <span className="h-3 w-3 rounded-full bg-blue-500" />
-                Node thường
-              </span>
+                {tr("Node thường")}</span>
 
               <span className="flex items-center gap-2">
                 <ShieldCheck size={14} className="text-emerald-400" />
@@ -569,14 +568,12 @@ export default function NetworkPage() {
 
           <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
             <h2 className="mb-4 font-semibold text-white">
-              Nhật ký lan truyền
-            </h2>
+              {tr("Nhật ký lan truyền")}</h2>
 
             <div className="space-y-2">
               {visibleEvents.length === 0 && (
                 <p className="text-sm leading-6 text-slate-500">
-                  Chọn node bắt đầu rồi chạy Transaction hoặc Block.
-                </p>
+                  {tr("Chọn node bắt đầu rồi chạy Transaction hoặc Block.")}</p>
               )}
 
               {visibleEvents.map((event, index) => (
@@ -584,11 +581,11 @@ export default function NetworkPage() {
                   key={event.nodeId}
                   className="rounded-xl border border-white/5 bg-[#050816] px-4 py-2.5 text-xs text-slate-300"
                 >
-                  Đợt {index + 1}: Node {event.nodeId} nhận dữ liệu tại{" "}
+                  {tr("Đợt")}{" "}{index + 1}: Node {event.nodeId} {" "}{tr("nhận dữ liệu tại")}{" "}
                   {event.receivedAt}ms
                   {event.fromNodeId
-                    ? ` từ Node ${event.fromNodeId}`
-                    : " — nguồn phát"}
+                    ? tr(" từ Node {0}", event.fromNodeId)
+                    : tr(" — nguồn phát")}
                 </div>
               ))}
             </div>
@@ -596,21 +593,21 @@ export default function NetworkPage() {
             {result && (
               <div className="mt-5 space-y-2 rounded-2xl border border-blue-400/10 bg-blue-400/5 p-4 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Loại dữ liệu</span>
+                  <span className="text-slate-500">{tr("Loại dữ liệu")}</span>
                   <span className="font-semibold text-white">
                     {result.type}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Node nhận được</span>
+                  <span className="text-slate-500">{tr("Node nhận được")}</span>
                   <span className="font-semibold text-white">
                     {result.reachedNodes}/{nodes.length}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Tổng thời gian</span>
+                  <span className="text-slate-500">{tr("Tổng thời gian")}</span>
                   <span className="font-semibold text-white">
                     {result.totalPropagationTime}ms
                   </span>
@@ -628,8 +625,7 @@ export default function NetworkPage() {
 
         <section className="mb-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6">
           <h2 className="mb-5 font-semibold text-white">
-            Quản lý Network
-          </h2>
+            {tr("Quản lý Network")}</h2>
 
           <div className="grid gap-6 lg:grid-cols-2">
             <form
@@ -645,7 +641,7 @@ export default function NetworkPage() {
                 type="text"
                 value={newNodeName}
                 onChange={(event) => setNewNodeName(event.target.value)}
-                placeholder="Tên node"
+                placeholder={tr("Tên node")}
                 className="mb-4 w-full rounded-xl border border-white/10 bg-[#0b1020] px-4 py-3 text-sm text-white outline-none"
               />
 

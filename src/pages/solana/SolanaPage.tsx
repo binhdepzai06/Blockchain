@@ -25,6 +25,7 @@ import type {
   ValidatorVote,
   VoteChoice,
 } from "../../types/solana";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface Slot {
   slot: number;
@@ -108,6 +109,8 @@ const initialVotes: ValidatorVote[] = [
 ];
 
 export default function SolanaPage() {
+  const { tr } = useLanguage();
+
   const [slots, setSlots] = useState<Slot[]>(generateSlots(8));
 
   const [validators, setValidators] =
@@ -269,7 +272,7 @@ export default function SolanaPage() {
     event.preventDefault();
 
     if (newValidatorStake < 0) {
-      setError("Stake không được âm.");
+      setError(tr("Stake không được âm."));
       return;
     }
 
@@ -371,45 +374,40 @@ export default function SolanaPage() {
         <div className="mb-8">
           <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-400/10 px-4 py-2 text-sm text-purple-300">
             <Zap size={16} />
-            Educational Simulation — không phải dữ liệu mạng thật
-          </div>
+            {tr("Educational Simulation — không phải dữ liệu mạng thật")}</div>
 
           <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
             Solana — Slot, Validator & Voting
           </h1>
 
           <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-            Quan sát Slot/Block Production và thử thay đổi Validator,
-            Stake, Delegation để xem stake-weighted voting thay đổi.
-          </p>
+            {tr("Quan sát Slot/Block Production và thử thay đổi Validator, Stake, Delegation để xem stake-weighted voting thay đổi.")}</p>
         </div>
 
         <div className="mb-6 flex items-center gap-2 rounded-2xl border border-yellow-400/20 bg-yellow-400/5 px-5 py-3 text-sm text-yellow-300">
           <Info size={16} />
-          Toàn bộ dữ liệu là mô phỏng phục vụ học tập, không kết nối
-          mạng Solana thật.
-        </div>
+          {tr("Toàn bộ dữ liệu là mô phỏng phục vụ học tập, không kết nối mạng Solana thật.")}</div>
 
         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <StatBox
-            label="Tổng số Slot"
+            label={tr("Tổng số Slot")}
             value={slots.length.toString()}
           />
 
           <StatBox
-            label="Tổng Transaction"
+            label={tr("Tổng Transaction")}
             value={totalTx.toLocaleString()}
           />
 
           <StatBox
-            label="TX trung bình / Slot"
+            label={tr("TX trung bình / Slot")}
             value={Math.round(
               totalTx / slots.length,
             ).toString()}
           />
 
           <StatBox
-            label="Số Validator"
+            label={tr("Số Validator")}
             value={validators.length.toString()}
           />
         </div>
@@ -417,8 +415,7 @@ export default function SolanaPage() {
         <section className="mb-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6">
           <div className="mb-5 flex items-center justify-between">
             <h2 className="font-semibold text-white">
-              Slot gần nhất
-            </h2>
+              {tr("Slot gần nhất")}</h2>
 
             <button
               type="button"
@@ -426,8 +423,7 @@ export default function SolanaPage() {
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-[1.02]"
             >
               <Activity size={15} />
-              Tạo slot mới
-            </button>
+              {tr("Tạo slot mới")}</button>
           </div>
 
           <div className="grid gap-3 md:grid-cols-4">
@@ -781,15 +777,10 @@ export default function SolanaPage() {
 
         <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
           <h2 className="mb-4 font-semibold text-white">
-            Ý nghĩa thí nghiệm
-          </h2>
+            {tr("Ý nghĩa thí nghiệm")}</h2>
 
           <p className="text-sm leading-6 text-slate-400">
-            Delegator thay đổi stake hoặc chuyển delegation sẽ làm thay đổi
-            voting weight của validator. Trong mô phỏng này, block được chấp
-            nhận khi ít nhất 2/3 tổng stake đang tham gia voting chọn
-            Approve.
-          </p>
+            {tr("Delegator thay đổi stake hoặc chuyển delegation sẽ làm thay đổi voting weight của validator. Trong mô phỏng này, block được chấp nhận khi ít nhất 2/3 tổng stake đang tham gia voting chọn Approve.")}</p>
         </section>
       </div>
     </div>

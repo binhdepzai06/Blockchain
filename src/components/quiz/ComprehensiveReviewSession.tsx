@@ -18,6 +18,7 @@ import {
 } from "../../utils/comprehensiveReviewGenerator";
 import { QUIZ_TOPICS } from "../../data/quizTopics";
 import { useProgressStore } from "../../store/useProgressStore";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface ComprehensiveReviewSessionProps {
   onBack: () => void;
@@ -28,6 +29,8 @@ type ReviewStage = "intro" | "in_progress" | "completed";
 export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProps> = ({
   onBack,
 }) => {
+  const { tr } = useLanguage();
+
   const { addXp } = useProgressStore();
   const [stage, setStage] = useState<ReviewStage>("intro");
   const [questions, setQuestions] = useState<ComprehensiveQuestion[]>(() =>
@@ -117,20 +120,17 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
       case "easy":
         return (
           <span className="inline-flex items-center rounded-md border border-emerald-500/30 bg-emerald-950/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">
-            Dễ
-          </span>
+            {tr("Dễ")}</span>
         );
       case "medium":
         return (
           <span className="inline-flex items-center rounded-md border border-amber-500/30 bg-amber-950/60 px-2.5 py-0.5 text-xs font-semibold text-amber-300">
-            Vừa
-          </span>
+            {tr("Vừa")}</span>
         );
       case "hard":
         return (
           <span className="inline-flex items-center rounded-md border border-rose-500/30 bg-rose-950/60 px-2.5 py-0.5 text-xs font-semibold text-rose-300">
-            Khó
-          </span>
+            {tr("Khó")}</span>
         );
     }
   };
@@ -146,11 +146,11 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
             >
               <ArrowLeft size={14} />
-              <span>Quay lại danh sách</span>
+              <span>{tr("Quay lại danh sách")}</span>
             </button>
             <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-300">
               <Sparkles size={13} />
-              <span>Tính năng mới</span>
+              <span>{tr("Tính năng mới")}</span>
             </div>
           </div>
 
@@ -159,38 +159,35 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
               <Layers size={40} />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
-              Ôn tập tổng hợp
-            </h1>
+              {tr("Ôn tập tổng hợp")}</h1>
             <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed">
-              Thử thách 40 câu hỏi trắc nghiệm tổng hợp từ toàn bộ 9 chuyên đề cốt lõi. Câu hỏi được phân bổ đồng đều giữa các chủ đề và cân bằng giữa 3 mức độ Dễ, Vừa và Khó.
-            </p>
+              {tr("Thử thách 40 câu hỏi trắc nghiệm tổng hợp từ toàn bộ 9 chuyên đề cốt lõi. Câu hỏi được phân bổ đồng đều giữa các chủ đề và cân bằng giữa 3 mức độ Dễ, Vừa và Khó.")}</p>
           </div>
 
           {/* Quick Specifications */}
           <div className="my-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4 text-center">
               <div className="text-2xl font-black text-blue-400 sm:text-3xl">40</div>
-              <div className="mt-1 text-xs text-slate-400">Câu hỏi chọn lọc</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Câu hỏi chọn lọc")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4 text-center">
               <div className="text-2xl font-black text-emerald-400 sm:text-3xl">9/9</div>
-              <div className="mt-1 text-xs text-slate-400">Chuyên đề cốt lõi</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Chuyên đề cốt lõi")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4 text-center">
-              <div className="text-2xl font-black text-amber-400 sm:text-3xl">3 cấp độ</div>
-              <div className="mt-1 text-xs text-slate-400">Dễ · Vừa · Khó</div>
+              <div className="text-2xl font-black text-amber-400 sm:text-3xl">{tr("3 cấp độ")}</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Dễ · Vừa · Khó")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4 text-center">
-              <div className="text-2xl font-black text-purple-400 sm:text-3xl">Tức thì</div>
-              <div className="mt-1 text-xs text-slate-400">Hiện Đúng / Sai ngay</div>
+              <div className="text-2xl font-black text-purple-400 sm:text-3xl">{tr("Tức thì")}</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Hiện Đúng / Sai ngay")}</div>
             </div>
           </div>
 
           {/* 9 Topics Included */}
           <div className="mb-8 rounded-2xl border border-white/5 bg-[#080d19] p-5">
             <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">
-              Danh sách 9 chuyên đề được phân bổ đồng đều:
-            </h3>
+              {tr("Danh sách 9 chuyên đề được phân bổ đồng đều:")}</h3>
             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
               {QUIZ_TOPICS.map((topic) => (
                 <div
@@ -198,7 +195,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                   className="flex items-center gap-2.5 rounded-xl border border-white/5 bg-[#0c1322] px-3 py-2 text-xs text-slate-300"
                 >
                   <span className="text-base">{topic.icon}</span>
-                  <span className="font-medium truncate">{topic.title}</span>
+                  <span className="font-medium truncate">{tr(topic.title)}</span>
                   <span className="ml-auto text-[10px] text-slate-400">{topic.secCode}</span>
                 </div>
               ))}
@@ -212,13 +209,13 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-3.5 text-base font-bold text-white shadow-xl shadow-blue-500/25 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]"
             >
               <Sparkles size={18} />
-              <span>Bắt đầu</span>
+              <span>{tr("Bắt đầu")}</span>
             </button>
             <button
               onClick={onBack}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3.5 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
             >
-              <span>Quay lại</span>
+              <span>{tr("Quay lại")}</span>
             </button>
           </div>
         </div>
@@ -250,28 +247,26 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
             <Trophy size={44} />
           </div>
           <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            Hoàn thành Ôn tập tổng hợp!
-          </h2>
+            {tr("Hoàn thành Ôn tập tổng hợp!")}</h2>
           <p className="mt-1 text-sm text-slate-400">
-            Kết quả 40 câu hỏi trắc nghiệm qua 9 chuyên đề Blockchain
-          </p>
+            {tr("Kết quả 40 câu hỏi trắc nghiệm qua 9 chuyên đề Blockchain")}</p>
 
           <div className="my-8 grid grid-cols-3 gap-3 sm:gap-4">
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-blue-400 sm:text-3xl">{percent}%</div>
-              <div className="mt-1 text-xs text-slate-400">Độ chính xác</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Độ chính xác")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-emerald-400 sm:text-3xl">
                 {correctCount} / {totalQuestions}
               </div>
-              <div className="mt-1 text-xs text-slate-400">Câu trả lời đúng</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Câu trả lời đúng")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-purple-400 sm:text-3xl">
                 +{correctCount * 15}
               </div>
-              <div className="mt-1 text-xs text-slate-400">Điểm kinh nghiệm</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Điểm kinh nghiệm")}</div>
             </div>
           </div>
 
@@ -280,9 +275,8 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
             <div className="mb-3 flex items-center justify-between text-xs text-slate-400 font-bold uppercase">
               <span className="flex items-center gap-1.5">
                 <BarChart3 size={14} className="text-blue-400" />
-                Kết quả chi tiết theo từng chuyên đề:
-              </span>
-              <span>Đúng / Tổng số</span>
+                {tr("Kết quả chi tiết theo từng chuyên đề:")}</span>
+              <span>{tr("Đúng / Tổng số")}</span>
             </div>
             <div className="space-y-2">
               {topicBreakdown.map((t) => {
@@ -294,7 +288,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-base">{t.icon}</span>
-                      <span className="font-semibold text-white">{t.title}</span>
+                      <span className="font-semibold text-white">{tr(t.title)}</span>
                       <span className="text-[10px] text-slate-500">({t.secCode})</span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -321,14 +315,14 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-500 active:scale-[0.98]"
             >
               <RotateCcw size={16} />
-              <span>Làm lại</span>
+              <span>{tr("Làm lại")}</span>
             </button>
             <button
               onClick={onBack}
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-300 transition hover:bg-white/10"
             >
               <ArrowLeft size={16} />
-              <span>Quay lại danh sách chủ đề</span>
+              <span>{tr("Quay lại danh sách chủ đề")}</span>
             </button>
           </div>
         </div>
@@ -346,28 +340,28 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
         >
           <ArrowLeft size={14} />
-          <span>Danh sách chủ đề</span>
+          <span>{tr("Danh sách chủ đề")}</span>
         </button>
 
         {/* Live Score Counter */}
         <div className="flex items-center gap-2 sm:gap-3 text-xs">
           <span className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 font-semibold text-emerald-300">
             <CheckCircle2 size={13} />
-            Đúng: {correctCount}
+            {tr("Đúng:")}{" "}{correctCount}
           </span>
           <span className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 font-semibold text-rose-300">
             <XCircle size={13} />
             Sai: {incorrectCount}
           </span>
           <span className="hidden sm:inline text-slate-400">
-            Đã làm: <strong className="text-white">{answeredCount}</strong> / {totalQuestions}
+            {tr("Đã làm:")}{" "}<strong className="text-white">{answeredCount}</strong> / {totalQuestions}
           </span>
           {/* NỘP BÀI button in header */}
           <button
             onClick={handleSubmit}
             className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600/90 px-3 py-1 font-bold text-white transition hover:bg-emerald-500 text-xs shadow"
           >
-            <span>Nộp bài</span>
+            <span>{tr("Nộp bài")}</span>
           </button>
         </div>
       </div>
@@ -376,11 +370,11 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
       <div className="mb-5 flex items-center justify-between rounded-xl border border-blue-500/20 bg-blue-500/5 px-4 py-2.5 text-xs text-slate-300">
         <div className="flex items-center gap-2">
           <Flame size={14} className="text-blue-400" />
-          <span className="font-semibold text-white">Chế độ Ôn tập tổng hợp</span>
-          <span className="text-slate-400">· 40 câu hỏi trích từ 9 chuyên đề</span>
+          <span className="font-semibold text-white">{tr("Chế độ Ôn tập tổng hợp")}</span>
+          <span className="text-slate-400">{tr("· 40 câu hỏi trích từ 9 chuyên đề")}</span>
         </div>
         <div className="text-slate-400 hidden sm:block">
-          Tiến độ: {Math.round((answeredCount / totalQuestions) * 100)}%
+          {tr("Tiến độ:")}{" "}{Math.round((answeredCount / totalQuestions) * 100)}%
         </div>
       </div>
 
@@ -391,7 +385,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-xs">
               <span className="font-mono text-slate-400">
-                Câu {currentIndex + 1} / {totalQuestions}
+                {tr("Câu")}{" "}{currentIndex + 1} / {totalQuestions}
               </span>
               <span>·</span>
               {getDifficultyBadge(currentQuestion.difficulty)}
@@ -414,8 +408,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                 {selectedOptionIndex === currentQuestion.correctIndex ? (
                   <>
                     <CheckCircle2 size={14} className="text-emerald-400" />
-                    Đúng ✅
-                  </>
+                    {tr("Đúng ✅")}</>
                 ) : (
                   <>
                     <XCircle size={14} className="text-rose-400" />
@@ -452,7 +445,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                   badge = (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 shrink-0 ml-2">
                       <CheckCircle2 size={16} />
-                      {isUserSelection ? "Đúng ✅" : "Đáp án đúng ✅"}
+                      {isUserSelection ? tr("Đúng ✅") : tr("Đáp án đúng ✅")}
                     </span>
                   );
                 } else if (isUserSelection && !isCorrectAnswer) {
@@ -506,17 +499,17 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                 className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 <ArrowLeft size={14} />
-                <span>Câu trước</span>
+                <span>{tr("Câu trước")}</span>
               </button>
 
               {/* LÀM LẠI */}
               <button
                 onClick={handleRestart}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs font-medium text-slate-400 transition hover:bg-white/10 hover:text-white"
-                title="Làm lại toàn bộ bài thi"
+                title={tr("Làm lại toàn bộ bài thi")}
               >
                 <RotateCcw size={13} />
-                <span>Làm lại</span>
+                <span>{tr("Làm lại")}</span>
               </button>
             </div>
 
@@ -528,7 +521,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                   className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-6 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-500 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <CheckCircle2 size={14} />
-                  <span>Nộp bài</span>
+                  <span>{tr("Nộp bài")}</span>
                 </button>
               ) : (
                 /* CÂU TIẾP THEO */
@@ -536,7 +529,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                   onClick={handleNext}
                   className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span>Câu tiếp theo</span>
+                  <span>{tr("Câu tiếp theo")}</span>
                   <ArrowRight size={14} />
                 </button>
               )}
@@ -549,21 +542,18 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
       <div className="mt-6 rounded-2xl border border-white/10 bg-[#0d1322] p-4 sm:p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
           <span className="font-semibold text-slate-300">
-            Bảng điều hướng nhanh 40 câu hỏi:
-          </span>
+            {tr("Bảng điều hướng nhanh 40 câu hỏi:")}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              Đúng
-            </span>
+              {tr("Đúng")}</span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-rose-400" />
               Sai
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-slate-700" />
-              Chưa làm
-            </span>
+              {tr("Chưa làm")}</span>
           </div>
         </div>
 
@@ -593,7 +583,7 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                 key={q.id}
                 onClick={() => setCurrentIndex(idx)}
                 className={`flex h-8 w-full items-center justify-center rounded-lg border text-xs transition ${dotStyle}`}
-                title={`Câu ${idx + 1}: ${q.topicTitle}`}
+                title={tr("Câu {0}: {1}", idx + 1, q.topicTitle)}
               >
                 {idx + 1}
               </button>
@@ -609,13 +599,11 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400">
               <HelpCircle size={28} />
             </div>
-            <h3 className="text-lg font-bold text-white">Xác nhận nộp bài?</h3>
+            <h3 className="text-lg font-bold text-white">{tr("Xác nhận nộp bài?")}</h3>
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              Bạn đã hoàn thành <strong className="text-white">{answeredCount}</strong> / {totalQuestions} câu hỏi.
-              {answeredCount < totalQuestions && (
+              {tr("Bạn đã hoàn thành")}{" "}<strong className="text-white">{answeredCount}</strong> / {totalQuestions} {" "}{tr("câu hỏi.")}{answeredCount < totalQuestions && (
                 <span className="block mt-1 text-amber-400">
-                  Còn {totalQuestions - answeredCount} câu hỏi chưa được trả lời.
-                </span>
+                  {tr("Còn")}{" "}{totalQuestions - answeredCount} {" "}{tr("câu hỏi chưa được trả lời.")}</span>
               )}
             </p>
 
@@ -624,14 +612,12 @@ export const ComprehensiveReviewSession: React.FC<ComprehensiveReviewSessionProp
                 onClick={() => setShowSubmitModal(false)}
                 className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 transition hover:bg-white/10"
               >
-                Tiếp tục làm bài
-              </button>
+                {tr("Tiếp tục làm bài")}</button>
               <button
                 onClick={finalizeQuiz}
                 className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-500"
               >
-                Nộp bài
-              </button>
+                {tr("Nộp bài")}</button>
             </div>
           </div>
         </div>

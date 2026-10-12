@@ -8,6 +8,7 @@ import type { Transaction } from "../../types/transaction";
 import type { Block } from "../../types/blockchain";
 import { createGenesisBlock } from "../network/genesis";
 import { computeBlockHash, mineFullBlock } from "../network/mining";
+import { tr } from "../../i18n";
 
 export class BlockchainEngine {
   public chain: Block[];
@@ -91,12 +92,12 @@ export class BlockchainEngine {
     const previousBlock = this.getLatestBlock();
 
     if (!previousBlock) {
-      throw new Error("Blockchain chưa được initialize");
+      throw new Error(tr("Blockchain chưa được initialize"));
     }
 
     const { root: merkleRoot } = await buildMerkleTree(transactions);
 
-    const blockData = data ?? `Block chứa ${transactions.length} giao dịch`;
+    const blockData = data ?? tr("Block chứa {0} giao dịch", transactions.length);
 
     const newBlock: Block = {
       version: BLOCK_VERSION,
@@ -138,7 +139,7 @@ export class BlockchainEngine {
     const previousBlock = this.getLatestBlock();
 
     if (!previousBlock) {
-      throw new Error("Blockchain chưa được initialize");
+      throw new Error(tr("Blockchain chưa được initialize"));
     }
 
     return mineFullBlock(

@@ -9,6 +9,7 @@ import {
 
 import type { Block } from "../../types/blockchain";
 import type { Transaction } from "../../types/transaction";
+import { tr } from "../../i18n";
 
 // =========================================================
 // COMPUTE BLOCK HASH
@@ -38,7 +39,7 @@ export async function mineFullBlock(
     await buildMerkleTree(transactions);
 
   const blockData =
-    data ?? `Block chứa ${transactions.length} giao dịch`;
+    data ?? tr("Block chứa {0} giao dịch", transactions.length);
 
   const dataHash = await hashBlockData(blockData);
 
@@ -120,9 +121,7 @@ export async function validateBlock(
     return {
       valid: false,
       reason:
-        `Sai thứ tự index: ` +
-        `Block #${block.index}, ` +
-        `Previous #${previousBlock.index}`,
+        tr("Sai thứ tự index: Block #{0}, Previous #{1}", block.index, previousBlock.index),
     };
   }
 
@@ -137,9 +136,7 @@ export async function validateBlock(
     return {
       valid: false,
       reason:
-        `Previous Hash không khớp | ` +
-        `block.previousHash=${block.previousHash} | ` +
-        `previousBlock.hash=${previousBlock.hash}`,
+        tr("Previous Hash không khớp | block.previousHash={0} | previousBlock.hash={1}", block.previousHash, previousBlock.hash),
     };
   }
 
@@ -170,7 +167,7 @@ export async function validateBlock(
     return {
       valid: false,
       reason:
-        "Hash không khớp với Header (bị giả mạo)",
+        tr("Hash không khớp với Header (bị giả mạo)"),
     };
   }
 
@@ -190,7 +187,7 @@ export async function validateBlock(
     return {
       valid: false,
       reason:
-        `Hash không đạt độ khó PoW ${difficulty}`,
+        tr("Hash không đạt độ khó PoW {0}", difficulty),
     };
   }
 
@@ -213,7 +210,7 @@ export async function validateChain(
     return {
       valid: false,
       reason:
-        "Blockchain rỗng",
+        tr("Blockchain rỗng"),
     };
   }
 

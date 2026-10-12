@@ -1,5 +1,6 @@
 import type { AttackState } from "../../types/attack";
 import { createBlock, createEvent } from "./attackEngine";
+import { tr } from "../../i18n";
 
 export function initializeDoubleSpendAttack(
   state: AttackState,
@@ -7,9 +8,9 @@ export function initializeDoubleSpendAttack(
   return {
     ...state,
 
-    resultTitle: "Mô phỏng chi tiêu gấp đôi",
+    resultTitle: tr("Mô phỏng chi tiêu gấp đôi"),
     resultDescription:
-      "Mô phỏng hai giao dịch sử dụng cùng một nguồn tiền: Alice → Bob và Alice → Charlie.",
+      tr("Mô phỏng hai giao dịch sử dụng cùng một nguồn tiền: Alice → Bob và Alice → Charlie."),
 
     events: [
       ...state.events,
@@ -142,13 +143,13 @@ export function stepDoubleSpendAttack(
 
     resultTitle:
       finished
-        ? "Phát hiện 2 giao dịch tranh chấp cùng 1 số tiền!"
-        : "Đang xử lý giao dịch xung đột...",
+        ? tr("Phát hiện 2 giao dịch tranh chấp cùng 1 số tiền!")
+        : tr("Đang xử lý giao dịch xung đột..."),
 
     resultDescription:
       finished
-        ? "Hai transaction sử dụng cùng nguồn tiền không thể cùng tồn tại trong cùng một trạng thái UTXO hợp lệ."
-        : "Hệ thống đang mô phỏng quá trình tạo, truyền và xác thực các transaction xung đột.",
+        ? tr("Hai transaction sử dụng cùng nguồn tiền không thể cùng tồn tại trong cùng một trạng thái UTXO hợp lệ.")
+        : tr("Hệ thống đang mô phỏng quá trình tạo, truyền và xác thực các transaction xung đột."),
 
     resultImpact:
       step >= 4

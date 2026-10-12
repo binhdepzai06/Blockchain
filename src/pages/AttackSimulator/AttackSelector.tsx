@@ -8,6 +8,7 @@ import {
 
 import type { AttackType } from "../../types/attack";
 import { ATTACK_DEFINITIONS } from "../../simulation/attacks/attackTypes";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface Props {
   selected: AttackType;
@@ -26,22 +27,20 @@ export default function AttackSelector({
   selected,
   onSelect,
 }: Props) {
+  const { tr } = useLanguage();
+
   return (
     <aside className="w-full lg:w-[310px]">
       <div className="rounded-3xl border border-white/10 bg-white/[0.025] p-4">
         <div className="mb-4">
           <div className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-400">
-            Phòng Lab An Ninh
-          </div>
+            {tr("Phòng Lab An Ninh")}</div>
 
           <h2 className="mt-1 text-lg font-bold text-white">
-            Chọn kịch bản tấn công
-          </h2>
+            {tr("Chọn kịch bản tấn công")}</h2>
 
           <p className="mt-1 text-xs leading-5 text-slate-500">
-            Mỗi kịch bản mô phỏng 1 cách kẻ xấu có thể
-            tìm cách phá vỡ blockchain.
-          </p>
+            {tr("Mỗi kịch bản mô phỏng 1 cách kẻ xấu có thể tìm cách phá vỡ blockchain.")}</p>
         </div>
 
         <div className="space-y-2">
@@ -78,25 +77,25 @@ export default function AttackSelector({
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-sm font-semibold text-white">
-                        {attack.name}
+                        {tr(attack.name)}
                       </span>
 
                       <span className="text-[9px] uppercase tracking-wider text-slate-600">
-                        {attack.difficulty}
+                        {tr(attack.difficulty)}
                       </span>
                     </div>
 
                     <p className="mt-1 text-xs leading-5 text-slate-500">
-                      {attack.description}
+                      {tr(attack.description)}
                     </p>
 
                     <div className="mt-2 flex items-center gap-2">
                       <span className="rounded-lg bg-white/5 px-2 py-1 text-[9px] uppercase tracking-wider text-slate-500">
-                        {attack.category}
+                        {tr(attack.category)}
                       </span>
 
                       <span className="rounded-lg bg-red-500/5 px-2 py-1 text-[9px] uppercase tracking-wider text-red-400/70">
-                        {attack.danger}
+                        {tr(attack.danger)}
                       </span>
                     </div>
                   </div>

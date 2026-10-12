@@ -12,10 +12,13 @@ import {
 
 import { blockchain } from "../../lib/blockchain/instance";
 import type { Block } from "../../types/blockchain";
+import { useLanguage } from "../../context/LanguageContext";
 
 const DIFFICULTY_OPTIONS = [1, 2, 3, 4, 5];
 
 export default function BlockchainPage() {
+  const { tr } = useLanguage();
+
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [isValid, setIsValid] = useState(true);
   const [data, setData] = useState("");
@@ -145,10 +148,7 @@ export default function BlockchainPage() {
               </h1>
 
               <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-                Xây dựng và quan sát một Blockchain đơn giản.
-                Mỗi Block liên kết với Block trước thông qua
-                Previous Hash.
-              </p>
+                {tr("Xây dựng và quan sát một Blockchain đơn giản. Mỗi Block liên kết với Block trước thông qua Previous Hash.")}</p>
             </div>
 
             {/* STATUS */}
@@ -208,9 +208,7 @@ export default function BlockchainPage() {
               </h2>
 
               <p className="text-sm text-slate-500">
-                Tìm một Nonce sao cho Hash bắt đầu bằng {difficulty} số 0
-                (Proof-of-Work thật, không phải giả lập)
-              </p>
+                {tr("Tìm một Nonce sao cho Hash bắt đầu bằng")}{" "}{difficulty} {" "}{tr("số 0 (Proof-of-Work thật, không phải giả lập)")}</p>
             </div>
 
           </div>
@@ -245,7 +243,7 @@ export default function BlockchainPage() {
                 setData(event.target.value)
               }
               disabled={isMining}
-              placeholder="Nhập dữ liệu cho Block..."
+              placeholder={tr("Nhập dữ liệu cho Block...")}
               className="flex-1 rounded-2xl border border-white/10 bg-[#050816] px-5 py-4 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50 disabled:opacity-60"
             />
 
@@ -277,17 +275,11 @@ export default function BlockchainPage() {
             Block Header vs Block Body
           </div>
           <p>
-            <span className="text-blue-300">Hash của Block = SHA-256(Header)</span>{" "}
-            với Header gồm version, previousHash, merkleRoot, timestamp,
-            difficulty, nonce (và dataHash cho ghi chú tự do). Body (danh sách
-            giao dịch, blockHeight, transactionCount) <em>không</em> được băm
-            trực tiếp: giao dịch được bảo vệ gián tiếp qua{" "}
-            <span className="text-blue-300">merkleRoot</span>, nên sửa giao dịch
-            thì Root khác và Block INVALID. Hai trường{" "}
+            <span className="text-blue-300">{tr("Hash của Block = SHA-256(Header)")}</span>{" "}
+            {tr("với Header gồm version, previousHash, merkleRoot, timestamp, difficulty, nonce (và dataHash cho ghi chú tự do). Body (danh sách giao dịch, blockHeight, transactionCount)")}{" "}<em>{tr("không")}</em> {" "}{tr("được băm trực tiếp: giao dịch được bảo vệ gián tiếp qua")}{" "}
+            <span className="text-blue-300">merkleRoot</span>{tr(", nên sửa giao dịch thì Root khác và Block INVALID. Hai trường")}{" "}
             <span className="text-slate-300">blockHeight / transactionCount</span>{" "}
-            chỉ là metadata để tra cứu, đồng bộ và hiển thị nhanh — node luôn tự
-            kiểm tra lại chứ không tin chúng.
-          </p>
+            {tr("chỉ là metadata để tra cứu, đồng bộ và hiển thị nhanh — node luôn tự kiểm tra lại chứ không tin chúng.")}</p>
         </section>
 
         {/* BLOCKCHAIN */}
@@ -323,8 +315,7 @@ export default function BlockchainPage() {
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Kiểm tra Hash và Previous Hash của toàn bộ chain.
-                </p>
+                  {tr("Kiểm tra Hash và Previous Hash của toàn bộ chain.")}</p>
               </div>
 
             </div>
@@ -361,6 +352,8 @@ function BlockCard({
   onEdit,
   onRecalculate,
 }: BlockCardProps) {
+  const { tr } = useLanguage();
+
   const [ownValid, setOwnValid] = useState(true);
   const [brokenFrom, setBrokenFrom] = useState(-1);
 
@@ -435,7 +428,7 @@ function BlockCard({
             <>
               <XCircle size={15} />
               {afterBreak
-                ? `INVALID — chuỗi đứt từ Block #${brokenFrom}`
+                ? tr("INVALID — chuỗi đứt từ Block #{0}", brokenFrom)
                 : "INVALID BLOCK"}
             </>
           )}
@@ -505,8 +498,7 @@ function BlockCard({
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-blue-400/15 bg-blue-400/[0.03] p-4">
           <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-300">
-            Header (được băm)
-          </div>
+            {tr("Header (được băm)")}</div>
           <Field label="Version" value={block.version} />
           <Field label="Merkle Root" value={shortHash(block.merkleRoot)} />
           <Field label="Data Hash" value={shortHash(block.dataHash)} />
@@ -517,11 +509,10 @@ function BlockCard({
 
         <div className="rounded-2xl border border-white/10 bg-[#050816] p-4">
           <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Body (cam kết qua Header)
-          </div>
+            {tr("Body (cam kết qua Header)")}</div>
           <Field label="Block Height" value={block.index} />
           <Field label="Transaction Count" value={block.transactionCount} />
-          <Field label="Transactions thực tế" value={block.transactions.length} />
+          <Field label={tr("Transactions thực tế")} value={block.transactions.length} />
         </div>
       </div>
 

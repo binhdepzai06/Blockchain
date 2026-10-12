@@ -1,4 +1,5 @@
 import { Check, ChevronRight, Hash, GitBranch, ShieldCheck } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface MerkleExplanationProps {
   selectedHash: string | null;
@@ -13,6 +14,8 @@ export default function MerkleExplanation({
   selectedNodeIndex,
   levels,
 }: MerkleExplanationProps) {
+  const { tr } = useLanguage();
+
   const isRoot = selectedLevel === levels.length - 1;
   const left =
     selectedLevel !== null && selectedLevel > 0
@@ -29,11 +32,9 @@ export default function MerkleExplanation({
       <div className="border-b border-white/10 px-5 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-white">
           <Hash size={16} className="text-cyan-400" />
-          Chi tiết node
-        </div>
+          {tr("Chi tiết node")}</div>
         <p className="mt-1 text-xs text-slate-500">
-          Chọn một node trên cây để xem cách nó được tạo.
-        </p>
+          {tr("Chọn một node trên cây để xem cách nó được tạo.")}</p>
       </div>
 
       {!selectedHash ? (
@@ -41,10 +42,9 @@ export default function MerkleExplanation({
           <div className="mb-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
             <GitBranch size={22} className="text-slate-600" />
           </div>
-          <p className="text-sm text-slate-400">Chưa chọn node</p>
+          <p className="text-sm text-slate-400">{tr("Chưa chọn node")}</p>
           <p className="mt-1 max-w-[230px] text-xs leading-5 text-slate-600">
-            Nhấn vào bất kỳ hash nào trên cây để xem quan hệ giữa các node.
-          </p>
+            {tr("Nhấn vào bất kỳ hash nào trên cây để xem quan hệ giữa các node.")}</p>
         </div>
       ) : (
         <div className="space-y-5 p-5">
@@ -61,29 +61,25 @@ export default function MerkleExplanation({
             <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
               <div className="flex items-center gap-2 text-xs font-medium text-white">
                 <Check size={14} className="text-emerald-400" />
-                Hash lá
-              </div>
+                {tr("Hash lá")}</div>
               <p className="mt-2 text-xs leading-5 text-slate-500">
-                Đây là H1, H2, H3... tương ứng với T1, T2, T3... Mỗi giao dịch được băm bằng SHA-256 để tạo hash lá.
-              </p>
+                {tr("Đây là H1, H2, H3... tương ứng với T1, T2, T3... Mỗi giao dịch được băm bằng SHA-256 để tạo hash lá.")}</p>
             </div>
           ) : (
             <>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-slate-600">
                   <span className="h-px flex-1 bg-white/10" />
-                  Hash đầu vào
-                  <span className="h-px flex-1 bg-white/10" />
+                  {tr("Hash đầu vào")}<span className="h-px flex-1 bg-white/10" />
                 </div>
 
-                <HashRow label="TRÁI" hash={left} />
-                <HashRow label="PHẢI" hash={right} duplicated={right === left} />
+                <HashRow label={tr("TRÁI")} hash={left} />
+                <HashRow label={tr("PHẢI")} hash={right} duplicated={right === left} />
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
                 <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
-                  Công thức
-                </div>
+                  {tr("Công thức")}</div>
                 <div className="font-mono text-[11px] leading-5 text-slate-400">
                   SHA-256(
                   <span className="text-cyan-300">{left?.slice(0, 10)}...</span>
@@ -100,19 +96,16 @@ export default function MerkleExplanation({
               <ShieldCheck size={17} className="mt-0.5 shrink-0 text-emerald-400" />
               <div>
                 <div className="text-xs font-semibold text-emerald-300">
-                  Dấu vân tay duy nhất
-                </div>
+                  {tr("Dấu vân tay duy nhất")}</div>
                 <p className="mt-1 text-[11px] leading-5 text-slate-500">
-                  Root đại diện cho toàn bộ tập transaction trong block.
-                </p>
+                  {tr("Root đại diện cho toàn bộ tập transaction trong block.")}</p>
               </div>
             </div>
           )}
 
           <div className="flex items-center gap-2 text-[10px] text-slate-600">
             <ChevronRight size={12} />
-            Thay đổi một giao dịch → hash lá và các hash cha trên đường đi cũng thay đổi.
-          </div>
+            {tr("Thay đổi một giao dịch → hash lá và các hash cha trên đường đi cũng thay đổi.")}</div>
         </div>
       )}
     </aside>
@@ -128,6 +121,8 @@ function HashRow({
   hash: string | null;
   duplicated?: boolean;
 }) {
+  const { tr } = useLanguage();
+
   return (
     <div className="rounded-xl border border-white/10 bg-black/10 p-3">
       <div className="mb-1 flex items-center justify-between">
@@ -135,7 +130,7 @@ function HashRow({
           {label}
         </span>
         {duplicated && (
-          <span className="text-[9px] text-amber-400/80">gấp đôi</span>
+          <span className="text-[9px] text-amber-400/80">{tr("gấp đôi")}</span>
         )}
       </div>
       <div className="break-all font-mono text-[10px] leading-4 text-slate-400">

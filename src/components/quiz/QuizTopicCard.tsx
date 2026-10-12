@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { QuizTopicMeta } from "../../data/quizTopics";
 import type { TopicQuizProgress } from "../../store/useProgressStore";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface QuizTopicCardProps {
   topic: QuizTopicMeta;
@@ -14,6 +15,8 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
   progress,
   onStartQuiz,
 }) => {
+  const { tr } = useLanguage();
+
   const answered = progress?.answered ?? 0;
   const total = topic.totalQuestions;
   const percent = total > 0 ? Math.round((answered / total) * 100) : 0;
@@ -31,7 +34,7 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
           <div className="flex items-center gap-1.5 text-slate-400">
             <span className="font-mono text-slate-300">{topic.secCode}</span>
             <span>·</span>
-            <span className="uppercase text-slate-300">{topic.category}</span>
+            <span className="uppercase text-slate-300">{tr(topic.category)}</span>
           </div>
           <span className={`text-xs font-bold ${percent === 100 ? "text-cyan-400" : "text-slate-400"}`}>
             {percent}%
@@ -45,10 +48,10 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <h3 className="text-xl font-bold text-white tracking-tight leading-snug">
-              {topic.title}
+              {tr(topic.title)}
             </h3>
             <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-400">
-              {topic.description}
+              {tr(topic.description)}
             </p>
           </div>
         </div>
@@ -56,8 +59,8 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
         {/* Inner distribution container */}
         <div className="rounded-xl border border-white/5 bg-[#080d19] p-4">
           <div className="mb-2.5 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Cơ cấu câu hỏi thực tế:</span>
-            <span className="font-bold text-white">{total} câu hỏi</span>
+            <span className="text-slate-400">{tr("Cơ cấu câu hỏi thực tế:")}</span>
+            <span className="font-bold text-white">{total} {" "}{tr("câu hỏi")}</span>
           </div>
 
           {/* Segmented multi-color progress bar */}
@@ -65,17 +68,17 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
             <div
               style={{ width: `${easyRatio}%` }}
               className="bg-emerald-400 transition-all duration-300"
-              title={`Dễ: ${topic.distribution.easy}`}
+              title={tr("Dễ: {0}", topic.distribution.easy)}
             />
             <div
               style={{ width: `${mediumRatio}%` }}
               className="bg-amber-400 transition-all duration-300"
-              title={`Vừa: ${topic.distribution.medium}`}
+              title={tr("Vừa: {0}", topic.distribution.medium)}
             />
             <div
               style={{ width: `${hardRatio}%` }}
               className="bg-rose-500 transition-all duration-300"
-              title={`Khó: ${topic.distribution.hard}`}
+              title={tr("Khó: {0}", topic.distribution.hard)}
             />
           </div>
 
@@ -83,15 +86,15 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
           <div className="mt-3 flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="text-slate-300">Dễ: {topic.distribution.easy}</span>
+              <span className="text-slate-300">{tr("Dễ:")}{" "}{topic.distribution.easy}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-amber-400" />
-              <span className="text-slate-300">Vừa: {topic.distribution.medium}</span>
+              <span className="text-slate-300">{tr("Vừa:")}{" "}{topic.distribution.medium}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-rose-500" />
-              <span className="text-slate-300">Khó: {topic.distribution.hard}</span>
+              <span className="text-slate-300">{tr("Khó:")}{" "}{topic.distribution.hard}</span>
             </div>
           </div>
         </div>
@@ -99,7 +102,7 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
         {/* Progress section */}
         <div className="mt-4">
           <div className="flex items-center justify-between text-xs text-slate-300">
-            <span>Tiến độ:</span>
+            <span>{tr("Tiến độ:")}</span>
             <span className="font-medium text-white">
               {answered} / {total}
             </span>
@@ -119,10 +122,10 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
       <div className="mt-6 flex items-center justify-between pt-2">
         <span className="text-xs text-slate-400">
           {!hasAttempted
-            ? "Chưa làm bài"
+            ? tr("Chưa làm bài")
             : progress?.completed
-            ? `Điểm: ${progress.bestScore}% (${progress.correct}/${total} đúng)`
-            : `Đang làm: ${answered}/${total}`}
+            ? tr("Điểm: {0}% ({1}/{2} đúng)", progress.bestScore, progress.correct, total)
+            : tr("Đang làm: {0}/{1}", answered, total)}
         </span>
 
         <button
@@ -130,7 +133,7 @@ export const QuizTopicCard: React.FC<QuizTopicCardProps> = ({
           className="group inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]"
         >
           <Play size={12} className="fill-white" />
-          <span>Luyện tập</span>
+          <span>{tr("Luyện tập")}</span>
           <ArrowUpRight size={14} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </button>
       </div>

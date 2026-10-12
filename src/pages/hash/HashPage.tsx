@@ -20,6 +20,7 @@ import {
   sha256,
   weakHash16,
 } from "../../lib/crypto/hash";
+import { useLanguage } from "../../context/LanguageContext";
 
 // =========================================================
 // PAGE
@@ -31,6 +32,8 @@ interface HistoryEntry {
 }
 
 export default function HashPage() {
+  const { tr } = useLanguage();
+
   const [input, setInput] = useState("Hello Blockchain");
   const [hash, setHash] = useState("");
   const [isHashing, setIsHashing] = useState(false);
@@ -81,10 +84,7 @@ export default function HashPage() {
           </h1>
 
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-400">
-            Không chỉ băm dữ liệu — mỗi khu vực bên dưới CHỨNG MINH bằng
-            code thật một tính chất của hàm băm: độ dài đầu ra cố định,
-            tính một chiều, tính kháng va chạm, và hiệu ứng Avalanche.
-          </p>
+            {tr("Không chỉ băm dữ liệu — mỗi khu vực bên dưới CHỨNG MINH bằng code thật một tính chất của hàm băm: độ dài đầu ra cố định, tính một chiều, tính kháng va chạm, và hiệu ứng Avalanche.")}</p>
         </div>
 
         {/* PLAYGROUND */}
@@ -93,7 +93,7 @@ export default function HashPage() {
             <div className="mb-5 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-white">Input</h2>
-                <p className="mt-1 text-sm text-slate-500">Dữ liệu đầu vào</p>
+                <p className="mt-1 text-sm text-slate-500">{tr("Dữ liệu đầu vào")}</p>
               </div>
 
               <button
@@ -108,7 +108,7 @@ export default function HashPage() {
             <textarea
               value={input}
               onChange={(event) => setInput(event.target.value)}
-              placeholder="Nhập dữ liệu cần hash..."
+              placeholder={tr("Nhập dữ liệu cần hash...")}
               className="min-h-[160px] w-full resize-none rounded-2xl border border-white/10 bg-[#050816] p-5 text-sm leading-7 text-slate-200 outline-none transition placeholder:text-slate-600 focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/10"
             />
 
@@ -135,7 +135,7 @@ export default function HashPage() {
                 <h2 className="text-lg font-semibold text-white">
                   SHA-256 Output
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">Kết quả hàm băm</p>
+                <p className="mt-1 text-sm text-slate-500">{tr("Kết quả hàm băm")}</p>
               </div>
             </div>
 
@@ -163,10 +163,9 @@ export default function HashPage() {
                 <div className="flex h-full min-h-[120px] items-center justify-center text-center">
                   <div>
                     <Hash size={40} className="mx-auto mb-4 text-slate-700" />
-                    <p className="text-sm text-slate-500">Chưa có hash</p>
+                    <p className="text-sm text-slate-500">{tr("Chưa có hash")}</p>
                     <p className="mt-1 text-xs text-slate-600">
-                      Nhấn Generate SHA-256 Hash
-                    </p>
+                      {tr("Nhấn Generate SHA-256 Hash")}</p>
                   </div>
                 </div>
               )}
@@ -195,28 +194,28 @@ export default function HashPage() {
 // =========================================================
 
 function FixedLengthSection({ history }: { history: HistoryEntry[] }) {
+  const { tr } = useLanguage();
+
   return (
     <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.02] p-6">
       <SectionHeader
         icon={<Ruler size={20} />}
         color="blue"
-        title="Tính chất 1 — Độ dài đầu ra cố định"
-        description="Hash mỗi đoạn text khác nhau ở Playground bên trên, rồi nhìn bảng dưới đây: input dài bao nhiêu ký tự cũng được, output luôn đúng 64 ký tự hex (256 bit)."
+        title={tr("Tính chất 1 — Độ dài đầu ra cố định")}
+        description={tr("Hash mỗi đoạn text khác nhau ở Playground bên trên, rồi nhìn bảng dưới đây: input dài bao nhiêu ký tự cũng được, output luôn đúng 64 ký tự hex (256 bit).")}
       />
 
       {history.length === 0 ? (
         <p className="rounded-2xl border border-white/10 bg-[#050816] p-5 text-sm text-slate-500">
-          Chưa có dữ liệu — hãy bấm "Generate SHA-256 Hash" ở Playground bên
-          trên vài lần với các đoạn text độ dài khác nhau.
-        </p>
+          {tr("Chưa có dữ liệu — hãy bấm \"Generate SHA-256 Hash\" ở Playground bên trên vài lần với các đoạn text độ dài khác nhau.")}</p>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/10">
           <table className="w-full text-left text-sm">
             <thead className="bg-white/[0.04] text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-4 py-3">Input</th>
-                <th className="px-4 py-3">Độ dài input</th>
-                <th className="px-4 py-3">Độ dài output</th>
+                <th className="px-4 py-3">{tr("Độ dài input")}</th>
+                <th className="px-4 py-3">{tr("Độ dài output")}</th>
               </tr>
             </thead>
             <tbody>
@@ -226,11 +225,10 @@ function FixedLengthSection({ history }: { history: HistoryEntry[] }) {
                   className="border-t border-white/5 bg-[#050816] font-mono"
                 >
                   <td className="max-w-[280px] truncate px-4 py-3 text-slate-300">
-                    {entry.input || "(rỗng)"}
+                    {entry.input || tr("(rỗng)")}
                   </td>
                   <td className="px-4 py-3 text-slate-400">
-                    {entry.input.length} ký tự
-                  </td>
+                    {entry.input.length} {" "}{tr("ký tự")}</td>
                   <td className="px-4 py-3 font-semibold text-emerald-400">
                     64 hex / 256 bit
                   </td>
@@ -249,6 +247,8 @@ function FixedLengthSection({ history }: { history: HistoryEntry[] }) {
 // =========================================================
 
 function OneWaySection() {
+  const { tr } = useLanguage();
+
   const [pinLength, setPinLength] = useState(3);
   const [secretHash, setSecretHash] = useState("");
   const [isCracking, setIsCracking] = useState(false);
@@ -301,14 +301,13 @@ function OneWaySection() {
       <SectionHeader
         icon={<Lock size={20} />}
         color="purple"
-        title="Tính chất 2 — Tính một chiều"
-        description="Máy có 1 hash bí mật của Bob và phải TỰ THỬ từng khả năng, hash rồi so sánh — không có cách nào tính ngược trực tiếp từ hash ra PIN gốc."
+        title={tr("Tính chất 2 — Tính một chiều")}
+        description={tr("Máy có 1 hash bí mật của Bob và phải TỰ THỬ từng khả năng, hash rồi so sánh — không có cách nào tính ngược trực tiếp từ hash ra PIN gốc.")}
       />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <span className="mr-1 text-xs uppercase tracking-wider text-slate-500">
-          Độ dài PIN
-        </span>
+          {tr("Độ dài PIN")}</span>
         {[2, 3, 4].map((len) => (
           <button
             key={len}
@@ -320,20 +319,17 @@ function OneWaySection() {
                 : "border border-white/10 bg-white/[0.03] text-slate-400 hover:text-white"
             } disabled:cursor-not-allowed disabled:opacity-50`}
           >
-            {len} chữ số
-          </button>
+            {len} {" "}{tr("chữ số")}</button>
         ))}
 
         <span className="ml-2 text-xs text-slate-500">
-          ({totalCombinations.toLocaleString()} khả năng)
-        </span>
+          ({totalCombinations.toLocaleString()} {" "}{tr("khả năng)")}</span>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-white/10 bg-[#050816] p-5">
           <div className="mb-2 text-xs uppercase tracking-wider text-slate-500">
-            Hash bí mật của Bob (bạn không thấy PIN gốc)
-          </div>
+            {tr("Hash bí mật của Bob (bạn không thấy PIN gốc)")}</div>
           <div className="break-all font-mono text-xs text-purple-300">
             {secretHash}
           </div>
@@ -344,8 +340,7 @@ function OneWaySection() {
             className="mt-4 flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 transition hover:bg-white/10 disabled:opacity-50"
           >
             <RotateCcw size={14} />
-            Tạo bí mật mới
-          </button>
+            {tr("Tạo bí mật mới")}</button>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-[#050816] p-5">
@@ -356,18 +351,18 @@ function OneWaySection() {
           >
             <KeyRound size={16} />
             {isCracking
-              ? `Đang dò... (${attempts.toLocaleString()}/${totalCombinations.toLocaleString()})`
-              : "Bắt đầu dò tìm (Brute-force)"}
+              ? tr("Đang dò... ({0}/{1})", attempts.toLocaleString(), totalCombinations.toLocaleString())
+              : tr("Bắt đầu dò tìm (Brute-force)")}
           </button>
 
           {foundAnswer !== null && (
             <div className="mt-4 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm">
               <div className="text-emerald-400">
-                Đã tìm ra PIN:{" "}
+                {tr("Đã tìm ra PIN:")}{" "}
                 <strong className="font-mono">{foundAnswer}</strong>
               </div>
               <div className="mt-1 text-xs text-slate-400">
-                Mất {attempts.toLocaleString()} lần thử ·{" "}
+                {tr("Mất")}{" "}{attempts.toLocaleString()} {" "}{tr("lần thử ·")}{" "}
                 {elapsedMs !== null ? Math.round(elapsedMs) : 0} ms
               </div>
             </div>
@@ -376,12 +371,7 @@ function OneWaySection() {
       </div>
 
       <p className="mt-4 text-sm leading-6 text-slate-500">
-        Với {pinLength} chữ số chỉ có {totalCombinations.toLocaleString()} khả
-        năng nên máy dò ra gần như tức thì. Một mật khẩu 8 ký tự chữ+số có
-        khoảng 218.000.000.000.000.000 khả năng — không máy nào dò hết nổi.
-        Đó là lý do hàm băm được gọi là <strong>một chiều</strong>: verify
-        (thử rồi so sánh) thì làm được, tính ngược trực tiếp thì không.
-      </p>
+        {tr("Với")}{" "}{pinLength} {" "}{tr("chữ số chỉ có")}{" "}{totalCombinations.toLocaleString()} {" "}{tr("khả năng nên máy dò ra gần như tức thì. Một mật khẩu 8 ký tự chữ+số có khoảng 218.000.000.000.000 khả năng — không máy nào dò hết nổi. Đó là lý do hàm băm được gọi là")}{" "}<strong>{tr("một chiều")}</strong>{tr(": verify (thử rồi so sánh) thì làm được, tính ngược trực tiếp thì không.")}</p>
     </section>
   );
 }
@@ -391,6 +381,8 @@ function OneWaySection() {
 // =========================================================
 
 function CollisionSection() {
+  const { tr } = useLanguage();
+
   const WEAK_CAP = 6000;
   const STRONG_CAP = 4000;
 
@@ -436,8 +428,8 @@ function CollisionSection() {
       <SectionHeader
         icon={<ShieldAlert size={20} />}
         color="red"
-        title="Tính chất 3 — Tính kháng va chạm"
-        description="Ném random input liên tục vào 1 hàm băm cho tới khi 2 input khác nhau vô tình ra cùng 1 hash (va chạm). So sánh hash 16-bit tự chế vs SHA-256 thật (256-bit)."
+        title={tr("Tính chất 3 — Tính kháng va chạm")}
+        description={tr("Ném random input liên tục vào 1 hàm băm cho tới khi 2 input khác nhau vô tình ra cùng 1 hash (va chạm). So sánh hash 16-bit tự chế vs SHA-256 thật (256-bit).")}
       />
 
       <button
@@ -446,22 +438,20 @@ function CollisionSection() {
         className="mb-5 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
       >
         <Sparkles size={16} />
-        {isRunning ? "Đang chạy thử va chạm..." : "Chạy thử va chạm"}
+        {isRunning ? tr("Đang chạy thử va chạm...") : tr("Chạy thử va chạm")}
       </button>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* WEAK HASH */}
         <div className="rounded-2xl border border-red-400/20 bg-red-400/[0.04] p-5">
           <div className="mb-2 text-sm font-semibold text-white">
-            Hash yếu (demo, 16-bit)
-          </div>
+            {tr("Hash yếu (demo, 16-bit)")}</div>
           <div className="mb-3 text-xs text-slate-500">
-            Chỉ 65.536 giá trị đầu ra có thể
-          </div>
+            {tr("Chỉ 65.536 giá trị đầu ra có thể")}</div>
 
           {phase === "weak" && (
             <div className="text-xs text-slate-400">
-              Đang thử... {weakAttempts.toLocaleString()} / {WEAK_CAP.toLocaleString()}
+              {tr("Đang thử...")}{" "}{weakAttempts.toLocaleString()} / {WEAK_CAP.toLocaleString()}
             </div>
           )}
 
@@ -470,9 +460,7 @@ function CollisionSection() {
               {weakResult.found ? (
                 <>
                   <div className="font-semibold text-red-400">
-                    Va chạm sau {weakResult.attempts.toLocaleString()} lần
-                    thử!
-                  </div>
+                    {tr("Va chạm sau")}{" "}{weakResult.attempts.toLocaleString()} {" "}{tr("lần thử!")}</div>
                   <div className="rounded-xl border border-white/10 bg-[#050816] p-3 font-mono">
                     <div className="truncate text-slate-300">
                       {weakResult.input1}
@@ -481,15 +469,13 @@ function CollisionSection() {
                       {weakResult.input2}
                     </div>
                     <div className="mt-1 text-red-300">
-                      → cùng hash: {weakResult.hash}
+                      {tr("→ cùng hash:")}{" "}{weakResult.hash}
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="text-slate-400">
-                  Chưa tìm thấy sau {weakResult.attempts.toLocaleString()} lần
-                  thử.
-                </div>
+                  {tr("Chưa tìm thấy sau")}{" "}{weakResult.attempts.toLocaleString()} {" "}{tr("lần thử.")}</div>
               )}
             </div>
           )}
@@ -498,15 +484,13 @@ function CollisionSection() {
         {/* STRONG HASH */}
         <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-5">
           <div className="mb-2 text-sm font-semibold text-white">
-            SHA-256 (thật, 256-bit)
-          </div>
+            {tr("SHA-256 (thật, 256-bit)")}</div>
           <div className="mb-3 text-xs text-slate-500">
-            2^256 giá trị đầu ra có thể
-          </div>
+            {tr("2^256 giá trị đầu ra có thể")}</div>
 
           {phase === "strong" && (
             <div className="text-xs text-slate-400">
-              Đang thử... {strongAttempts.toLocaleString()} /{" "}
+              {tr("Đang thử...")}{" "}{strongAttempts.toLocaleString()} /{" "}
               {STRONG_CAP.toLocaleString()}
             </div>
           )}
@@ -515,14 +499,11 @@ function CollisionSection() {
             <div className="text-xs">
               {strongResult.found ? (
                 <div className="font-semibold text-red-400">
-                  Va chạm! (gần như không thể xảy ra ở SHA-256 thật)
-                </div>
+                  {tr("Va chạm! (gần như không thể xảy ra ở SHA-256 thật)")}</div>
               ) : (
                 <div className="text-emerald-400">
-                  Chưa tìm thấy va chạm nào sau{" "}
-                  {strongResult.attempts.toLocaleString()} lần thử ngẫu
-                  nhiên.
-                </div>
+                  {tr("Chưa tìm thấy va chạm nào sau")}{" "}
+                  {strongResult.attempts.toLocaleString()} {" "}{tr("lần thử ngẫu nhiên.")}</div>
               )}
             </div>
           )}
@@ -530,12 +511,7 @@ function CollisionSection() {
       </div>
 
       <p className="mt-4 text-sm leading-6 text-slate-500">
-        Với không gian chỉ 65.536 giá trị, theo nghịch lý ngày sinh
-        (birthday paradox), va chạm thường xuất hiện chỉ sau vài trăm lần
-        thử. Với SHA-256, số lần thử trung bình cần để có 50% cơ hội tìm ra
-        va chạm là khoảng 2^128 — một con số có 39 chữ số, nhiều hơn số
-        nguyên tử ước tính trong vũ trụ quan sát được.
-      </p>
+        {tr("Với không gian chỉ 65.536 giá trị, theo nghịch lý ngày sinh (birthday paradox), va chạm thường xuất hiện chỉ sau vài trăm lần thử. Với SHA-256, số lần thử trung bình cần để có 50% cơ hội tìm ra va chạm là khoảng 2^128 — một con số có 39 chữ số, nhiều hơn số nguyên tử ước tính trong vũ trụ quan sát được.")}</p>
     </section>
   );
 }
@@ -565,6 +541,8 @@ function flipOneChar(text: string): string {
 }
 
 function AvalancheSection() {
+  const { tr } = useLanguage();
+
   const [original, setOriginal] = useState("Blockchain la tuong lai");
   const [modified, setModified] = useState("Blockchain la tuong lai");
   const [hashA, setHashA] = useState("");
@@ -601,15 +579,14 @@ function AvalancheSection() {
       <SectionHeader
         icon={<Waves size={20} />}
         color="emerald"
-        title="Tính chất 4 — Hiệu ứng Avalanche"
-        description="Chỉ đổi 1 ký tự trong input, rồi nhìn hash thay đổi hoàn toàn ở mức bit — đúng nghĩa 'lở tuyết', không có kiểu thay đổi nhỏ tương ứng thay đổi nhỏ."
+        title={tr("Tính chất 4 — Hiệu ứng Avalanche")}
+        description={tr("Chỉ đổi 1 ký tự trong input, rồi nhìn hash thay đổi hoàn toàn ở mức bit — đúng nghĩa 'lở tuyết', không có kiểu thay đổi nhỏ tương ứng thay đổi nhỏ.")}
       />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div>
           <label className="mb-2 block text-xs uppercase tracking-wider text-slate-500">
-            Bản gốc
-          </label>
+            {tr("Bản gốc")}</label>
           <textarea
             value={original}
             onChange={(e) => {
@@ -623,15 +600,13 @@ function AvalancheSection() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <label className="text-xs uppercase tracking-wider text-slate-500">
-              Bản đã đổi (sửa tay hoặc bấm nút)
-            </label>
+              {tr("Bản đã đổi (sửa tay hoặc bấm nút)")}</label>
             <button
               onClick={() => setModified(flipOneChar(original))}
               className="flex items-center gap-1 rounded-lg border border-white/10 px-2 py-1 text-[11px] text-slate-300 hover:bg-white/10"
             >
               <RotateCcw size={12} />
-              Đổi 1 ký tự ngẫu nhiên
-            </button>
+              {tr("Đổi 1 ký tự ngẫu nhiên")}</button>
           </div>
           <textarea
             value={modified}
@@ -642,16 +617,15 @@ function AvalancheSection() {
       </div>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-2">
-        <HashDiffLine label="Hash gốc" hash={hashA} other={hashB} />
-        <HashDiffLine label="Hash đã đổi" hash={hashB} other={hashA} />
+        <HashDiffLine label={tr("Hash gốc")} hash={hashA} other={hashB} />
+        <HashDiffLine label={tr("Hash đã đổi")} hash={hashB} other={hashA} />
       </div>
 
       {diff && (
         <div className="mt-6 rounded-2xl border border-white/10 bg-[#050816] p-5">
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm text-slate-300">
-              Số bit khác nhau trong 256 bit
-            </span>
+              {tr("Số bit khác nhau trong 256 bit")}</span>
             <span
               className={`rounded-full px-3 py-1 text-sm font-bold ${
                 diff.diffPercent > 35 && diff.diffPercent < 65
@@ -667,7 +641,7 @@ function AvalancheSection() {
             {diff.diffMask.map((differs, i) => (
               <div
                 key={i}
-                title={`bit ${i}: ${differs ? "khác" : "giống"}`}
+                title={tr("bit {0}: {1}", i, differs ? tr("khác") : tr("giống"))}
                 className={`aspect-square rounded-[2px] ${
                   differs ? "bg-emerald-400" : "bg-white/10"
                 }`}
@@ -676,10 +650,7 @@ function AvalancheSection() {
           </div>
 
           <p className="mt-4 text-xs text-slate-500">
-            Ô sáng = bit khác nhau giữa 2 hash, ô tối = bit giống nhau. Một
-            hàm băm tốt sẽ cho ra tỉ lệ dao động quanh 50%, bất kể input chỉ
-            đổi 1 ký tự hay đổi toàn bộ.
-          </p>
+            {tr("Ô sáng = bit khác nhau giữa 2 hash, ô tối = bit giống nhau. Một hàm băm tốt sẽ cho ra tỉ lệ dao động quanh 50%, bất kể input chỉ đổi 1 ký tự hay đổi toàn bộ.")}</p>
         </div>
       )}
     </section>

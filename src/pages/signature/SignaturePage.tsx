@@ -17,10 +17,13 @@ import {
   signMessage,
   verifySignature,
 } from "../../lib/crypto/signature";
+import { useLanguage } from "../../context/LanguageContext";
 
 type Step = "keys" | "signed" | "verified";
 
 export default function SignaturePage() {
+  const { tr } = useLanguage();
+
   const [keyPair, setKeyPair] = useState<CryptoKeyPair | null>(null);
   const [publicKeyDisplay, setPublicKeyDisplay] = useState("");
 
@@ -108,31 +111,27 @@ export default function SignaturePage() {
           </div>
 
           <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Chữ ký số
-          </h1>
+            {tr("Chữ ký số")}</h1>
 
           <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-            Alice muốn gửi tiền cho Bob. Cô ấy{" "}
-            <strong className="text-white">ký</strong> giao dịch bằng khoá bí
-            mật của mình, ai cũng có thể{" "}
-            <strong className="text-white">xác thực</strong> bằng khoá công
-            khai — nhưng chỉ Alice mới ký được.
-          </p>
+            {tr("Alice muốn gửi tiền cho Bob. Cô ấy")}{" "}
+            <strong className="text-white">{tr("ký")}</strong> {" "}{tr("giao dịch bằng khoá bí mật của mình, ai cũng có thể")}{" "}
+            <strong className="text-white">{tr("xác thực")}</strong> {" "}{tr("bằng khoá công khai — nhưng chỉ Alice mới ký được.")}</p>
         </div>
 
         <div className="mb-8 flex items-center justify-center gap-6 rounded-3xl border border-white/10 bg-white/[0.02] p-6">
-          <ActorBadge icon={User} name="Alice" color="blue" sub="Người gửi" />
+          <ActorBadge icon={User} name="Alice" color="blue" sub={tr("Người gửi")} />
           <div className="flex flex-col items-center gap-1">
             <ArrowRight className="text-slate-600" size={28} />
             <span className="text-xs text-slate-500">{amount} BTC</span>
           </div>
-          <ActorBadge icon={User} name="Bob" color="emerald" sub="Người nhận" />
+          <ActorBadge icon={User} name="Bob" color="emerald" sub={tr("Người nhận")} />
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-3">
-          <StepBadge number={1} title="Tạo khoá" active={step === "keys"} done={!!keyPair} />
-          <StepBadge number={2} title="Ký giao dịch" active={step === "signed" && !!keyPair} done={!!signature} />
-          <StepBadge number={3} title="Xác thực" active={step === "verified"} done={verifyResult !== null} />
+          <StepBadge number={1} title={tr("Tạo khoá")} active={step === "keys"} done={!!keyPair} />
+          <StepBadge number={2} title={tr("Ký giao dịch")} active={step === "signed" && !!keyPair} done={!!signature} />
+          <StepBadge number={3} title={tr("Xác thực")} active={step === "verified"} done={verifyResult !== null} />
         </div>
 
         <section className="mb-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6">
@@ -141,11 +140,9 @@ export default function SignaturePage() {
               <Key size={20} />
             </div>
             <div>
-              <h2 className="font-semibold text-white">Bước 1 — Alice tạo cặp khoá</h2>
+              <h2 className="font-semibold text-white">{tr("Bước 1 — Alice tạo cặp khoá")}</h2>
               <p className="text-sm text-slate-500">
-                Khoá riêng (Private Key): chỉ Alice giữ, dùng để ký. Khoá
-                công khai (Public Key): ai cũng xem được, dùng để kiểm tra.
-              </p>
+                {tr("Khoá riêng (Private Key): chỉ Alice giữ, dùng để ký. Khoá công khai (Public Key): ai cũng xem được, dùng để kiểm tra.")}</p>
             </div>
           </div>
 
@@ -153,14 +150,12 @@ export default function SignaturePage() {
             onClick={handleGenerateKeys}
             className="rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.02]"
           >
-            Tạo cặp khoá cho Alice
-          </button>
+            {tr("Tạo cặp khoá cho Alice")}</button>
 
           {publicKeyDisplay && (
             <div className="mt-4 rounded-2xl border border-white/5 bg-[#050816] p-4">
               <div className="mb-1 text-xs uppercase tracking-wider text-slate-500">
-                Khoá công khai của Alice (ai cũng xem được)
-              </div>
+                {tr("Khoá công khai của Alice (ai cũng xem được)")}</div>
               <div className="break-all font-mono text-xs text-blue-300">{publicKeyDisplay}</div>
             </div>
           )}
@@ -172,15 +167,14 @@ export default function SignaturePage() {
               <PenLine size={20} />
             </div>
             <div>
-              <h2 className="font-semibold text-white">Bước 2 — Alice ký giao dịch</h2>
+              <h2 className="font-semibold text-white">{tr("Bước 2 — Alice ký giao dịch")}</h2>
               <p className="text-sm text-slate-500">
-                Nội dung giao dịch + Khoá riêng → ra một chữ ký duy nhất
-              </p>
+                {tr("Nội dung giao dịch + Khoá riêng → ra một chữ ký duy nhất")}</p>
             </div>
           </div>
 
           <div className="mb-4 flex items-center gap-3">
-            <span className="text-sm text-slate-400">Số tiền gửi:</span>
+            <span className="text-sm text-slate-400">{tr("Số tiền gửi:")}</span>
             <input
               type="number"
               value={amount}
@@ -195,13 +189,12 @@ export default function SignaturePage() {
             disabled={!keyPair}
             className="rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Ký giao dịch bằng Khoá riêng
-          </button>
+            {tr("Ký giao dịch bằng Khoá riêng")}</button>
 
           {signature && (
             <div className="mt-4 rounded-2xl border border-white/5 bg-[#050816] p-4">
               <div className="mb-1 text-xs uppercase tracking-wider text-slate-500">
-                Chữ ký (đã ký lúc số tiền = {signedAmount} BTC)
+                {tr("Chữ ký (đã ký lúc số tiền =")}{" "}{signedAmount} BTC)
               </div>
               <div className="break-all font-mono text-xs text-purple-300">{signature}</div>
             </div>
@@ -214,10 +207,9 @@ export default function SignaturePage() {
               <ShieldCheck size={20} />
             </div>
             <div>
-              <h2 className="font-semibold text-white">Bước 3 — Mạng lưới xác thực</h2>
+              <h2 className="font-semibold text-white">{tr("Bước 3 — Mạng lưới xác thực")}</h2>
               <p className="text-sm text-slate-500">
-                Dùng Khoá công khai của Alice để kiểm tra chữ ký có khớp với giao dịch hiện tại không
-              </p>
+                {tr("Dùng Khoá công khai của Alice để kiểm tra chữ ký có khớp với giao dịch hiện tại không")}</p>
             </div>
           </div>
 
@@ -226,8 +218,7 @@ export default function SignaturePage() {
             disabled={!signature}
             className="rounded-2xl bg-gradient-to-r from-emerald-500 to-blue-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Xác thực chữ ký
-          </button>
+            {tr("Xác thực chữ ký")}</button>
 
           {verifyResult !== null && (
             <div
@@ -242,12 +233,11 @@ export default function SignaturePage() {
               )}
               <div>
                 <div className={`font-semibold ${verifyResult ? "text-emerald-400" : "text-red-400"}`}>
-                  {verifyResult ? "HỢP LỆ — giao dịch chưa bị thay đổi" : "KHÔNG HỢP LỆ — giao dịch đã bị can thiệp!"}
+                  {verifyResult ? tr("HỢP LỆ — giao dịch chưa bị thay đổi") : tr("KHÔNG HỢP LỆ — giao dịch đã bị can thiệp!")}
                 </div>
                 {wasAttacked && (
                   <div className="mt-1 text-xs text-slate-400">
-                    Số tiền hiện tại ({amount} BTC) khác với lúc Alice ký ({signedAmount} BTC) — chữ ký lập tức không còn khớp.
-                  </div>
+                    {tr("Số tiền hiện tại (")}{amount} {" "}{tr("BTC) khác với lúc Alice ký (")}{signedAmount} {" "}{tr("BTC) — chữ ký lập tức không còn khớp.")}</div>
                 )}
               </div>
             </div>
@@ -260,10 +250,9 @@ export default function SignaturePage() {
               <Skull size={20} />
             </div>
             <div>
-              <h2 className="font-semibold text-white">Demo: Mallory chặn & sửa giao dịch</h2>
+              <h2 className="font-semibold text-white">{tr("Demo: Mallory chặn & sửa giao dịch")}</h2>
               <p className="text-sm text-slate-500">
-                Mallory chặn giao dịch giữa đường, đổi số tiền Bob nhận được — xem chữ ký có phát hiện ra không
-              </p>
+                {tr("Mallory chặn giao dịch giữa đường, đổi số tiền Bob nhận được — xem chữ ký có phát hiện ra không")}</p>
             </div>
           </div>
 
@@ -273,22 +262,17 @@ export default function SignaturePage() {
             className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-40"
           >
             <AlertTriangle size={16} />
-            Mallory giả mạo giao dịch
-          </button>
+            {tr("Mallory giả mạo giao dịch")}</button>
 
           <p className="mt-4 text-sm leading-6 text-slate-500">
-            Vì chữ ký được tính từ đúng nội dung giao dịch gốc, chỉ cần đổi 1
-            con số, chữ ký cũ không còn khớp với dữ liệu mới nữa — mạng lưới
-            phát hiện giả mạo ngay lập tức, không cần ai đi so sánh thủ công.
-          </p>
+            {tr("Vì chữ ký được tính từ đúng nội dung giao dịch gốc, chỉ cần đổi 1 con số, chữ ký cũ không còn khớp với dữ liệu mới nữa — mạng lưới phát hiện giả mạo ngay lập tức, không cần ai đi so sánh thủ công.")}</p>
 
           <button
             onClick={handleReset}
             className="mt-4 flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white"
           >
             <RotateCcw size={13} />
-            Làm lại từ đầu (demo lần nữa)
-          </button>
+            {tr("Làm lại từ đầu (demo lần nữa)")}</button>
         </section>
       </div>
     </div>

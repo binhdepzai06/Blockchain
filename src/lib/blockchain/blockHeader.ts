@@ -1,6 +1,7 @@
 import { sha256 } from "../crypto/hash";
 import { buildMerkleTree } from "./merkle";
 import type { Block, BlockHeader } from "../../types/blockchain";
+import { tr } from "../../i18n";
 
 export const BLOCK_VERSION = 1;
 
@@ -34,24 +35,24 @@ export async function validateBlockBody(
   block: Block
 ): Promise<{ valid: boolean; reason?: string }> {
   if (block.version !== BLOCK_VERSION) {
-    return { valid: false, reason: `Version ${block.version} không được hỗ trợ` };
+    return { valid: false, reason: tr("Version {0} không được hỗ trợ", block.version) };
   }
 
   if (block.transactionCount !== block.transactions.length) {
     return {
       valid: false,
-      reason: `transactionCount (${block.transactionCount}) ≠ số giao dịch thực tế (${block.transactions.length})`,
+      reason: tr("transactionCount ({0}) ≠ số giao dịch thực tế ({1})", block.transactionCount, block.transactions.length),
     };
   }
 
   const { root } = await buildMerkleTree(block.transactions);
 
   if (root !== block.merkleRoot) {
-    return { valid: false, reason: "Merkle Root không khớp với danh sách giao dịch" };
+    return { valid: false, reason: tr("Merkle Root không khớp với danh sách giao dịch") };
   }
 
   if ((await hashBlockData(block.data)) !== block.dataHash) {
-    return { valid: false, reason: "Data không khớp dataHash trong Header" };
+    return { valid: false, reason: tr("Data không khớp dataHash trong Header") };
   }
 
   return { valid: true };

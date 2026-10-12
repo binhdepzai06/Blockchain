@@ -3,6 +3,7 @@ import {
   createBlock,
   createEvent,
 } from "./attackEngine";
+import { tr } from "../../i18n";
 
 export function initializeFiftyOneAttack(
   state: AttackState,
@@ -10,9 +11,9 @@ export function initializeFiftyOneAttack(
   return {
     ...state,
 
-    resultTitle: "Mô phỏng tấn công 51%",
+    resultTitle: tr("Mô phỏng tấn công 51%"),
     resultDescription:
-      "Attacker sẽ cạnh tranh với honest miners bằng hash power. Khi attacker có hơn 50% hash power, khả năng tạo private chain dài hơn tăng lên.",
+      tr("Attacker sẽ cạnh tranh với honest miners bằng hash power. Khi attacker có hơn 50% hash power, khả năng tạo private chain dài hơn tăng lên."),
     resultImpact: "CRITICAL",
 
     events: [
@@ -172,13 +173,13 @@ export function stepFiftyOneAttack(
 
     resultTitle:
       attackConditionReached
-        ? "Kẻ tấn công đã chiếm hơn 50% sức mạnh đào!"
-        : "Đang âm thầm đào chuỗi riêng...",
+        ? tr("Kẻ tấn công đã chiếm hơn 50% sức mạnh đào!")
+        : tr("Đang âm thầm đào chuỗi riêng..."),
 
     resultDescription:
       attackConditionReached
-        ? "Attacker đang sở hữu hơn 50% hash power trong mô phỏng. Điều này cho phép attacker có khả năng tạo chain thay thế hoặc tổ chức lại lịch sử giao dịch tùy điều kiện mạng."
-        : "Attacker đang duy trì một private chain trong khi honest miners tiếp tục xây dựng public chain.",
+        ? tr("Attacker đang sở hữu hơn 50% hash power trong mô phỏng. Điều này cho phép attacker có khả năng tạo chain thay thế hoặc tổ chức lại lịch sử giao dịch tùy điều kiện mạng.")
+        : tr("Attacker đang duy trì một private chain trong khi honest miners tiếp tục xây dựng public chain."),
 
     resultImpact:
       attackConditionReached

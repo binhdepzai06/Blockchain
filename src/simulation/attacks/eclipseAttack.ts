@@ -1,5 +1,6 @@
 import type { AttackState } from "../../types/attack";
 import { createEvent } from "./attackEngine";
+import { tr } from "../../i18n";
 
 export function initializeEclipseAttack(
   state: AttackState,
@@ -7,10 +8,10 @@ export function initializeEclipseAttack(
   return {
     ...state,
 
-    resultTitle: "Mô phỏng tấn công Eclipse",
+    resultTitle: tr("Mô phỏng tấn công Eclipse"),
 
     resultDescription:
-      "Attacker cố gắng kiểm soát các peer connections của target node.",
+      tr("Attacker cố gắng kiểm soát các peer connections của target node."),
 
     events: [
       ...state.events,
@@ -54,9 +55,9 @@ export function stepEclipseAttack(
     return {
       ...state,
       status: "FAILED",
-      resultTitle: "Không tìm thấy Node mục tiêu",
+      resultTitle: tr("Không tìm thấy Node mục tiêu"),
       resultDescription:
-        "Không tìm thấy target node.",
+        tr("Không tìm thấy target node."),
       resultImpact: "LOW",
     };
   }
@@ -169,11 +170,11 @@ export function stepEclipseAttack(
 
     resultTitle:
       conditionReached
-        ? "Node mục tiêu đã bị cô lập hoàn toàn!"
-        : "Đang thay dần các kết nối xung quanh...",
+        ? tr("Node mục tiêu đã bị cô lập hoàn toàn!")
+        : tr("Đang thay dần các kết nối xung quanh..."),
 
     resultDescription:
-      `${target.id} đang dần mất các kết nối honest peer. ${isolationRatio}% kết nối mô phỏng hiện do attacker kiểm soát.`,
+      tr("{0} đang dần mất các kết nối honest peer. {1}% kết nối mô phỏng hiện do attacker kiểm soát.", target.id, isolationRatio),
 
     resultImpact:
       conditionReached

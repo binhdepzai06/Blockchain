@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { QuizTopicMeta, QuizQuestion } from "../../data/quizTopics";
 import { useProgressStore } from "../../store/useProgressStore";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface QuizSessionProps {
   topic: QuizTopicMeta;
@@ -19,6 +20,8 @@ interface QuizSessionProps {
 type DifficultyFilter = "all" | "easy" | "medium" | "hard";
 
 export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
+  const { tr } = useLanguage();
+
   const { setTopicQuizResult, addXp } = useProgressStore();
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyFilter>("all");
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -107,20 +110,17 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
       case "easy":
         return (
           <span className="inline-flex items-center rounded-md border border-emerald-500/30 bg-emerald-950/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">
-            Dễ
-          </span>
+            {tr("Dễ")}</span>
         );
       case "medium":
         return (
           <span className="inline-flex items-center rounded-md border border-amber-500/30 bg-amber-950/60 px-2.5 py-0.5 text-xs font-semibold text-amber-300">
-            Vừa
-          </span>
+            {tr("Vừa")}</span>
         );
       case "hard":
         return (
           <span className="inline-flex items-center rounded-md border border-rose-500/30 bg-rose-950/60 px-2.5 py-0.5 text-xs font-semibold text-rose-300">
-            Khó
-          </span>
+            {tr("Khó")}</span>
         );
     }
   };
@@ -139,27 +139,27 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400">
             <Trophy size={36} />
           </div>
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">Hoàn thành bài luyện tập!</h2>
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">{tr("Hoàn thành bài luyện tập!")}</h2>
           <p className="mt-1 text-sm text-slate-400">
-            {topic.secCode} · {topic.title}
+            {topic.secCode} · {tr(topic.title)}
           </p>
 
           <div className="my-8 grid grid-cols-3 gap-3 sm:gap-4">
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-blue-400 sm:text-3xl">{percent}%</div>
-              <div className="mt-1 text-xs text-slate-400">Độ chính xác</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Độ chính xác")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-emerald-400 sm:text-3xl">
                 {totalCorrect} / {totalInFilter}
               </div>
-              <div className="mt-1 text-xs text-slate-400">Câu trả lời đúng</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Câu trả lời đúng")}</div>
             </div>
             <div className="rounded-2xl border border-white/5 bg-[#080d19] p-4">
               <div className="text-2xl font-black text-purple-400 sm:text-3xl">
                 +{totalCorrect * 10}
               </div>
-              <div className="mt-1 text-xs text-slate-400">Điểm kinh nghiệm</div>
+              <div className="mt-1 text-xs text-slate-400">{tr("Điểm kinh nghiệm")}</div>
             </div>
           </div>
 
@@ -169,15 +169,13 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
             >
               <RotateCcw size={16} />
-              Làm lại bài thi
-            </button>
+              {tr("Làm lại bài thi")}</button>
             <button
               onClick={onBack}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition hover:bg-blue-500"
             >
               <ArrowLeft size={16} />
-              Quay lại danh sách chủ đề
-            </button>
+              {tr("Quay lại danh sách chủ đề")}</button>
           </div>
         </div>
       </div>
@@ -193,21 +191,21 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
           className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
         >
           <ArrowLeft size={14} />
-          <span>Danh sách chủ đề</span>
+          <span>{tr("Danh sách chủ đề")}</span>
         </button>
 
         {/* Live Score Counter */}
         <div className="flex items-center gap-3 text-xs">
           <span className="flex items-center gap-1 rounded-lg border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1 font-semibold text-emerald-300">
             <CheckCircle2 size={13} />
-            Đúng: {correctCount}
+            {tr("Đúng:")}{" "}{correctCount}
           </span>
           <span className="flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 font-semibold text-rose-300">
             <XCircle size={13} />
             Sai: {incorrectCount}
           </span>
           <span className="hidden sm:inline text-slate-400">
-            Đã làm: <strong className="text-white">{answeredCount}</strong> / {totalInFilter}
+            {tr("Đã làm:")}{" "}<strong className="text-white">{answeredCount}</strong> / {totalInFilter}
           </span>
         </div>
       </div>
@@ -216,8 +214,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
       <div className="mb-6 flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
         <span className="flex items-center gap-1 text-xs text-slate-400 mr-1">
           <Filter size={13} />
-          Mức độ:
-        </span>
+          {tr("Mức độ:")}</span>
         <button
           onClick={() => {
             setSelectedDifficulty("all");
@@ -229,7 +226,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
           }`}
         >
-          Tất cả ({topic.questions.length})
+          {tr("Tất cả (")}{topic.questions.length})
         </button>
         <button
           onClick={() => {
@@ -242,7 +239,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
           }`}
         >
-          Dễ ({easyCount})
+          {tr("Dễ (")}{easyCount})
         </button>
         <button
           onClick={() => {
@@ -255,7 +252,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
           }`}
         >
-          Vừa ({mediumCount})
+          {tr("Vừa (")}{mediumCount})
         </button>
         <button
           onClick={() => {
@@ -268,7 +265,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               : "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"
           }`}
         >
-          Khó ({hardCount})
+          {tr("Khó (")}{hardCount})
         </button>
       </div>
 
@@ -279,7 +276,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-slate-400">
-                Câu {currentIndex + 1} / {filteredQuestions.length}
+                {tr("Câu")}{" "}{currentIndex + 1} / {filteredQuestions.length}
               </span>
               <span>·</span>
               {getDifficultyBadge(currentQuestion.difficulty)}
@@ -297,13 +294,11 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
                 {selectedOptionIndex === currentQuestion.correctIndex ? (
                   <>
                     <CheckCircle2 size={14} className="text-emerald-400" />
-                    Chính xác ✅
-                  </>
+                    {tr("Chính xác ✅")}</>
                 ) : (
                   <>
                     <XCircle size={14} className="text-rose-400" />
-                    Không chính xác ❌
-                  </>
+                    {tr("Không chính xác ❌")}</>
                 )}
               </span>
             )}
@@ -336,7 +331,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
                   badge = (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 shrink-0 ml-2">
                       <CheckCircle2 size={16} />
-                      {isUserSelection ? "Chính xác ✅" : "Đáp án đúng ✅"}
+                      {isUserSelection ? tr("Chính xác ✅") : tr("Đáp án đúng ✅")}
                     </span>
                   );
                 } else if (isUserSelection && !isCorrectAnswer) {
@@ -388,8 +383,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
               className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
             >
               <ArrowLeft size={14} />
-              Câu trước
-            </button>
+              {tr("Câu trước")}</button>
 
             <button
               onClick={handleNext}
@@ -397,8 +391,8 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
             >
               <span>
                 {currentIndex + 1 < filteredQuestions.length
-                  ? "Câu tiếp theo"
-                  : "Xem kết quả bài thi"}
+                  ? tr("Câu tiếp theo")
+                  : tr("Xem kết quả bài thi")}
               </span>
               <ArrowRight size={14} />
             </button>
@@ -409,20 +403,18 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
       {/* Quick Jump Question Navigator Grid */}
       <div className="mt-6 rounded-2xl border border-white/10 bg-[#0d1322] p-4 sm:p-5">
         <div className="mb-3 flex items-center justify-between text-xs text-slate-400">
-          <span className="font-semibold text-slate-300">Bảng điều hướng nhanh câu hỏi:</span>
+          <span className="font-semibold text-slate-300">{tr("Bảng điều hướng nhanh câu hỏi:")}</span>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              Đúng
-            </span>
+              {tr("Đúng")}</span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-rose-400" />
               Sai
             </span>
             <span className="flex items-center gap-1">
               <span className="h-2 w-2 rounded-full bg-slate-700" />
-              Chưa làm
-            </span>
+              {tr("Chưa làm")}</span>
           </div>
         </div>
 
@@ -452,7 +444,7 @@ export const QuizSession: React.FC<QuizSessionProps> = ({ topic, onBack }) => {
                 key={q.id}
                 onClick={() => setCurrentIndex(idx)}
                 className={`flex h-8 w-full items-center justify-center rounded-lg border text-xs transition ${dotStyle}`}
-                title={`Câu ${idx + 1}`}
+                title={tr("Câu {0}", idx + 1)}
               >
                 {idx + 1}
               </button>

@@ -14,6 +14,7 @@ import {
   XCircle,
 } from "lucide-react";
 import "./AttackSimulator.css";
+import { useLanguage } from "../../context/LanguageContext";
 
 type AttackId = "51" | "double" | "sybil" | "eclipse";
 
@@ -180,6 +181,8 @@ function AttackScene({
   attackId: AttackId;
   step: number;
 }) {
+  const { tr } = useLanguage();
+
   if (attackId === "51") {
     return (
       <div className="attack-scene">
@@ -250,7 +253,7 @@ function AttackScene({
         {step >= 4 && (
           <div className="scene-warning">
             <AlertTriangle size={18} />
-            <span>Chain của attacker đã dài hơn.</span>
+            <span>{tr("Chain của attacker đã dài hơn.")}</span>
           </div>
         )}
       </div>
@@ -306,8 +309,8 @@ function AttackScene({
           <div className="conflict-box">
             <CircleAlert size={18} />
             <div>
-              <strong>Hai giao dịch xung đột</strong>
-              <span>Cùng sử dụng 10 COIN của Alice.</span>
+              <strong>{tr("Hai giao dịch xung đột")}</strong>
+              <span>{tr("Cùng sử dụng 10 COIN của Alice.")}</span>
             </div>
           </div>
         )}
@@ -315,8 +318,7 @@ function AttackScene({
         {step >= 4 && (
           <div className="result-small">
             <XCircle size={18} />
-            Transaction B bị từ chối.
-          </div>
+            {tr("Transaction B bị từ chối.")}</div>
         )}
       </div>
     );
@@ -357,7 +359,7 @@ function AttackScene({
         {step >= 4 && (
           <div className="scene-warning">
             <AlertTriangle size={18} />
-            <span>Nhiều identity nhưng cùng thuộc một attacker.</span>
+            <span>{tr("Nhiều identity nhưng cùng thuộc một attacker.")}</span>
           </div>
         )}
       </div>
@@ -400,7 +402,7 @@ function AttackScene({
       {step >= 4 && (
         <div className="scene-warning">
           <AlertTriangle size={18} />
-          <span>Target đang bị cô lập khỏi mạng thật.</span>
+          <span>{tr("Target đang bị cô lập khỏi mạng thật.")}</span>
         </div>
       )}
     </div>
@@ -408,6 +410,8 @@ function AttackScene({
 }
 
 export default function AttackSimulator() {
+  const { tr } = useLanguage();
+
   const [selectedAttack, setSelectedAttack] =
     useState<AttackId>("51");
 
@@ -480,9 +484,7 @@ export default function AttackSimulator() {
           <h1>Attack Simulator</h1>
 
           <p>
-            Khám phá cách các cuộc tấn công có thể ảnh hưởng đến
-            blockchain.
-          </p>
+            {tr("Khám phá cách các cuộc tấn công có thể ảnh hưởng đến blockchain.")}</p>
         </div>
       </div>
 
@@ -511,9 +513,9 @@ export default function AttackSimulator() {
                 STEP {step + 1} / {totalSteps}
               </span>
 
-              <h2>{attack.steps[step].title}</h2>
+              <h2>{tr(attack.steps[step].title)}</h2>
 
-              <p>{attack.steps[step].description}</p>
+              <p>{tr(attack.steps[step].description)}</p>
             </div>
 
             <button
@@ -550,8 +552,7 @@ export default function AttackSimulator() {
               disabled={step === 0}
             >
               <ChevronLeft size={18} />
-              Quay lại
-            </button>
+              {tr("Quay lại")}</button>
 
             {!isFinished ? (
               <button
@@ -563,7 +564,7 @@ export default function AttackSimulator() {
                 }
               >
                 {isPlaying ? (
-                  "Đang mô phỏng..."
+                  tr("Đang mô phỏng...")
                 ) : (
                   <>
                     {step === 0 ? (
@@ -572,8 +573,8 @@ export default function AttackSimulator() {
                       <ChevronRight size={17} />
                     )}
                     {step === 0
-                      ? "Bắt đầu"
-                      : "Tiếp tục"}
+                      ? tr("Bắt đầu")
+                      : tr("Tiếp tục")}
                   </>
                 )}
               </button>
@@ -583,8 +584,7 @@ export default function AttackSimulator() {
                 onClick={resetSimulation}
               >
                 <RotateCcw size={17} />
-                Xem lại
-              </button>
+                {tr("Xem lại")}</button>
             )}
 
             <button
@@ -592,8 +592,7 @@ export default function AttackSimulator() {
               onClick={nextStep}
               disabled={isFinished}
             >
-              Tiếp theo
-              <ChevronRight size={18} />
+              {tr("Tiếp theo")}<ChevronRight size={18} />
             </button>
           </div>
         </section>
@@ -604,7 +603,7 @@ export default function AttackSimulator() {
 
             <h3>{attack.title}</h3>
 
-            <p>{attack.description}</p>
+            <p>{tr(attack.description)}</p>
           </div>
 
           <div className="info-card happening-card">
@@ -618,7 +617,7 @@ export default function AttackSimulator() {
               )}
             </div>
 
-            <p>{attack.steps[step].description}</p>
+            <p>{tr(attack.steps[step].description)}</p>
           </div>
 
           <div className="info-card key-card">
@@ -626,30 +625,22 @@ export default function AttackSimulator() {
 
             {selectedAttack === "51" && (
               <p>
-                Attacker có lợi thế lớn trong việc tạo
-                block mới.
-              </p>
+                {tr("Attacker có lợi thế lớn trong việc tạo block mới.")}</p>
             )}
 
             {selectedAttack === "double" && (
               <p>
-                Một số coin không thể được sử dụng hợp
-                lệ cho hai giao dịch cùng lúc.
-              </p>
+                {tr("Một số coin không thể được sử dụng hợp lệ cho hai giao dịch cùng lúc.")}</p>
             )}
 
             {selectedAttack === "sybil" && (
               <p>
-                Một attacker có thể tạo nhiều identity
-                giả để gây ảnh hưởng đến mạng.
-              </p>
+                {tr("Một attacker có thể tạo nhiều identity giả để gây ảnh hưởng đến mạng.")}</p>
             )}
 
             {selectedAttack === "eclipse" && (
               <p>
-                Target có thể bị cô lập nếu attacker
-                kiểm soát các peer mà nó kết nối tới.
-              </p>
+                {tr("Target có thể bị cô lập nếu attacker kiểm soát các peer mà nó kết nối tới.")}</p>
             )}
           </div>
 
@@ -662,7 +653,7 @@ export default function AttackSimulator() {
               <div>
                 <strong>Simulation complete</strong>
                 <p>
-                  Bạn đã xem toàn bộ quá trình của{" "}
+                  {tr("Bạn đã xem toàn bộ quá trình của")}{" "}
                   {attack.title}.
                 </p>
               </div>

@@ -27,6 +27,7 @@ import {
   Wallet,
   XCircle,
 } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 type ContractFunction = "deposit" | "transfer" | "withdraw";
 
@@ -304,6 +305,8 @@ function createDiff(
 }
 
 export default function SmartContractPage() {
+  const { tr } = useLanguage();
+
   const [func, setFunc] =
     useState<ContractFunction>("transfer");
 
@@ -402,32 +405,32 @@ export default function SmartContractPage() {
     snapshot: ContractState,
   ): string | null => {
     if (!Number.isFinite(amount) || amount <= 0) {
-      return "Amount phải lớn hơn 0.";
+      return tr("Amount phải lớn hơn 0.");
     }
 
     if (func === "transfer" && from === to) {
-      return "Không thể transfer cho chính tài khoản gửi.";
+      return tr("Không thể transfer cho chính tài khoản gửi.");
     }
 
     if (
       func === "deposit" &&
       snapshot.wallets[from] < amount
     ) {
-      return `${from} không đủ số dư Wallet để deposit.`;
+      return tr("{0} không đủ số dư Wallet để deposit.", from);
     }
 
     if (
       func === "withdraw" &&
       snapshot.vault[from] < amount
     ) {
-      return `${from} không đủ số dư Contract Vault để withdraw.`;
+      return tr("{0} không đủ số dư Contract Vault để withdraw.", from);
     }
 
     if (
       func === "transfer" &&
       snapshot.vault[from] < amount
     ) {
-      return `${from} không đủ số dư Contract Vault để transfer.`;
+      return tr("{0} không đủ số dư Contract Vault để transfer.", from);
     }
 
     return null;
@@ -487,7 +490,7 @@ export default function SmartContractPage() {
 
     await addStep(
       "1. Transaction Created",
-      `${from} gọi ${meta.signature}`,
+      tr("{0} gọi {1}", from, meta.signature),
     );
 
     setCurrentPhase("ABI Encoding");
@@ -501,7 +504,7 @@ export default function SmartContractPage() {
 
     await addStep(
       "3. Validation",
-      "Kiểm tra input, sender và trạng thái hiện tại của Smart Contract.",
+      tr("Kiểm tra input, sender và trạng thái hiện tại của Smart Contract."),
     );
 
     const validationError =
@@ -569,7 +572,7 @@ export default function SmartContractPage() {
 
     await addStep(
       "5. EVM Execution",
-      `${func}() đang thực thi logic và thay đổi contract storage.`,
+      tr("{0}() đang thực thi logic và thay đổi contract storage.", func),
     );
 
     const { nextState, event } =
@@ -594,14 +597,14 @@ export default function SmartContractPage() {
 
     await addStep(
       "7. State Updated",
-      "Contract storage đã được cập nhật thành công.",
+      tr("Contract storage đã được cập nhật thành công."),
     );
 
     setCurrentPhase("Block Confirmation");
 
     await addStep(
       "8. Block Confirmed",
-      `Transaction được ghi vào block #${nextBlock}.`,
+      tr("Transaction được ghi vào block #{0}.", nextBlock),
     );
 
     const gasUsed =
@@ -720,10 +723,7 @@ export default function SmartContractPage() {
               </h1>
 
               <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-                Học nguyên lý Smart Contract trước,
-                sau đó tự tạo transaction và quan sát
-                toàn bộ quá trình thực thi từng bước.
-              </p>
+                {tr("Học nguyên lý Smart Contract trước, sau đó tự tạo transaction và quan sát toàn bộ quá trình thực thi từng bước.")}</p>
             </div>
 
             <button
@@ -746,11 +746,7 @@ export default function SmartContractPage() {
           />
 
           <div>
-            Đây là môi trường mô phỏng phục vụ học
-            tập. Transaction, gas, hash và block
-            bên dưới không được gửi tới blockchain
-            thật.
-          </div>
+            {tr("Đây là môi trường mô phỏng phục vụ học tập. Transaction, gas, hash và block bên dưới không được gửi tới blockchain thật.")}</div>
         </div>
 
         {/* THEORY */}
@@ -762,22 +758,13 @@ export default function SmartContractPage() {
 
             <div>
               <div className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">
-                Kiến thức trước khi thực hành
-              </div>
+                {tr("Kiến thức trước khi thực hành")}</div>
 
               <h2 className="text-2xl font-bold text-white md:text-3xl">
-                Smart Contract hoạt động như thế nào?
-              </h2>
+                {tr("Smart Contract hoạt động như thế nào?")}</h2>
 
               <p className="mt-3 max-w-4xl leading-7 text-slate-400">
-                Smart Contract là một chương trình
-                được triển khai trên blockchain.
-                Người dùng gửi transaction để gọi
-                một function của contract. Contract
-                kiểm tra dữ liệu đầu vào, thực thi
-                logic và nếu hợp lệ sẽ cập nhật
-                state được lưu trên blockchain.
-              </p>
+                {tr("Smart Contract là một chương trình được triển khai trên blockchain. Người dùng gửi transaction để gọi một function của contract. Contract kiểm tra dữ liệu đầu vào, thực thi logic và nếu hợp lệ sẽ cập nhật state được lưu trên blockchain.")}</p>
             </div>
           </div>
 
@@ -785,20 +772,20 @@ export default function SmartContractPage() {
           <div className="mb-8 grid gap-4 md:grid-cols-3">
             <TheoryStage
               number="01"
-              title="Người dùng tạo Transaction"
-              description="Chọn function cần gọi, tài khoản gửi và các tham số."
+              title={tr("Người dùng tạo Transaction")}
+              description={tr("Chọn function cần gọi, tài khoản gửi và các tham số.")}
             />
 
             <TheoryStage
               number="02"
-              title="Smart Contract thực thi"
-              description="Dữ liệu được encode, kiểm tra điều kiện và thực thi trên EVM."
+              title={tr("Smart Contract thực thi")}
+              description={tr("Dữ liệu được encode, kiểm tra điều kiện và thực thi trên EVM.")}
             />
 
             <TheoryStage
               number="03"
-              title="Blockchain lưu kết quả"
-              description="State được cập nhật, event được phát ra và receipt được tạo."
+              title={tr("Blockchain lưu kết quả")}
+              description={tr("State được cập nhật, event được phát ra và receipt được tạo.")}
             />
           </div>
 
@@ -811,8 +798,7 @@ export default function SmartContractPage() {
               />
 
               <h3 className="font-semibold text-white">
-                6 khái niệm cần biết
-              </h3>
+                {tr("6 khái niệm cần biết")}</h3>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -830,7 +816,7 @@ export default function SmartContractPage() {
                   </div>
 
                   <p className="text-sm leading-6 text-slate-400">
-                    {concept.description}
+                    {tr(concept.description)}
                   </p>
                 </article>
               ))}
@@ -846,8 +832,7 @@ export default function SmartContractPage() {
               />
 
               <h3 className="font-semibold text-white">
-                Vòng đời của một transaction
-              </h3>
+                {tr("Vòng đời của một transaction")}</h3>
             </div>
 
             <div className="rounded-2xl border border-white/5 bg-[#050816] p-5">
@@ -889,15 +874,14 @@ export default function SmartContractPage() {
               />
 
               <h3 className="font-semibold text-white">
-                MiniVault có 3 function
-              </h3>
+                {tr("MiniVault có 3 function")}</h3>
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
               <FunctionTheoryCard
                 name="deposit(amount)"
                 color="emerald"
-                description="Đưa token từ Wallet của người dùng vào Contract Vault."
+                description={tr("Đưa token từ Wallet của người dùng vào Contract Vault.")}
                 example="Alice deposit(50)"
                 result="Wallet −50 / Vault +50"
               />
@@ -905,7 +889,7 @@ export default function SmartContractPage() {
               <FunctionTheoryCard
                 name="transfer(to, amount)"
                 color="blue"
-                description="Chuyển token giữa hai tài khoản bên trong Contract Vault."
+                description={tr("Chuyển token giữa hai tài khoản bên trong Contract Vault.")}
                 example="Alice → Bob 30"
                 result="Alice −30 / Bob +30"
               />
@@ -913,7 +897,7 @@ export default function SmartContractPage() {
               <FunctionTheoryCard
                 name="withdraw(amount)"
                 color="purple"
-                description="Rút token từ Contract Vault trở lại Wallet của người dùng."
+                description={tr("Rút token từ Contract Vault trở lại Wallet của người dùng.")}
                 example="Bob withdraw(20)"
                 result="Vault −20 / Wallet +20"
               />
@@ -930,14 +914,12 @@ export default function SmartContractPage() {
                 />
 
                 <h3 className="font-semibold text-emerald-300">
-                  Ví dụ transaction thành công
-                </h3>
+                  {tr("Ví dụ transaction thành công")}</h3>
               </div>
 
               <div className="space-y-3 text-sm text-slate-400">
                 <p>
-                  Ban đầu Alice có:
-                </p>
+                  {tr("Ban đầu Alice có:")}</p>
 
                 <div className="rounded-xl border border-white/5 bg-[#050816] p-3 font-mono text-xs">
                   Wallet ={" "}
@@ -952,7 +934,7 @@ export default function SmartContractPage() {
                 </div>
 
                 <p>
-                  Alice gọi{" "}
+                  {tr("Alice gọi")}{" "}
                   <span className="font-mono text-emerald-300">
                     deposit(50)
                   </span>
@@ -980,22 +962,19 @@ export default function SmartContractPage() {
                 />
 
                 <h3 className="font-semibold text-rose-300">
-                  Ví dụ transaction bị Revert
-                </h3>
+                  {tr("Ví dụ transaction bị Revert")}</h3>
               </div>
 
               <p className="text-sm leading-7 text-slate-400">
-                Nếu Alice chỉ có{" "}
+                {tr("Nếu Alice chỉ có")}{" "}
                 <strong className="text-white">
                   120 TOKEN
                 </strong>{" "}
-                trong Vault nhưng gọi{" "}
+                {tr("trong Vault nhưng gọi")}{" "}
                 <span className="font-mono text-rose-300">
                   withdraw(500)
                 </span>
-                , Smart Contract phát hiện số dư
-                không đủ.
-              </p>
+                {tr(", Smart Contract phát hiện số dư không đủ.")}</p>
 
               <div className="mt-4 rounded-xl border border-rose-400/10 bg-[#050816] p-3 text-sm">
                 <div className="font-semibold text-rose-300">
@@ -1003,8 +982,7 @@ export default function SmartContractPage() {
                 </div>
 
                 <div className="mt-1 text-xs text-slate-500">
-                  Contract state không thay đổi.
-                </div>
+                  {tr("Contract state không thay đổi.")}</div>
               </div>
             </div>
           </div>
@@ -1019,11 +997,8 @@ export default function SmartContractPage() {
 
               <div className="text-sm leading-6 text-slate-400">
                 <strong className="text-blue-300">
-                  Bài thực hành:
-                </strong>{" "}
-                Hãy thay đổi function, tài khoản và
-                amount trong simulator bên dưới.
-                Quan sát{" "}
+                  {tr("Bài thực hành:")}</strong>{" "}
+                {tr("Hãy thay đổi function, tài khoản và amount trong simulator bên dưới. Quan sát")}{" "}
                 <strong className="text-white">
                   Execution Pipeline
                 </strong>
@@ -1031,13 +1006,11 @@ export default function SmartContractPage() {
                 <strong className="text-white">
                   State Diff
                 </strong>{" "}
-                và{" "}
+                {tr("và")}{" "}
                 <strong className="text-white">
                   Transaction Receipt
                 </strong>{" "}
-                để hiểu transaction được xử lý như
-                thế nào.
-              </div>
+                {tr("để hiểu transaction được xử lý như thế nào.")}</div>
             </div>
           </div>
         </section>
@@ -1047,8 +1020,7 @@ export default function SmartContractPage() {
           <div className="h-px flex-1 bg-white/10" />
 
           <span className="rounded-full border border-white/10 bg-white/[0.03] px-5 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
-            Bắt đầu thực hành
-          </span>
+            {tr("Bắt đầu thực hành")}</span>
 
           <div className="h-px flex-1 bg-white/10" />
         </div>
@@ -1096,9 +1068,7 @@ export default function SmartContractPage() {
                 </h2>
 
                 <p className="text-xs text-slate-500">
-                  Chọn function và tạo simulated
-                  transaction.
-                </p>
+                  {tr("Chọn function và tạo simulated transaction.")}</p>
               </div>
             </div>
 
@@ -1143,7 +1113,7 @@ export default function SmartContractPage() {
               </div>
 
               <p className="mt-2 text-xs leading-5 text-slate-400">
-                {meta.description}
+                {tr(meta.description)}
               </p>
             </div>
 
@@ -1275,9 +1245,7 @@ export default function SmartContractPage() {
                   </h2>
 
                   <p className="text-xs text-slate-500">
-                    Theo dõi transaction theo từng
-                    bước.
-                  </p>
+                    {tr("Theo dõi transaction theo từng bước.")}</p>
                 </div>
               </div>
 
@@ -1300,15 +1268,10 @@ export default function SmartContractPage() {
                   />
 
                   <div className="font-medium text-slate-400">
-                    Chưa có transaction
-                  </div>
+                    {tr("Chưa có transaction")}</div>
 
                   <p className="mt-2 max-w-sm text-sm leading-6 text-slate-600">
-                    Bấm Execute Contract để quan
-                    sát quá trình ABI encoding,
-                    validation, EVM execution và
-                    state update.
-                  </p>
+                    {tr("Bấm Execute Contract để quan sát quá trình ABI encoding, validation, EVM execution và state update.")}</p>
                 </div>
               )}
 
@@ -1373,10 +1336,7 @@ export default function SmartContractPage() {
               </h2>
 
               <p className="text-xs text-slate-500">
-                So sánh Wallet balance và số dư
-                đang được lưu trong Contract
-                Vault.
-              </p>
+                {tr("So sánh Wallet balance và số dư đang được lưu trong Contract Vault.")}</p>
             </div>
           </div>
 
@@ -1508,9 +1468,7 @@ export default function SmartContractPage() {
                 />
 
                 <p className="text-sm text-slate-500">
-                  Receipt sẽ xuất hiện sau khi
-                  transaction được thực thi.
-                </p>
+                  {tr("Receipt sẽ xuất hiện sau khi transaction được thực thi.")}</p>
               </div>
             ) : (
               <div className="space-y-3 text-sm">
@@ -1610,16 +1568,13 @@ export default function SmartContractPage() {
               </h2>
 
               <p className="text-xs text-slate-500">
-                Lịch sử transaction trong phiên
-                mô phỏng hiện tại.
-              </p>
+                {tr("Lịch sử transaction trong phiên mô phỏng hiện tại.")}</p>
             </div>
           </div>
 
           {history.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-white/10 px-5 py-10 text-center text-sm text-slate-600">
-              Chưa có transaction nào.
-            </div>
+              {tr("Chưa có transaction nào.")}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[800px] text-left text-sm">
@@ -1775,6 +1730,8 @@ function FunctionTheoryCard({
   example: string;
   result: string;
 }) {
+  const { tr } = useLanguage();
+
   const colorClasses = {
     emerald:
       "border-emerald-400/10 text-emerald-300",
@@ -1798,8 +1755,7 @@ function FunctionTheoryCard({
 
       <div className="rounded-xl border border-white/5 bg-white/[0.025] p-3">
         <div className="text-[11px] uppercase tracking-wider text-slate-600">
-          Ví dụ
-        </div>
+          {tr("Ví dụ")}</div>
 
         <div className="mt-1 font-mono text-xs text-white">
           {example}

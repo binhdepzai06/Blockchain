@@ -6,15 +6,9 @@ import {
   FileCode2,
   Fingerprint,
   GitBranch,
-  Globe2,
-  GraduationCap,
-  Hash,
   Network,
-  ShieldAlert,
   ShieldCheck,
-  Sparkles,
   Users,
-  WalletCards,
 } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext";
 

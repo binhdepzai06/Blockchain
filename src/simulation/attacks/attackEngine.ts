@@ -32,6 +32,7 @@ import {
   initializeSelfishMiningAttack,
   stepSelfishMiningAttack,
 } from "./selfishMiningAttack";
+import { tr } from "../../i18n";
 
 function createId(prefix: string, number: number) {
   return `${prefix}-${number}`;
@@ -229,7 +230,7 @@ export function createInitialState(
 
     resultTitle: "Simulation Ready",
     resultDescription:
-      "Chọn START ATTACK để bắt đầu mô phỏng.",
+      tr("Chọn START ATTACK để bắt đầu mô phỏng."),
     resultImpact: "LOW",
   };
 

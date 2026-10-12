@@ -17,8 +17,11 @@ import MerkleExplanation from "./MerkleExplanation";
 import MerkleTree from "./MerkleTree";
 import MerkleProofPanel from "./MerkleProofPanel";
 import TransactionList from "./TransactionList";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function MerklePage() {
+  const { tr } = useLanguage();
+
   const [blockIndex, setBlockIndex] = useState<number | null>(null);
   const [sandboxTxs, setSandboxTxs] = useState<Transaction[]>([]);
   const [levels, setLevels] = useState<string[][]>([]);
@@ -205,8 +208,7 @@ export default function MerklePage() {
       <div className="flex min-h-[calc(100vh-72px)] items-center justify-center">
         <div className="flex items-center gap-3 text-sm text-slate-500">
           <GitBranch className="animate-pulse text-cyan-400" size={20} />
-          Đang tạo không gian Cây Merkle...
-        </div>
+          {tr("Đang tạo không gian Cây Merkle...")}</div>
       </div>
     );
   }
@@ -218,22 +220,18 @@ export default function MerklePage() {
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
               <GitBranch size={13} className="text-cyan-400" />
-              Cây Merkle
-            </span>
+              {tr("Cây Merkle")}</span>
             <span className="text-xs text-slate-700">/</span>
             <span className="text-xs text-slate-600">
-              Mô phỏng tính toàn vẹn dữ liệu
-            </span>
+              {tr("Mô phỏng tính toàn vẹn dữ liệu")}</span>
           </div>
 
           <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Một thay đổi — một Merkle Root khác.
-              </h1>
+                {tr("Một thay đổi — một Merkle Root khác.")}</h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-                Trực quan hóa cách các giao dịch được băm theo từng tầng để tạo ra một Merkle Root duy nhất cho Block.
-              </p>
+                {tr("Trực quan hóa cách các giao dịch được băm theo từng tầng để tạo ra một Merkle Root duy nhất cho Block.")}</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -243,24 +241,21 @@ export default function MerklePage() {
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-xs font-medium text-slate-300 transition hover:bg-white/[0.07] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Play size={14} />
-                Tạo cây
-              </button>
+                {tr("Tạo cây")}</button>
               <button
                 onClick={simulateTampering}
                 disabled={isBuilding || sandboxTxs.length === 0}
                 className="inline-flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-400/[0.06] px-4 py-2.5 text-xs font-medium text-red-300 transition hover:bg-red-400/[0.1] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <AlertTriangle size={14} />
-                Mô phỏng sửa dữ liệu
-              </button>
+                {tr("Mô phỏng sửa dữ liệu")}</button>
               <button
                 onClick={reset}
                 disabled={isBuilding || blockIndex === null}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-xs font-medium text-slate-500 transition hover:text-white disabled:opacity-40"
               >
                 <RotateCcw size={14} />
-                Đặt lại
-              </button>
+                {tr("Đặt lại")}</button>
             </div>
           </div>
         </header>
@@ -282,18 +277,17 @@ export default function MerklePage() {
                 >
                   Block #{block.index}
                   <span className="ml-2 text-[10px] opacity-50">
-                    {block.transactions.length} giao dịch
-                  </span>
+                    {block.transactions.length} {" "}{tr("giao dịch")}</span>
                 </button>
               ))}
             </div>
 
             <section className="mb-5 grid gap-3 sm:grid-cols-3">
-              <Metric label="Giao dịch" value={String(txCount)} />
-              <Metric label="Số tầng" value={String(treeHeight)} />
+              <Metric label={tr("Giao dịch")} value={String(txCount)} />
+              <Metric label={tr("Số tầng")} value={String(treeHeight)} />
               <Metric
-                label="Toàn vẹn dữ liệu"
-                value={isValid ? "Đã xác minh" : "Đã thay đổi"}
+                label={tr("Toàn vẹn dữ liệu")}
+                value={isValid ? tr("Đã xác minh") : tr("Đã thay đổi")}
                 danger={changed}
               />
             </section>
@@ -341,8 +335,8 @@ export default function MerklePage() {
                         }`}
                       >
                         {isValid
-                          ? "Merkle Root khớp với Block"
-                          : "Merkle Root đã thay đổi — dữ liệu đã bị sửa"}
+                          ? tr("Merkle Root khớp với Block")
+                          : tr("Merkle Root đã thay đổi — dữ liệu đã bị sửa")}
                       </div>
                       <div className="mt-1 break-all font-mono text-[10px] leading-5 text-slate-500">
                         {root}
@@ -372,35 +366,26 @@ export default function MerklePage() {
               <div className="mb-5 flex items-center gap-2">
                 <CircleHelp size={16} className="text-cyan-400" />
                 <h2 className="text-sm font-semibold text-white">
-                  Cách xây dựng Cây Merkle
-                </h2>
+                  {tr("Cách xây dựng Cây Merkle")}</h2>
               </div>
 
               <div className="grid gap-3 md:grid-cols-4">
-                <Step number="01" title="Băm các giao dịch">
-                  Mỗi giao dịch được chuyển thành một hash SHA-256: H1, H2, H3...
-                </Step>
-                <Step number="02" title="Ghép các hash">
-                  Hai hash cạnh nhau được ghép thành một cặp. Nếu số hash là lẻ, hash cuối được dùng lại một lần.
-                </Step>
-                <Step number="03" title="Băm lần nữa">
-                  Băm cặp hash để tạo node cha ở tầng trên.
-                </Step>
-                <Step number="04" title="Tạo Merkle Root">
-                  Lặp lại cho đến khi chỉ còn một Merkle Root.
-                </Step>
+                <Step number="01" title={tr("Băm các giao dịch")}>
+                  {tr("Mỗi giao dịch được chuyển thành một hash SHA-256: H1, H2, H3...")}</Step>
+                <Step number="02" title={tr("Ghép các hash")}>
+                  {tr("Hai hash cạnh nhau được ghép thành một cặp. Nếu số hash là lẻ, hash cuối được dùng lại một lần.")}</Step>
+                <Step number="03" title={tr("Băm lần nữa")}>
+                  {tr("Băm cặp hash để tạo node cha ở tầng trên.")}</Step>
+                <Step number="04" title={tr("Tạo Merkle Root")}>
+                  {tr("Lặp lại cho đến khi chỉ còn một Merkle Root.")}</Step>
               </div>
 
               <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:flex-row md:items-center">
                 <ShieldCheck size={18} className="shrink-0 text-cyan-400" />
                 <p className="text-xs leading-5 text-slate-500">
                   <span className="font-medium text-slate-300">
-                    Ý tưởng demo:
-                  </span>{" "}
-                  sửa một amount ở bên trái rồi quan sát leaf hash, parent
-                  hashes và Merkle Root thay đổi. Đây là cách trực quan nhất để
-                  giải thích tính toàn vẹn dữ liệu của Cây Merkle.
-                </p>
+                    {tr("Ý tưởng demo:")}</span>{" "}
+                  {tr("sửa một amount ở bên trái rồi quan sát leaf hash, parent hashes và Merkle Root thay đổi. Đây là cách trực quan nhất để giải thích tính toàn vẹn dữ liệu của Cây Merkle.")}</p>
               </div>
             </section>
           </>
@@ -457,15 +442,15 @@ function Step({
 }
 
 function EmptyState() {
+  const { tr } = useLanguage();
+
   return (
     <div className="rounded-[28px] border border-white/10 bg-[#070b16] p-10 text-center">
       <GitBranch size={26} className="mx-auto text-slate-600" />
       <h2 className="mt-4 text-sm font-semibold text-white">
-        Chưa có Block chứa giao dịch
-      </h2>
+        {tr("Chưa có Block chứa giao dịch")}</h2>
       <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-slate-500">
-        Hãy tạo và mine một vài giao dịch ở trang Transaction trước. Cây Merkle sẽ tự lấy dữ liệu từ các Block có giao dịch.
-      </p>
+        {tr("Hãy tạo và mine một vài giao dịch ở trang Transaction trước. Cây Merkle sẽ tự lấy dữ liệu từ các Block có giao dịch.")}</p>
     </div>
   );
 }

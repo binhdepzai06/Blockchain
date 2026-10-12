@@ -7,12 +7,21 @@ import {
   type ReactNode,
 } from "react";
 
-export type Language = "vi" | "en";
+import {
+  setCurrentLanguage,
+  translate,
+  type Language,
+  type TranslateArg,
+} from "../i18n";
+
+export type { Language };
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
   toggleLanguage: () => void;
+  // Dịch 1 câu tiếng Việt gốc sang ngôn ngữ đang chọn (có tham số {0}, {1}...)
+  tr: (key: string, ...args: TranslateArg[]) => string;
   isVietnamese: boolean;
   isEnglish: boolean;
 }
@@ -39,6 +48,9 @@ export function LanguageProvider({
       return saved === "en" ? "en" : "vi";
     });
 
+  // Đồng bộ ngôn ngữ cho code ngoài React (lib) ngay trong lúc render
+  setCurrentLanguage(language);
+
   useEffect(() => {
     localStorage.setItem(
       LANGUAGE_STORAGE_KEY,
@@ -63,6 +75,8 @@ export function LanguageProvider({
       language,
       setLanguage,
       toggleLanguage,
+      tr: (key: string, ...args: TranslateArg[]) =>
+        translate(language, key, args),
       isVietnamese: language === "vi",
       isEnglish: language === "en",
     }),

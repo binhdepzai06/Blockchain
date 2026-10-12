@@ -6,10 +6,13 @@ import { QuizTopicCard } from "../../components/quiz/QuizTopicCard";
 import { QuizTopicCompactCard } from "../../components/quiz/QuizTopicCompactCard";
 import { QuizSession } from "../../components/quiz/QuizSession";
 import { ComprehensiveReviewSession } from "../../components/quiz/ComprehensiveReviewSession";
+import { useLanguage } from "../../context/LanguageContext";
 
 type ViewMode = "detailed" | "compact";
 
 export default function QuizPage() {
+  const { tr } = useLanguage();
+
   const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
   const [isComprehensiveReview, setIsComprehensiveReview] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("detailed");
@@ -54,14 +57,12 @@ export default function QuizPage() {
           <div>
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-xs font-medium text-blue-300">
               <Sparkles size={13} />
-              <span>Hệ thống 9 chuyên đề trắc nghiệm</span>
+              <span>{tr("Hệ thống 9 chuyên đề trắc nghiệm")}</span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
-              Ôn tập theo chủ đề
-            </h1>
+              {tr("Ôn tập theo chủ đề")}</h1>
             <p className="mt-1.5 text-sm text-slate-400">
-              Kiểm tra kiến thức chuyên sâu với 9 chủ đề cốt lõi về Mật mã, Blockchain, PoW và Smart Contract.
-            </p>
+              {tr("Kiểm tra kiến thức chuyên sâu với 9 chủ đề cốt lõi về Mật mã, Blockchain, PoW và Smart Contract.")}</p>
           </div>
 
           {/* View toggle */}
@@ -74,10 +75,10 @@ export default function QuizPage() {
                     ? "bg-blue-600 text-white shadow"
                     : "text-slate-400 hover:text-white"
                 }`}
-                title="Cấu trúc chi tiết (Ảnh 2)"
+                title={tr("Cấu trúc chi tiết (Ảnh 2)")}
               >
                 <LayoutGrid size={14} />
-                <span>Thẻ chi tiết</span>
+                <span>{tr("Thẻ chi tiết")}</span>
               </button>
               <button
                 onClick={() => setViewMode("compact")}
@@ -86,10 +87,10 @@ export default function QuizPage() {
                     ? "bg-blue-600 text-white shadow"
                     : "text-slate-400 hover:text-white"
                 }`}
-                title="Dạng lưới gọn (Ảnh 1)"
+                title={tr("Dạng lưới gọn (Ảnh 1)")}
               >
                 <ListFilter size={14} />
-                <span>Dạng tổng quan</span>
+                <span>{tr("Dạng tổng quan")}</span>
               </button>
             </div>
           </div>
@@ -101,8 +102,7 @@ export default function QuizPage() {
           <div className="relative z-10 flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
             <div className="max-w-3xl">
               <h2 className="text-xl font-black text-white sm:text-2xl lg:text-3xl">
-                Ôn tập tổng hợp
-              </h2>
+                {tr("Ôn tập tổng hợp")}</h2>
             </div>
 
             <div className="flex flex-col gap-2 shrink-0">
@@ -111,7 +111,7 @@ export default function QuizPage() {
                 className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-blue-600 px-6 py-4 text-sm font-bold text-white shadow-xl shadow-blue-500/25 transition hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Layers size={18} />
-                <span>Ôn tập tổng hợp</span>
+                <span>{tr("Ôn tập tổng hợp")}</span>
                 <ArrowRight size={16} />
               </button>
             </div>
@@ -145,21 +145,17 @@ export default function QuizPage() {
         <div className="mt-10 rounded-2xl border border-white/10 bg-[#0d1322]/80 p-5 backdrop-blur-sm">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row text-xs text-slate-400">
             <div>
-              Đã hoàn thành <strong className="text-white">{completedTopics}</strong> / {totalTopics} chủ đề kiến thức.
-            </div>
+              {tr("Đã hoàn thành")}{" "}<strong className="text-white">{completedTopics}</strong> / {totalTopics} {" "}{tr("chủ đề kiến thức.")}</div>
             <div className="flex items-center gap-6">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                Dễ: Nền tảng khái niệm
-              </span>
+                {tr("Dễ: Nền tảng khái niệm")}</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-amber-400" />
-                Vừa: Cơ chế hoạt động
-              </span>
+                {tr("Vừa: Cơ chế hoạt động")}</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-rose-500" />
-                Khó: Kỹ thuật & Tấn công
-              </span>
+                {tr("Khó: Kỹ thuật & Tấn công")}</span>
             </div>
           </div>
         </div>

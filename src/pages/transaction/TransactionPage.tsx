@@ -14,8 +14,11 @@ import {
   transactionPool,
 } from "../../lib/blockchain/transaction";
 import type { Transaction } from "../../types/transaction";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function TransactionPage() {
+  const { tr } = useLanguage();
+
   const [pending, setPending] = useState<Transaction[]>([]);
   const [confirmed, setConfirmed] = useState<Transaction[]>([]);
 
@@ -108,9 +111,7 @@ export default function TransactionPage() {
           </h1>
 
           <p className="mt-4 max-w-3xl leading-7 text-slate-400">
-            Tạo giao dịch, đưa vào Transaction Pool, sau đó "mine" chúng vào
-            một Block thật trên Blockchain.
-          </p>
+            {tr("Tạo giao dịch, đưa vào Transaction Pool, sau đó \"mine\" chúng vào một Block thật trên Blockchain.")}</p>
         </div>
 
         {/* CREATE FORM */}
@@ -124,8 +125,7 @@ export default function TransactionPage() {
                 Create New Transaction
               </h2>
               <p className="text-sm text-slate-500">
-                Nhập người gửi, người nhận và số lượng
-              </p>
+                {tr("Nhập người gửi, người nhận và số lượng")}</p>
             </div>
           </div>
 
@@ -133,20 +133,20 @@ export default function TransactionPage() {
             <input
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              placeholder="Từ (From)"
+              placeholder={tr("Từ (From)")}
               className="rounded-2xl border border-white/10 bg-[#050816] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50"
             />
             <input
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              placeholder="Đến (To)"
+              placeholder={tr("Đến (To)")}
               className="rounded-2xl border border-white/10 bg-[#050816] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50"
             />
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              placeholder="Số lượng"
+              placeholder={tr("Số lượng")}
               className="rounded-2xl border border-white/10 bg-[#050816] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-blue-400/50"
             />
             <button
@@ -154,8 +154,7 @@ export default function TransactionPage() {
               className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 px-4 py-3 text-sm font-semibold text-white transition hover:scale-[1.01]"
             >
               <Send size={16} />
-              Tạo giao dịch
-            </button>
+              {tr("Tạo giao dịch")}</button>
           </div>
         </section>
 
@@ -173,8 +172,7 @@ export default function TransactionPage() {
                     Pending ({pending.length})
                   </h2>
                   <p className="text-sm text-slate-500">
-                    Chưa được đưa vào Block
-                  </p>
+                    {tr("Chưa được đưa vào Block")}</p>
                 </div>
               </div>
 
@@ -186,8 +184,8 @@ export default function TransactionPage() {
                 >
                   <PackagePlus size={14} />
                   {isMining
-                    ? `Đang mine... (${miningAttempts.toLocaleString()})`
-                    : "Mine vào Block"}
+                    ? tr("Đang mine... ({0})", miningAttempts.toLocaleString())
+                    : tr("Mine vào Block")}
                 </button>
               )}
             </div>
@@ -195,8 +193,7 @@ export default function TransactionPage() {
             <div className="space-y-3">
               {pending.length === 0 && (
                 <p className="text-sm text-slate-500">
-                  Chưa có giao dịch nào đang chờ.
-                </p>
+                  {tr("Chưa có giao dịch nào đang chờ.")}</p>
               )}
 
               {pending.map((tx) => (
@@ -216,16 +213,14 @@ export default function TransactionPage() {
                   Confirmed ({confirmed.length})
                 </h2>
                 <p className="text-sm text-slate-500">
-                  Đã nằm trong Blockchain
-                </p>
+                  {tr("Đã nằm trong Blockchain")}</p>
               </div>
             </div>
 
             <div className="space-y-3">
               {confirmed.length === 0 && (
                 <p className="text-sm text-slate-500">
-                  Chưa có giao dịch nào được xác nhận.
-                </p>
+                  {tr("Chưa có giao dịch nào được xác nhận.")}</p>
               )}
 
               {confirmed.map((tx) => (

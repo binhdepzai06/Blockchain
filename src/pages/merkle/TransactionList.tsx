@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, Pencil, ReceiptText } from "lucide-react";
 import type { Transaction } from "../../types/transaction";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -12,16 +13,16 @@ export default function TransactionList({
   onEditAmount,
   tamperedIndex,
 }: TransactionListProps) {
+  const { tr } = useLanguage();
+
   return (
     <section className="rounded-[28px] border border-white/10 bg-[#070b16]">
       <div className="border-b border-white/10 px-5 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-white">
           <ReceiptText size={16} className="text-cyan-400" />
-          Giao dịch
-        </div>
+          {tr("Giao dịch")}</div>
         <p className="mt-1 text-xs text-slate-500">
-          Mỗi giao dịch tạo ra một hash lá: H1, H2, H3...
-        </p>
+          {tr("Mỗi giao dịch tạo ra một hash lá: H1, H2, H3...")}</p>
       </div>
 
       <div className="divide-y divide-white/[0.06]">
@@ -59,8 +60,7 @@ export default function TransactionList({
 
                 {tampered && (
                   <span className="rounded-full border border-red-400/20 bg-red-400/10 px-2 py-1 text-[9px] font-semibold uppercase tracking-wider text-red-300">
-                    đã sửa
-                  </span>
+                    {tr("đã sửa")}</span>
                 )}
               </div>
 
@@ -82,8 +82,7 @@ export default function TransactionList({
                   />
                 </div>
                 <div className="rounded-xl border border-white/10 px-3 py-2.5 text-[10px] text-slate-500">
-                  Số lượng
-                </div>
+                  {tr("Số lượng")}</div>
                 <Pencil size={13} className="text-slate-700" />
               </div>
             </div>
