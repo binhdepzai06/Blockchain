@@ -14,6 +14,7 @@ import { useLanguage } from "../../context/LanguageContext";
 
 interface TeamMember {
   id: string;
+  initials: string;
   name: string;
   role: string;
   roleEn: string;
@@ -26,9 +27,10 @@ interface TeamMember {
 const teamMembers: TeamMember[] = [
   {
     id: "01",
+    initials: "CB",
     name: "Nguyễn Công Bình",
-    role: "Điều phối & tích hợp hệ thống",
-    roleEn: "System Coordination & Integration",
+    role: "Team Leader & Tích hợp hệ thống",
+    roleEn: "Team Leader & System Integration",
     description:
       "Điều phối tiến độ, tích hợp các module và phụ trách Blockchain, Merkle Tree, Attack Simulator cùng việc kết nối các thành phần của hệ thống.",
     descriptionEn:
@@ -43,87 +45,67 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: "02",
+    initials: "VH",
     name: "Lê Trần Vĩnh Hưng",
-    role: "Frontend & giao diện hệ thống",
+    role: "Frontend & Giao diện hệ thống",
     roleEn: "Frontend & System Interface",
     description:
       "Phụ trách xây dựng giao diện, layout, navigation, các component dùng chung và trải nghiệm tương tác của CryptoLab.",
     descriptionEn:
       "Builds the interface, layouts, navigation, shared components, and interactive experience of CryptoLab.",
-    modules: [
-      "Frontend",
-      "Navbar",
-      "Authentication",
-      "UI Components",
-    ],
+    modules: ["Frontend", "Navbar", "Authentication", "UI Components"],
     icon: Code2,
   },
   {
     id: "03",
+    initials: "AK",
     name: "Ngô Bùi Anh Khải",
-    role: "Mật mã & chữ ký số",
+    role: "Mật mã & Chữ ký số",
     roleEn: "Cryptography & Digital Signature",
     description:
       "Phụ trách các nội dung mật mã nền tảng, hàm băm SHA-256, chữ ký số ECDSA và cơ chế xác minh tính toàn vẹn dữ liệu.",
     descriptionEn:
       "Works on core cryptography concepts, SHA-256 hashing, ECDSA digital signatures, and data integrity verification.",
-    modules: [
-      "SHA-256",
-      "Digital Signature",
-      "ECDSA",
-      "Data Integrity",
-    ],
+    modules: ["SHA-256", "Digital Signature", "ECDSA", "Data Integrity"],
     icon: Fingerprint,
   },
   {
     id: "04",
+    initials: "DK",
     name: "Trần Đình Kiệt",
-    role: "Cơ chế đồng thuận & khai thác",
+    role: "Cơ chế đồng thuận & Khai thác",
     roleEn: "Consensus & Mining",
     description:
       "Phụ trách mô phỏng Proof of Work, Proof of Stake, quá trình Mining, Nonce, Difficulty và lựa chọn Validator.",
     descriptionEn:
       "Works on Proof of Work, Proof of Stake, mining, nonce, difficulty, and validator selection simulations.",
-    modules: [
-      "Proof of Work",
-      "Proof of Stake",
-      "Mining",
-      "Validator",
-    ],
+    modules: ["Proof of Work", "Proof of Stake", "Mining", "Validator"],
     icon: Cpu,
   },
   {
     id: "05",
+    initials: "ĐĐ",
     name: "Nguyễn Đình Tiến Đạt",
-    role: "Mạng Blockchain & nền tảng thực tế",
-    roleEn: "Blockchain Network & Real Networks",
+    role: "Mạng Blockchain & Nền tảng thực tế",
+    roleEn: "Blockchain Network & Real-World Platforms",
     description:
       "Phụ trách mô phỏng mạng Blockchain, Full Node Network và nội dung mô phỏng các hệ sinh thái Cardano và Solana.",
     descriptionEn:
       "Works on Blockchain network simulation, Full Node Network, and real-world ecosystem simulations for Cardano and Solana.",
-    modules: [
-      "Network Simulator",
-      "Full Node Network",
-      "Cardano",
-      "Solana",
-    ],
+    modules: ["Network Simulator", "Full Node Network", "Cardano", "Solana"],
     icon: Network,
   },
   {
     id: "06",
+    initials: "BL",
     name: "Huỳnh Bảo Lâm",
-    role: "Smart Contract & nội dung học tập",
+    role: "Smart Contract & Nội dung học tập",
     roleEn: "Smart Contract & Learning Content",
     description:
       "Phụ trách Smart Contract, nội dung giải thích khái niệm và hỗ trợ xây dựng tài liệu, README và nội dung phục vụ trình bày.",
     descriptionEn:
       "Works on Smart Contract, educational explanations, documentation, README, and presentation content.",
-    modules: [
-      "Smart Contract",
-      "Learning Content",
-      "Documentation",
-      "README",
-    ],
+    modules: ["Smart Contract", "Learning Content", "Documentation", "README"],
     icon: FileCode2,
   },
 ];
@@ -136,18 +118,14 @@ export default function TeamPage() {
       {/* Background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-[-280px] h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-cyan-500/[0.04] blur-3xl" />
-
         <div className="absolute bottom-[-250px] right-[-200px] h-[500px] w-[500px] rounded-full bg-violet-500/[0.035] blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
-        {/* =========================================================
-            HEADER
-        ========================================================= */}
+        {/* Header */}
         <section className="mb-14">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-
             {isEnglish ? "PROJECT TEAM" : "NHÓM PHÁT TRIỂN"}
           </div>
 
@@ -166,9 +144,7 @@ export default function TeamPage() {
           </div>
         </section>
 
-        {/* =========================================================
-            ABOUT CRYPTOLAB
-        ========================================================= */}
+        {/* About CryptoLab */}
         <section className="mb-16">
           <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:p-8">
             <div className="max-w-4xl">
@@ -181,11 +157,8 @@ export default function TeamPage() {
                   <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
                     {isEnglish ? "About the project" : "Về dự án"}
                   </p>
-
                   <h2 className="mt-1 text-lg font-medium text-white">
-                    {isEnglish
-                      ? "What is CryptoLab?"
-                      : "CryptoLab là gì?"}
+                    {isEnglish ? "What is CryptoLab?" : "CryptoLab là gì?"}
                   </h2>
                 </div>
               </div>
@@ -211,9 +184,7 @@ export default function TeamPage() {
           </div>
         </section>
 
-        {/* =========================================================
-            TEAM
-        ========================================================= */}
+        {/* Team Members */}
         <section className="mb-16">
           <div className="mb-7 flex items-end justify-between gap-4">
             <div>
@@ -229,8 +200,8 @@ export default function TeamPage() {
 
               <p className="mt-2 text-sm text-zinc-500">
                 {isEnglish
-                  ? "Each member is responsible for a specific part of the CryptoLab project."
-                  : "Mỗi thành viên phụ trách một nhóm công việc cụ thể trong dự án CryptoLab."}
+                  ? "Each member contributes to a specific part of the CryptoLab project."
+                  : "Mỗi thành viên đảm nhận một phần công việc trong dự án CryptoLab."}
               </p>
             </div>
 
@@ -247,12 +218,12 @@ export default function TeamPage() {
               return (
                 <article
                   key={member.id}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition-colors hover:border-white/20 hover:bg-white/[0.04]"
+                  className="group rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.04]"
                 >
-                  {/* Member header */}
+                  {/* Avatar and member number */}
                   <div className="flex items-start justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                      <Icon className="h-5 w-5 text-cyan-400" />
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.08] text-lg font-semibold tracking-wide text-cyan-300 transition-colors group-hover:border-cyan-400/40 group-hover:bg-cyan-400/[0.12]">
+                      {member.initials}
                     </div>
 
                     <span className="font-mono text-xs text-zinc-600">
@@ -261,33 +232,39 @@ export default function TeamPage() {
                   </div>
 
                   {/* Name */}
-                  <h3 className="mt-5 text-base font-medium text-white">
+                  <h3 className="mt-5 text-base font-semibold text-white">
                     {member.name}
                   </h3>
 
                   {/* Role */}
-                  <p className="mt-1 text-sm text-cyan-400/80">
+                  <p className="mt-1 text-sm leading-6 text-cyan-300/90">
                     {isEnglish ? member.roleEn : member.role}
                   </p>
 
                   {/* Description */}
-                  <p className="mt-4 min-h-[84px] text-sm leading-6 text-zinc-500">
+                  <p className="mt-4 min-h-[84px] text-sm leading-6 text-zinc-400">
                     {isEnglish
                       ? member.descriptionEn
                       : member.description}
                   </p>
 
                   {/* Responsibilities */}
-                  <div className="mt-5 border-t border-white/[0.07] pt-4">
-                    <p className="mb-2 text-[11px] uppercase tracking-wider text-zinc-600">
-                      {isEnglish ? "Responsibilities" : "Phụ trách"}
-                    </p>
+                  <div className="mt-5 rounded-xl border border-cyan-400/15 bg-cyan-400/[0.04] p-3.5">
+                    <div className="mb-3 flex items-center gap-2">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-400/10">
+                        <Icon className="h-3.5 w-3.5 text-cyan-300" />
+                      </div>
 
-                    <div className="flex flex-wrap gap-1.5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-cyan-200">
+                        {isEnglish ? "Responsibilities" : "Phụ trách"}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
                       {member.modules.map((module) => (
                         <span
                           key={module}
-                          className="rounded-md border border-white/[0.08] bg-black/20 px-2 py-1 text-[11px] text-zinc-500"
+                          className="rounded-md border border-white/10 bg-[#0b1017] px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition-colors group-hover:border-cyan-400/20"
                         >
                           {module}
                         </span>
@@ -300,9 +277,7 @@ export default function TeamPage() {
           </div>
         </section>
 
-        {/* =========================================================
-            GITHUB
-        ========================================================= */}
+        {/* GitHub */}
         <section className="mb-10">
           <div className="flex flex-col gap-5 rounded-2xl border border-white/10 bg-white/[0.025] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>
@@ -315,7 +290,6 @@ export default function TeamPage() {
                   <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
                     GitHub
                   </p>
-
                   <h2 className="mt-1 text-lg font-medium text-white">
                     {isEnglish
                       ? "Explore the source code"
@@ -338,7 +312,6 @@ export default function TeamPage() {
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-medium text-zinc-200 transition-colors hover:border-white/20 hover:bg-white/[0.08]"
             >
               {isEnglish ? "View GitHub" : "Xem GitHub"}
-
               <ArrowRight className="h-4 w-4" />
             </a>
           </div>

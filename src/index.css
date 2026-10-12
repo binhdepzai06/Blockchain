@@ -1,11 +1,58 @@
 @import "tailwindcss";
 
+/* =====================================================================
+   BẢNG MÀU MỚI - NAVY SÁNG + CYAN + ĐỎ SAN HÔ NHẠT
+   Muốn chỉnh tông màu toàn web: chỉ cần sửa các giá trị trong khối này.
+   ===================================================================== */
+@theme static {
+  /* Nền navy (từ đậm -> nhạt) */
+  --color-navy-950: #0a1833; /* ô nhập liệu, vùng lõm bên trong card */
+  --color-navy-900: #0f2247; /* nền trang */
+  --color-navy-850: #142b56; /* card đặc, modal quiz */
+  --color-navy-800: #1a3466; /* dropdown, popup, hover */
+  --color-navy-700: #234382; /* ô icon, viền nhấn */
+
+  /* Slate ngả xanh navy, chữ phụ sáng hơn để dễ đọc trên nền sáng */
+  --color-slate-100: #eaf1fc;
+  --color-slate-200: #dbe6f7;
+  --color-slate-300: #bccbe4;
+  --color-slate-400: #9cb0d0;
+  --color-slate-500: #7b90b4;
+  --color-slate-600: #5a7098;
+  --color-slate-700: #3d5380;
+  --color-slate-800: #263a63;
+
+  /* Xanh chủ đạo */
+  --color-blue-200: #c3dcff;
+  --color-blue-300: #9bc9ff;
+  --color-blue-400: #5aa9ff;
+  --color-blue-500: #3b8cf4;
+  --color-blue-600: #2a6fdb;
+
+  /* Tím cũ -> chuyển sang cyan/teal để đồng bộ gradient xanh-cyan */
+  --color-purple-200: #b4f0f7;
+  --color-purple-300: #7fe3f0;
+  --color-purple-400: #38d0e6;
+  --color-purple-500: #17b8d6;
+  --color-purple-600: #0e93b0;
+  --color-indigo-600: #2a6fdb;
+  --color-pink-500: #ff7a8c; /* điểm nhấn đỏ san hô ở cuối gradient */
+
+  /* Đỏ nhẹ (san hô) */
+  --color-red-300: #ffb8b8;
+  --color-red-400: #ff8f8f;
+  --color-red-500: #f56b6b;
+  --color-rose-300: #ffb5c2;
+  --color-rose-400: #ff8fa3;
+  --color-rose-500: #f56a82;
+}
+
 :root {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
 
-  color: #e5e7eb;
-  background: #050816;
+  color: #e8f0fc;
+  background: #0f2247;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,7 +67,7 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: #050816;
+  background: #0f2247;
 }
 
 body {
@@ -29,16 +76,21 @@ body {
   min-height: 100vh;
   background:
     radial-gradient(
-      circle at 15% 15%,
-      rgba(59, 130, 246, 0.12),
-      transparent 30%
+      circle at 12% 10%,
+      rgba(34, 211, 238, 0.16),
+      transparent 32%
     ),
     radial-gradient(
-      circle at 85% 20%,
-      rgba(139, 92, 246, 0.1),
-      transparent 28%
+      circle at 88% 14%,
+      rgba(59, 140, 244, 0.20),
+      transparent 34%
     ),
-    #050816;
+    radial-gradient(
+      circle at 70% 95%,
+      rgba(255, 122, 140, 0.07),
+      transparent 30%
+    ),
+    #0f2247;
 }
 
 button,
@@ -55,4 +107,18 @@ button {
 a {
   color: inherit;
   text-decoration: none;
+}
+/* Cột hex trôi chậm của nền code (xem CodeBackground.tsx) */
+@keyframes code-bg-drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.code-bg-drift {
+  animation-name: code-bg-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .code-bg-drift { animation: none; }
 }
