@@ -1,12 +1,7 @@
+
 import {
   ArrowRight,
-  Blocks,
-  Code2,
-  Cpu,
-  FileCode2,
-  Fingerprint,
   GitBranch,
-  Network,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -21,92 +16,89 @@ interface TeamMember {
   description: string;
   descriptionEn: string;
   modules: string[];
-  icon: typeof Users;
+  modulesEn: string[];
+  isLeader?: boolean;
 }
 
 const teamMembers: TeamMember[] = [
   {
     id: "01",
-    initials: "CB",
+    initials: "NB",
     name: "Nguyễn Công Bình",
     role: "Team Leader & Tích hợp hệ thống",
     roleEn: "Team Leader & System Integration",
     description:
-      "Điều phối tiến độ, tích hợp các module và phụ trách Blockchain, Merkle Tree, Attack Simulator cùng việc kết nối các thành phần của hệ thống.",
+      "Điều phối tiến độ nhóm, kết nối các module và đảm bảo các thành phần của CryptoLab hoạt động thống nhất. Phụ trách nội dung Block, Blockchain và Merkle Tree.",
     descriptionEn:
-      "Coordinates the project, integrates modules, and works on Blockchain, Merkle Tree, Attack Simulator, and system-level integration.",
-    modules: [
-      "Blockchain",
-      "Merkle Tree",
-      "Attack Simulator",
-      "Integration",
-    ],
-    icon: Blocks,
+      "Coordinates the team, integrates modules, and ensures the CryptoLab components work together. Responsible for Block, Blockchain, and Merkle Tree.",
+    modules: ["Block", "Blockchain", "Merkle Tree", "Tích hợp hệ thống"],
+    modulesEn: ["Block", "Blockchain", "Merkle Tree", "System Integration"],
+    isLeader: true,
   },
   {
     id: "02",
-    initials: "VH",
+    initials: "LH",
     name: "Lê Trần Vĩnh Hưng",
     role: "Frontend & Giao diện hệ thống",
     roleEn: "Frontend & System Interface",
     description:
-      "Phụ trách xây dựng giao diện, layout, navigation, các component dùng chung và trải nghiệm tương tác của CryptoLab.",
+      "Phụ trách giao diện người dùng, Dashboard, đăng nhập Google, chuyển đổi ngôn ngữ Việt/Anh và mô phỏng hàm băm SHA-256.",
     descriptionEn:
-      "Builds the interface, layouts, navigation, shared components, and interactive experience of CryptoLab.",
-    modules: ["Frontend", "Navbar", "Authentication", "UI Components"],
-    icon: Code2,
+      "Responsible for the user interface, Dashboard, Google login, Vietnamese/English language switching, and SHA-256 hashing simulation.",
+    modules: ["Dashboard", "Google Login", "VI/EN", "SHA-256 Hash"],
+    modulesEn: ["Dashboard", "Google Login", "VI/EN", "SHA-256 Hash"],
   },
   {
     id: "03",
-    initials: "AK",
+    initials: "NK",
     name: "Ngô Bùi Anh Khải",
-    role: "Mật mã & Chữ ký số",
-    roleEn: "Cryptography & Digital Signature",
+    role: "Giao dịch & Chữ ký số",
+    roleEn: "Transactions & Digital Signatures",
     description:
-      "Phụ trách các nội dung mật mã nền tảng, hàm băm SHA-256, chữ ký số ECDSA và cơ chế xác minh tính toàn vẹn dữ liệu.",
+      "Phụ trách mô phỏng giao dịch Blockchain và chữ ký số ECDSA, giúp người dùng tìm hiểu cách ký, xác minh chữ ký và kiểm tra tính toàn vẹn dữ liệu.",
     descriptionEn:
-      "Works on core cryptography concepts, SHA-256 hashing, ECDSA digital signatures, and data integrity verification.",
-    modules: ["SHA-256", "Digital Signature", "ECDSA", "Data Integrity"],
-    icon: Fingerprint,
+      "Responsible for Blockchain transaction and ECDSA digital signature simulations, demonstrating signing, signature verification, and data integrity.",
+    modules: ["Transaction", "Digital Signature", "ECDSA", "Xác minh chữ ký"],
+    modulesEn: ["Transaction", "Digital Signature", "ECDSA", "Verification"],
   },
   {
     id: "04",
-    initials: "DK",
+    initials: "TK",
     name: "Trần Đình Kiệt",
-    role: "Cơ chế đồng thuận & Khai thác",
-    roleEn: "Consensus & Mining",
+    role: "Đồng thuận & Full Node Network",
+    roleEn: "Consensus & Full Node Network",
     description:
-      "Phụ trách mô phỏng Proof of Work, Proof of Stake, quá trình Mining, Nonce, Difficulty và lựa chọn Validator.",
+      "Phụ trách các cơ chế đồng thuận Proof of Work, Proof of Stake, quá trình khai thác block và mô phỏng mạng lưới các node.",
     descriptionEn:
-      "Works on Proof of Work, Proof of Stake, mining, nonce, difficulty, and validator selection simulations.",
-    modules: ["Proof of Work", "Proof of Stake", "Mining", "Validator"],
-    icon: Cpu,
+      "Responsible for Proof of Work, Proof of Stake, block mining, and Full Node Network simulations.",
+    modules: ["Consensus", "Proof of Work", "Proof of Stake", "Full Node Network"],
+    modulesEn: ["Consensus", "Proof of Work", "Proof of Stake", "Full Node Network"],
   },
   {
     id: "05",
-    initials: "ĐĐ",
+    initials: "NĐ",
     name: "Nguyễn Đình Tiến Đạt",
-    role: "Mạng Blockchain & Nền tảng thực tế",
-    roleEn: "Blockchain Network & Real-World Platforms",
+    role: "Mô phỏng mạng & Nền tảng Blockchain",
+    roleEn: "Network Simulation & Blockchain Platforms",
     description:
-      "Phụ trách mô phỏng mạng Blockchain, Full Node Network và nội dung mô phỏng các hệ sinh thái Cardano và Solana.",
+      "Phụ trách mô phỏng hoạt động của mạng Blockchain và giới thiệu các nền tảng thực tế thông qua những ví dụ về Cardano và Solana.",
     descriptionEn:
-      "Works on Blockchain network simulation, Full Node Network, and real-world ecosystem simulations for Cardano and Solana.",
-    modules: ["Network Simulator", "Full Node Network", "Cardano", "Solana"],
-    icon: Network,
+      "Responsible for Blockchain network simulation and demonstrations of real-world platforms, including Cardano and Solana.",
+    modules: ["Network Simulator", "Cardano", "Solana", "So sánh nền tảng"],
+    modulesEn: ["Network Simulator", "Cardano", "Solana", "Platform Comparison"],
   },
   {
     id: "06",
-    initials: "BL",
+    initials: "HL",
     name: "Huỳnh Bảo Lâm",
-    role: "Smart Contract & Nội dung học tập",
-    roleEn: "Smart Contract & Learning Content",
+    role: "Smart Contract & Kiểm thử bảo mật",
+    roleEn: "Smart Contracts & Security Testing",
     description:
-      "Phụ trách Smart Contract, nội dung giải thích khái niệm và hỗ trợ xây dựng tài liệu, README và nội dung phục vụ trình bày.",
+      "Phụ trách nội dung Smart Contract, Attack Simulator và Quiz, giúp người dùng tìm hiểu hợp đồng thông minh, các tình huống tấn công minh họa và củng cố kiến thức.",
     descriptionEn:
-      "Works on Smart Contract, educational explanations, documentation, README, and presentation content.",
-    modules: ["Smart Contract", "Learning Content", "Documentation", "README"],
-    icon: FileCode2,
+      "Responsible for Smart Contracts, Attack Simulator, and Quiz, helping users explore smart contracts, illustrative attack scenarios, and review key concepts.",
+    modules: ["Smart Contract", "Attack Simulator", "Quiz", "Tổng kết"],
+    modulesEn: ["Smart Contract", "Attack Simulator", "Quiz", "Wrap-up"],
   },
 ];
 
@@ -157,6 +149,7 @@ export default function TeamPage() {
                   <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
                     {isEnglish ? "About the project" : "Về dự án"}
                   </p>
+
                   <h2 className="mt-1 text-lg font-medium text-white">
                     {isEnglish ? "What is CryptoLab?" : "CryptoLab là gì?"}
                   </h2>
@@ -165,20 +158,20 @@ export default function TeamPage() {
 
               <p className="mt-6 text-sm leading-7 text-zinc-400">
                 {isEnglish
-                  ? "CryptoLab is an interactive Blockchain learning website developed to help users understand fundamental Blockchain concepts through direct interaction and visual simulation."
-                  : "CryptoLab là website học Blockchain tương tác được xây dựng nhằm giúp người dùng hiểu các khái niệm nền tảng của Blockchain thông qua thao tác trực tiếp và mô phỏng trực quan."}
+                  ? "CryptoLab is an interactive Blockchain learning website designed to help users explore fundamental concepts through hands-on interaction and visual simulations."
+                  : "CryptoLab là website học Blockchain tương tác, được xây dựng nhằm giúp người dùng tìm hiểu các khái niệm nền tảng thông qua thao tác trực tiếp và mô phỏng trực quan."}
               </p>
 
               <p className="mt-4 text-sm leading-7 text-zinc-400">
                 {isEnglish
-                  ? "The project combines theoretical knowledge with practical simulations, allowing users to observe how data is hashed, transactions are processed, blocks are formed, consensus is reached, and Blockchain networks operate."
-                  : "Dự án kết hợp kiến thức lý thuyết với các mô phỏng thực hành, giúp người dùng quan sát cách dữ liệu được băm, giao dịch được xử lý, block được hình thành, cơ chế đồng thuận hoạt động và mạng Blockchain vận hành."}
+                  ? "The project connects theoretical knowledge with practical examples, allowing users to explore how data is hashed, transactions are processed, blocks are linked, and consensus mechanisms work."
+                  : "Dự án kết nối kiến thức lý thuyết với các ví dụ thực hành, giúp người dùng tìm hiểu cách dữ liệu được băm, giao dịch được xử lý, các block liên kết với nhau và cơ chế đồng thuận hoạt động."}
               </p>
 
               <p className="mt-4 text-sm leading-7 text-zinc-400">
                 {isEnglish
-                  ? "Our goal is to create a simple, visual, and practical environment where Blockchain concepts can be explored instead of being learned only through theory."
-                  : "Mục tiêu của nhóm là xây dựng một môi trường đơn giản, trực quan và thực tế, nơi các khái niệm Blockchain có thể được khám phá thay vì chỉ học thông qua lý thuyết."}
+                  ? "Our goal is to make Blockchain easier to understand through a simple, visual, and practical learning experience."
+                  : "Mục tiêu của nhóm là giúp Blockchain trở nên dễ hiểu hơn thông qua trải nghiệm học tập đơn giản, trực quan và thực tế."}
               </p>
             </div>
           </div>
@@ -189,7 +182,7 @@ export default function TeamPage() {
           <div className="mb-7 flex items-end justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
-                {isEnglish ? "The team" : "Đội ngũ"}
+                {isEnglish ? "The team" : "ĐỘI NGŨ"}
               </p>
 
               <h2 className="mt-2 text-2xl font-semibold text-white">
@@ -200,8 +193,8 @@ export default function TeamPage() {
 
               <p className="mt-2 text-sm text-zinc-500">
                 {isEnglish
-                  ? "Each member contributes to a specific part of the CryptoLab project."
-                  : "Mỗi thành viên đảm nhận một phần công việc trong dự án CryptoLab."}
+                  ? "Each member takes responsibility for specific parts of CryptoLab."
+                  : "Mỗi thành viên đảm nhận một nhóm công việc cụ thể trong dự án CryptoLab."}
               </p>
             </div>
 
@@ -213,22 +206,43 @@ export default function TeamPage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {teamMembers.map((member) => {
-              const Icon = member.icon;
+              const responsibilities = isEnglish
+                ? member.modulesEn
+                : member.modules;
 
               return (
                 <article
                   key={member.id}
-                  className="group rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.04]"
+                  className={`group rounded-2xl border p-5 transition-colors ${
+                    member.isLeader
+                      ? "border-cyan-400/30 bg-cyan-400/[0.045] hover:border-cyan-400/50"
+                      : "border-white/10 bg-white/[0.025] hover:border-white/20 hover:bg-white/[0.04]"
+                  }`}
                 >
                   {/* Avatar and member number */}
                   <div className="flex items-start justify-between">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.08] text-lg font-semibold tracking-wide text-cyan-300 transition-colors group-hover:border-cyan-400/40 group-hover:bg-cyan-400/[0.12]">
+                    <div
+                      className={`flex h-14 w-14 items-center justify-center rounded-2xl border text-lg font-semibold tracking-wide ${
+                        member.isLeader
+                          ? "border-cyan-400/40 bg-cyan-400/10 text-cyan-300"
+                          : "border-white/10 bg-white/[0.05] text-zinc-200"
+                      }`}
+                      aria-label={`Avatar ${member.name}`}
+                    >
                       {member.initials}
                     </div>
 
-                    <span className="font-mono text-xs text-zinc-600">
-                      {member.id}
-                    </span>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="font-mono text-xs text-zinc-600">
+                        {member.id}
+                      </span>
+
+                      {member.isLeader && (
+                        <span className="rounded-md border border-cyan-400/25 bg-cyan-400/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-cyan-300">
+                          {isEnglish ? "Team Leader" : "Trưởng nhóm"}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Name */}
@@ -237,34 +251,54 @@ export default function TeamPage() {
                   </h3>
 
                   {/* Role */}
-                  <p className="mt-1 text-sm leading-6 text-cyan-300/90">
+                  <p
+                    className={`mt-1 text-sm font-medium ${
+                      member.isLeader ? "text-cyan-300" : "text-cyan-400/90"
+                    }`}
+                  >
                     {isEnglish ? member.roleEn : member.role}
                   </p>
 
                   {/* Description */}
-                  <p className="mt-4 min-h-[84px] text-sm leading-6 text-zinc-400">
+                  <p className="mt-4 min-h-[108px] text-sm leading-6 text-zinc-400">
                     {isEnglish
                       ? member.descriptionEn
                       : member.description}
                   </p>
 
-                  {/* Responsibilities */}
-                  <div className="mt-5 rounded-xl border border-cyan-400/15 bg-cyan-400/[0.04] p-3.5">
+                  {/* Highlighted responsibilities */}
+                  <div
+                    className={`mt-5 rounded-xl border p-4 ${
+                      member.isLeader
+                        ? "border-cyan-400/20 bg-cyan-400/[0.045]"
+                        : "border-white/[0.09] bg-black/20"
+                    }`}
+                  >
                     <div className="mb-3 flex items-center gap-2">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-400/10">
-                        <Icon className="h-3.5 w-3.5 text-cyan-300" />
-                      </div>
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          member.isLeader ? "bg-cyan-300" : "bg-cyan-500"
+                        }`}
+                      />
 
-                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-cyan-200">
+                      <p
+                        className={`text-xs font-semibold uppercase tracking-[0.12em] ${
+                          member.isLeader ? "text-cyan-300" : "text-zinc-200"
+                        }`}
+                      >
                         {isEnglish ? "Responsibilities" : "Phụ trách"}
                       </p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      {member.modules.map((module) => (
+                      {responsibilities.map((module) => (
                         <span
                           key={module}
-                          className="rounded-md border border-white/10 bg-[#0b1017] px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition-colors group-hover:border-cyan-400/20"
+                          className={`rounded-lg border px-2.5 py-1.5 text-xs font-medium ${
+                            member.isLeader
+                              ? "border-cyan-400/20 bg-cyan-400/[0.08] text-cyan-200"
+                              : "border-white/[0.12] bg-white/[0.04] text-zinc-300"
+                          }`}
                         >
                           {module}
                         </span>
@@ -290,6 +324,7 @@ export default function TeamPage() {
                   <p className="text-xs uppercase tracking-[0.18em] text-zinc-500">
                     GitHub
                   </p>
+
                   <h2 className="mt-1 text-lg font-medium text-white">
                     {isEnglish
                       ? "Explore the source code"
